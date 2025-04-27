@@ -13,8 +13,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-@Component("optrou_FuelStationIntegrationProcessor")
+@Component(FuelStationIntegrationProcessor.NAME)
 public class FuelStationIntegrationProcessor {
+
+    public static final String NAME = "optrou_FuelStationIntegrationProcessor";
 
     private static final Logger log = LoggerFactory.getLogger(FuelStationIntegrationProcessor.class);
     private final FuelStationIntegrationController fuelStationIntegrationController;
@@ -42,7 +44,7 @@ public class FuelStationIntegrationProcessor {
         for (FuelStationDto fuelStationDto : fuelStationDtos) {
             int lastIndexOf = fuelStationStationIds.lastIndexOf(fuelStationDto.getStationId());
 
-            FuelStation fuelStation = lastIndexOf != 1
+            FuelStation fuelStation = lastIndexOf != -1
                 ? fuelStations.get(lastIndexOf)
                 : fuelStationRepository.create();
 

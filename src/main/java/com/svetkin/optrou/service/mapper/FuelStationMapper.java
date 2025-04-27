@@ -5,8 +5,10 @@ import com.svetkin.optrou.entity.dto.FuelStationDto;
 import com.svetkin.optrou.repository.FuelStationRepository;
 import org.springframework.stereotype.Component;
 
-@Component("optrou_FuelStationMapper")
+@Component(FuelStationMapper.NAME)
 public class FuelStationMapper {
+
+    public static final String NAME = "optrou_FuelStationMapper";
 
     public FuelStation mapDtoToEntity(FuelStation fuelStation, FuelStationDto fuelStationDto) {
         fuelStation.setStationId(fuelStationDto.getStationId());

@@ -11,8 +11,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-@Component("optrou_RestClient")
+@Component(RestClient.NAME)
 public class RestClient {
+
+    public static final String NAME = "optrou_RestClient";
+
     private static final Logger log = LoggerFactory.getLogger(FuelStationIntegrationController.class);
 
     public <RES> ResponseEntity<RES> get(String path, Class<RES> responseType, Map<String, Object> uriVariables) {

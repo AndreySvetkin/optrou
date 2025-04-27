@@ -3,6 +3,8 @@
 
     <menu id="application" title="msg://com.svetkin.optrou/menu.application.title" opened="true">
         <item view="optrou_User.list" title="msg://com.svetkin.optrou.view.user/UserListView.title"/>
+        <item view="optrou_FuelStation.list"
+              title="msg://com.svetkin.optrou.view.fuelstation/fuelStationListView.title"/>
     </menu>
 
 </menu-config>
