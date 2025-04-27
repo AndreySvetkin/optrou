@@ -54,4 +54,12 @@ public class FuelStationIntegrationController {
                 .map(fuelStationPrice -> objectMapper.convertValue(fuelStationPrice, FuelStationPriceDto.class))
                 .toList();
     }
+
+    public List<FuelStationPriceDto> getFuelStationPrices(String stationId) {
+        String path = baseUrl + "price";
+        List<?> fuelStationPrices = restClient.get(path, List.class, Map.of("stationId", stationId)).getBody();
+        return fuelStationPrices.stream()
+                .map(fuelStationPrice -> objectMapper.convertValue(fuelStationPrice, FuelStationPriceDto.class))
+                .toList();
+    }
 }

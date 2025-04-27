@@ -19,6 +19,7 @@ public class FuelStationListView extends StandardListView<FuelStation> {
 
     @Autowired
     private FuelStationIntegrationProcessor fuelStationIntegrationProcessor;
+
     @ViewComponent
     private CollectionLoader<FuelStation> fuelStationsDl;
 
