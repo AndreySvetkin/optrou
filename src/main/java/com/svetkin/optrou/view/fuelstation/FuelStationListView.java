@@ -25,6 +25,7 @@ public class FuelStationListView extends StandardListView<FuelStation> {
     @Subscribe("fuelStationsDataGrid.refresh")
     public void onFuelStationsDataGridRefresh(final ActionPerformedEvent event) {
         fuelStationIntegrationProcessor.processFuelStations();
+        fuelStationIntegrationProcessor.processFuelStationPrices();
         fuelStationsDl.load();
     }
 

@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface FuelStationRepository extends JmixDataRepository<FuelStation, UUID> {
+
+    FuelStation findByStationId(String stationId);
 }

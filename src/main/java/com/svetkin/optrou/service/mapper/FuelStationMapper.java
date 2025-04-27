@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component(FuelStationMapper.NAME)
 public class FuelStationMapper {
 
-    public static final String NAME = "optrou_FuelStationMapper";
+    public static final String NAME = "optrou_FuelStationPriceMapper";
 
     public FuelStation mapDtoToEntity(FuelStation fuelStation, FuelStationDto fuelStationDto) {
         fuelStation.setStationId(fuelStationDto.getStationId());

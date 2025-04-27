@@ -5,8 +5,11 @@
     <data>
         <instance id="fuelStationDc"
                   class="com.svetkin.optrou.entity.FuelStation">
-            <fetchPlan extends="_base"/>
+            <fetchPlan extends="_base">
+                <property name="prices" fetchPlan="_base"/>
+            </fetchPlan>
             <loader id="fuelStationDl"/>
+            <collection id="fuelStationPrices" property="prices"/>
         </instance>
     </data>
     <facets>
@@ -29,6 +32,29 @@
             <textField id="addressField" property="address"/>
             <textField id="locationField" property="location"/>
         </formLayout>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createButton" action="fuelStationPricesDataGrid.create"/>
+            <button id="editButton" action="fuelStationPricesDataGrid.edit"/>
+            <button id="refreshButton" action="fuelStationPricesDataGrid.refresh"/>
+            <button id="removeButton" action="fuelStationPricesDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="fuelStationPricesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="fuelStationPrices"
+                  columnReorderingAllowed="true"
+                  selectionMode="MULTI">
+            <actions>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="refresh" type="list_refresh"/>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="fuelType"/>
+                <column property="value"/>
+            </columns>
+        </dataGrid>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>
