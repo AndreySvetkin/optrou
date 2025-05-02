@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://routeListView.title"
+      focusComponent="routesDataGrid">
+    <data>
+        <collection id="routesDc"
+                    class="com.svetkin.optrou.entity.Route">
+            <fetchPlan extends="_base"/>
+            <loader id="routesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from optrou_Route e]]>
+                </query>
+            </loader>
+        </collection>
+        <instance id="routeDc"
+                  class="com.svetkin.optrou.entity.Route">
+            <fetchPlan extends="_base">
+                <property name="controlPoints" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="routeDl"/>
+            <collection id="controlPointsDc" property="controlPoints"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <hbox height="100%" width="100%">
+            <vbox height="100%" width="40%">
+                <genericFilter id="genericFilter"
+                               dataLoader="routesDl">
+                    <properties include=".*"/>
+                </genericFilter>
+                <hbox id="buttonsPanel" classNames="buttons-panel">
+                    <button id="createButton" action="routesDataGrid.create"/>
+                    <button id="editButton" action="routesDataGrid.edit"/>
+                    <button id="refreshButton" action="routesDataGrid.refresh"/>
+                    <button id="removeButton" action="routesDataGrid.remove"/>
+                    <simplePagination id="pagination" dataLoader="routesDl"/>
+                </hbox>
+                <dataGrid id="routesDataGrid"
+                          width="100%"
+                          minHeight="20em"
+                          dataContainer="routesDc"
+                          columnReorderingAllowed="true"
+                          selectionMode="MULTI">
+                    <actions>
+                        <action id="create" type="list_create"/>
+                        <action id="edit" type="list_edit"/>
+                        <action id="refresh" type="list_refresh"/>
+                        <action id="remove" type="list_remove"/>
+                    </actions>
+                    <columns resizable="true">
+                        <column property="name"/>
+                    </columns>
+                </dataGrid>
+
+                <hbox id="lookupActions" visible="false">
+                    <button id="selectButton" action="selectAction"/>
+                    <button id="discardButton" action="discardAction"/>
+                </hbox>
+            </vbox>
+            <vbox height="100%" width="60%">
+                <fragment id="mapFragment" class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+            </vbox>
+        </hbox>
+    </layout>
+</view>

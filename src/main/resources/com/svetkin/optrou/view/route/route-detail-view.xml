@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:maps="http://jmix.io/schema/maps/ui"
+      title="msg://routeDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="routeDc"
+                  class="com.svetkin.optrou.entity.Route">
+            <fetchPlan extends="_base">
+                <property name="controlPoints" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="routeDl"/>
+            <collection id="controlPointsDc" property="controlPoints"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+        <action id="createRouteAction" text="Рассчитать маршрут"/>
+    </actions>
+    <layout>
+        <hbox height="100%" width="100%">
+            <vbox height="100%" width="40%">
+                <formLayout id="form" dataContainer="routeDc">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+                    <textField id="nameField" property="name"/>
+                    <hbox id="buttonsPanel" classNames="buttons-panel">
+                        <button id="createRouteButton" action="createRouteAction"/>
+                        <button id="createButton" action="controlPointsDataGrid.create"/>
+                        <button id="removeButton" action="controlPointsDataGrid.remove"/>
+                    </hbox>
+                    <dataGrid id="controlPointsDataGrid"
+                              width="100%"
+                              minHeight="20em"
+                              dataContainer="controlPointsDc"
+                              rowsDraggable="true">
+                        <actions>
+                            <action id="create" text="Создать точку"/>
+                            <action id="remove" type="list_remove"/>
+                        </actions>
+                        <columns resizable="true">
+                            <column property="name" editable="true"/>
+                            <column property="latitude"/>
+                            <column property="longitude"/>
+                            <editorActionsColumn>
+                                <editButton/>
+                                <closeButton/>
+                            </editorActionsColumn>
+                        </columns>
+                    </dataGrid>
+                </formLayout>
+                <hbox id="detailActions">
+                    <button id="saveAndCloseButton" action="saveAction"/>
+                    <button id="closeButton" action="closeAction"/>
+                </hbox>
+            </vbox>
+            <vbox height="100%" width="60%">
+                <fragment id="mapFragment"
+                          class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+            </vbox>
+        </hbox>
+    </layout>
+</view>

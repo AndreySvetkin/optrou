@@ -1,7 +1,7 @@
 package com.svetkin.optrou.view.fuelstation;
 
 import com.svetkin.optrou.entity.FuelStation;
-import com.svetkin.optrou.service.FuelStationIntegrationProcessor;
+import com.svetkin.optrou.service.FuelStationProcessor;
 import com.svetkin.optrou.view.main.MainView;
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -18,15 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FuelStationListView extends StandardListView<FuelStation> {
 
     @Autowired
-    private FuelStationIntegrationProcessor fuelStationIntegrationProcessor;
+    private FuelStationProcessor fuelStationProcessor;
 
     @ViewComponent
     private CollectionLoader<FuelStation> fuelStationsDl;
 
     @Subscribe("fuelStationsDataGrid.refresh")
     public void onFuelStationsDataGridRefresh(final ActionPerformedEvent event) {
-        fuelStationIntegrationProcessor.processFuelStations();
-        fuelStationIntegrationProcessor.processFuelStationPrices();
+        fuelStationProcessor.processFuelStations();
+        fuelStationProcessor.processFuelStationPrices();
         fuelStationsDl.load();
     }
 

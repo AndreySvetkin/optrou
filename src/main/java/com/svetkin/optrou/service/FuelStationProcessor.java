@@ -1,6 +1,6 @@
 package com.svetkin.optrou.service;
 
-import com.svetkin.optrou.controller.FuelStationIntegrationController;
+import com.svetkin.optrou.controller.FuelStationController;
 import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.entity.FuelStationPrice;
 import com.svetkin.optrou.entity.dto.FuelStationDto;
@@ -21,21 +21,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-@Component(FuelStationIntegrationProcessor.NAME)
-public class FuelStationIntegrationProcessor {
+@Component(FuelStationProcessor.NAME)
+public class FuelStationProcessor {
 
-    public static final String NAME = "optrou_FuelStationIntegrationProcessor";
+    public static final String NAME = "optrou_FuelStationProcessor";
 
-    private static final Logger log = LoggerFactory.getLogger(FuelStationIntegrationProcessor.class);
-    private final FuelStationIntegrationController fuelStationIntegrationController;
+    private static final Logger log = LoggerFactory.getLogger(FuelStationProcessor.class);
+    private final FuelStationController fuelStationController;
     private final FuelStationRepository fuelStationRepository;
     private final FuelStationMapper fuelStationMapper;
     private final FuelStationPriceRepository fuelStationPriceRepository;
     private final FuelStationPriceMapper fuelStationPriceMapper;
     private final DataManager dataManager;
 
-    public FuelStationIntegrationProcessor(FuelStationIntegrationController fuelStationIntegrationController, FuelStationRepository fuelStationRepository, FuelStationMapper fuelStationMapper, FuelStationPriceRepository fuelStationPriceRepository, FuelStationPriceMapper fuelStationPriceMapper, DataManager dataManager) {
-        this.fuelStationIntegrationController = fuelStationIntegrationController;
+    public FuelStationProcessor(FuelStationController fuelStationController, FuelStationRepository fuelStationRepository, FuelStationMapper fuelStationMapper, FuelStationPriceRepository fuelStationPriceRepository, FuelStationPriceMapper fuelStationPriceMapper, DataManager dataManager) {
+        this.fuelStationController = fuelStationController;
         this.fuelStationRepository = fuelStationRepository;
         this.fuelStationMapper = fuelStationMapper;
         this.fuelStationPriceRepository = fuelStationPriceRepository;
@@ -45,7 +45,7 @@ public class FuelStationIntegrationProcessor {
 
     public void processFuelStations() {
         log.debug("Begin process fuel stations");
-        List<FuelStationDto> fuelStationDtos = fuelStationIntegrationController.getAllFuelStations();
+        List<FuelStationDto> fuelStationDtos = fuelStationController.getAllFuelStations();
 
         List<FuelStation> fuelStations = StreamSupport
                 .stream(fuelStationRepository.findAll().spliterator(), false)
@@ -75,7 +75,7 @@ public class FuelStationIntegrationProcessor {
 
     public void processFuelStationPrices() {
         log.debug("Begin process fuel station prices");
-        List<FuelStationPriceDto> fuelStationPriceDtos = fuelStationIntegrationController.getAllFuelStationPrices();
+        List<FuelStationPriceDto> fuelStationPriceDtos = fuelStationController.getAllFuelStationPrices();
 
         List<FuelStationPrice> fuelStationPrices = StreamSupport
                 .stream(fuelStationPriceRepository.findAll().spliterator(), false)
@@ -121,7 +121,7 @@ public class FuelStationIntegrationProcessor {
         log.debug("Begin process fuel station prices. Fuel station {}", fuelStation);
         String stationId = fuelStation.getStationId();
 
-        List<FuelStationPriceDto> fuelStationPriceDtos = fuelStationIntegrationController.getFuelStationPrices(stationId);
+        List<FuelStationPriceDto> fuelStationPriceDtos = fuelStationController.getFuelStationPrices(stationId);
 
         List<FuelStationPrice> fuelStationPrices = fuelStationPriceRepository.findByFuelStation(fuelStation);
 
