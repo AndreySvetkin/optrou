@@ -1,12 +1,15 @@
 package com.svetkin.optrou.view.route;
 
+import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.entity.Route;
 import com.svetkin.optrou.entity.RoutePoint;
 import com.svetkin.optrou.service.RouteService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
+import com.vaadin.flow.component.tabs.Tab;
 import io.jmix.core.DataManager;
 import io.jmix.flowui.component.grid.DataGrid;
+import io.jmix.flowui.component.tabsheet.JmixTabSheet;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
@@ -32,6 +35,7 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Objects;
 import java.util.Set;
 
 @com.vaadin.flow.router.Route(value = "routes/:id", layout = MainView.class)
@@ -48,31 +52,41 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @ViewComponent
     private CollectionPropertyContainer<RoutePoint> controlPointsDc;
     @ViewComponent
-    private DataGrid<RoutePoint> controlPointsDataGrid;
+    private CollectionPropertyContainer<FuelStation> fuelStationsDc;
     @ViewComponent
     private InstanceContainer<Route> routeDc;
+    @ViewComponent
+    private DataGrid<RoutePoint> controlPointsDataGrid;
     @ViewComponent
     private DataContext dataContext;
     @ViewComponent
     private MapFragment mapFragment;
+    @ViewComponent("tabSheet.fuelStationsTab")
+    private Tab fuelStationsTab;
+    @ViewComponent("tabSheet.commonTab")
+    private Tab commonTab;
 
     private GeoMap map;
+    private VectorLayer routeVectorLayer;
+    private VectorLayer controlPointsVectorLayer;
+    private VectorLayer fuelStationsVectorLayer;
 
     @Subscribe
     public void onInit(final InitEvent event) {
         map = mapFragment.getMap();
 
-        mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
-        mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
-
-        mapFragment.setZoom(10);
+        routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
+        controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+        fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(fuelStationsDc, "location");
 
         map.addSingleClickListener(this::onMapSingleClick);
     }
 
-    @Subscribe
-    public void onBeforeShow(final BeforeShowEvent event) {
-
+    @Subscribe("tabSheet")
+    public void onTabSheetSelectedChange(final JmixTabSheet.SelectedChangeEvent event) {
+        fuelStationsVectorLayer.setVisible(fuelStationsTab.isSelected());
+        routeVectorLayer.setVisible(commonTab.isSelected());
+        controlPointsVectorLayer.setVisible(commonTab.isSelected());
     }
 
     public void onMapSingleClick(final MapSingleClickEvent event) {

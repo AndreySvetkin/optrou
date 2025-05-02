@@ -34,12 +34,13 @@ public class MapFragment extends Fragment<VerticalLayout> {
         return map;
     }
 
-    public <T> DataVectorSource<T> addVectorLayerWithDataVectorSource(InstanceContainer<T> dc, String property) {
+    public <T> VectorLayer addVectorLayerWithDataVectorSource(InstanceContainer<T> dc, String property) {
         DataVectorSource<T> dataVectorSource = new DataVectorSource<T>()
                 .withItems(new ContainerDataVectorSourceItems<>(dc, property));
-        map.addLayer(new VectorLayer()
-                .withSource(dataVectorSource));
-        return dataVectorSource;
+        VectorLayer vectorLayer = new VectorLayer()
+                .withSource(dataVectorSource);
+        map.addLayer(vectorLayer);
+        return vectorLayer;
     }
 
     public void setCenter(Coordinate center) {

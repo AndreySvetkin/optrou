@@ -2,7 +2,7 @@
 <view xmlns="http://jmix.io/schema/flowui/view"
       xmlns:maps="http://jmix.io/schema/maps/ui"
       title="msg://routeDetailView.title"
-      focusComponent="form">
+      focusComponent="commonForm">
     <data>
         <instance id="routeDc"
                   class="com.svetkin.optrou.entity.Route">
@@ -11,6 +11,7 @@
             </fetchPlan>
             <loader id="routeDl"/>
             <collection id="controlPointsDc" property="controlPoints"/>
+            <collection id="fuelStationsDc" property="fuelStations"/>
         </instance>
     </data>
     <facets>
@@ -21,46 +22,75 @@
         <action id="closeAction" type="detail_close"/>
         <action id="createRouteAction" text="Рассчитать маршрут"/>
     </actions>
-    <layout>
+    <layout height="100%" width="100%">
         <hbox height="100%" width="100%">
-            <vbox height="100%" width="40%">
-                <formLayout id="form" dataContainer="routeDc">
-                    <responsiveSteps>
-                        <responsiveStep minWidth="0" columns="1"/>
-                        <responsiveStep minWidth="40em" columns="2"/>
-                    </responsiveSteps>
-                    <textField id="nameField" property="name"/>
-                    <hbox id="buttonsPanel" classNames="buttons-panel">
-                        <button id="createRouteButton" action="createRouteAction"/>
-                        <button id="createButton" action="controlPointsDataGrid.create"/>
-                        <button id="removeButton" action="controlPointsDataGrid.remove"/>
-                    </hbox>
-                    <dataGrid id="controlPointsDataGrid"
-                              width="100%"
-                              minHeight="20em"
-                              dataContainer="controlPointsDc"
-                              rowsDraggable="true">
-                        <actions>
-                            <action id="create" text="Создать точку"/>
-                            <action id="remove" type="list_remove"/>
-                        </actions>
-                        <columns resizable="true">
-                            <column property="name" editable="true"/>
-                            <column property="latitude"/>
-                            <column property="longitude"/>
-                            <editorActionsColumn>
-                                <editButton/>
-                                <closeButton/>
-                            </editorActionsColumn>
-                        </columns>
-                    </dataGrid>
-                </formLayout>
+            <vbox height="100%" width="50%" padding="false">
+                <tabSheet id="tabSheet" height="100%" width="100%">
+                    <tab id="commonTab" label="msg://commonTab.label">
+                        <formLayout id="commonForm" dataContainer="routeDc" height="100%" width="100%">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                            </responsiveSteps>
+                            <textField id="nameField" property="name"/>
+                            <hbox id="controlPointsButtonsPanel" classNames="buttons-panel">
+                                <button id="createRouteButton" action="createRouteAction"/>
+                                <button id="createPointButton" action="controlPointsDataGrid.create"/>
+                                <button id="removePointButton" action="controlPointsDataGrid.remove"/>
+                            </hbox>
+                            <dataGrid id="controlPointsDataGrid"
+                                      width="100%"
+                                      height="100%"
+                                      minHeight="20em"
+                                      dataContainer="controlPointsDc"
+                                      rowsDraggable="true">
+                                <actions>
+                                    <action id="create" text="Создать точку"/>
+                                    <action id="remove" type="list_remove"/>
+                                </actions>
+                                <columns resizable="true">
+                                    <column property="name" editable="true"/>
+                                    <column property="latitude"/>
+                                    <column property="longitude"/>
+                                    <editorActionsColumn>
+                                        <editButton/>
+                                        <closeButton/>
+                                    </editorActionsColumn>
+                                </columns>
+                            </dataGrid>
+                        </formLayout>
+                    </tab>
+                    <tab id="fuelStationsTab" label="msg://fuelStationsTab.label">
+                        <formLayout id="fuelStationsForm" height="100%" width="100%">
+                            <hbox id="fuelStationsButtonsPanel" classNames="buttons-panel">
+                                <button id="addFuelStationButton" action="fuelStationsDataGrid.add"/>
+                                <button id="excludeFuelStationButton" action="fuelStationsDataGrid.exclude"/>
+                            </hbox>
+                            <dataGrid id="fuelStationsDataGrid"
+                                      width="100%"
+                                      height="100%"
+                                      minHeight="20em"
+                                      dataContainer="fuelStationsDc">
+                                <actions>
+                                    <action id="add" type="list_add"/>
+                                    <action id="exclude" type="list_exclude"/>
+                                </actions>
+                                <columns resizable="true">
+                                    <column property="name"/>
+                                    <column property="brand" autoWidth="true"/>
+                                    <column property="address"/>
+                                    <column property="latitude" autoWidth="true"/>
+                                    <column property="longitude" autoWidth="true"/>
+                                </columns>
+                            </dataGrid>
+                        </formLayout>
+                    </tab>
+                </tabSheet>
                 <hbox id="detailActions">
                     <button id="saveAndCloseButton" action="saveAction"/>
                     <button id="closeButton" action="closeAction"/>
                 </hbox>
             </vbox>
-            <vbox height="100%" width="60%">
+            <vbox height="100%" width="50%">
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
