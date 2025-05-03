@@ -2,7 +2,11 @@ package com.svetkin.optrou.view.route;
 
 import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.entity.Route;
+import com.svetkin.optrou.entity.RouteFuelStation;
 import com.svetkin.optrou.entity.RoutePoint;
+import com.svetkin.optrou.repository.RouteFuelStationRepository;
+import com.svetkin.optrou.repository.RoutePointRepository;
+import com.svetkin.optrou.service.FuelStationSearchService;
 import com.svetkin.optrou.service.RouteService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
@@ -45,16 +49,22 @@ import java.util.Set;
 public class RouteDetailView extends StandardDetailView<Route> {
 
     @Autowired
-    private DataManager dataManager;
-    @Autowired
     private RouteService routeService;
+    @Autowired
+    private FuelStationSearchService fuelStationSearchService;
+    @Autowired
+    private RoutePointRepository routePointRepository;
+    @Autowired
+    private RouteFuelStationRepository routeFuelStationRepository;
 
     @ViewComponent
     private CollectionPropertyContainer<RoutePoint> controlPointsDc;
     @ViewComponent
-    private CollectionPropertyContainer<FuelStation> fuelStationsDc;
-    @ViewComponent
     private InstanceContainer<Route> routeDc;
+    @ViewComponent
+    private CollectionPropertyContainer<RouteFuelStation> routeFuelStationsDc;
+    @ViewComponent
+    private InstanceLoader<Route> routeDl;
     @ViewComponent
     private DataGrid<RoutePoint> controlPointsDataGrid;
     @ViewComponent
@@ -77,9 +87,17 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
         routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
         controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
-        fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(fuelStationsDc, "location");
+        fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeFuelStationsDc, "fuelStation.location");
 
         map.addSingleClickListener(this::onMapSingleClick);
+    }
+
+    @Subscribe
+    public void onBeforeShow(final BeforeShowEvent event) {
+        LineString routeLine = getEditedEntity().getLine();
+        if (routeLine != null) {
+            setMapCenterByLine(routeLine);
+        }
     }
 
     @Subscribe("tabSheet")
@@ -107,7 +125,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
     @Subscribe("controlPointsDataGrid.create")
     public void onControlPointsDataGridCreate(final ActionPerformedEvent event) {
-        RoutePoint routePoint = dataManager.create(RoutePoint.class);
+        RoutePoint routePoint = routePointRepository.create();
         routePoint.setName("Новая точка");
         controlPointsDc.getMutableItems().add(routePoint);
     }
@@ -118,11 +136,22 @@ public class RouteDetailView extends StandardDetailView<Route> {
         LineString routeLine = routeService.getLineByPoints(getEditedEntity().getControlPoints()).get(0);
         route.setLine(routeLine);
 
-        mapFragment.setCenter(new Coordinate(routeLine.getCoordinateN(0)));
+        setMapCenterByLine(routeLine);
     }
 
     @Subscribe
     public void onBeforeSave(final BeforeSaveEvent event) {
         getEditedEntity().getControlPoints().removeIf(point -> point.getLocation() == null);
+    }
+
+    @Subscribe("searchFuelStationsAction")
+    public void onSearchFuelStationsAction(final ActionPerformedEvent event) {
+        routeFuelStationsDc.getMutableItems().clear();
+        routeFuelStationsDc.getMutableItems().addAll(fuelStationSearchService.getFuelStations(getEditedEntity()));
+    }
+
+    private void setMapCenterByLine(LineString line) {
+        mapFragment.setCenter(new Coordinate(line.getCoordinateN(0)));
+        mapFragment.setZoom(10.0);
     }
 }

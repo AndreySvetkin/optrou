@@ -9,6 +9,7 @@ import io.jmix.flowui.view.ViewComponent;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.data.ContainerDataVectorSourceItems;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
+import io.jmix.mapsflowui.component.model.source.ClusterSource;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.kit.component.model.layer.Layer;
 import org.locationtech.jts.geom.Coordinate;
@@ -35,10 +36,18 @@ public class MapFragment extends Fragment<VerticalLayout> {
     }
 
     public <T> VectorLayer addVectorLayerWithDataVectorSource(InstanceContainer<T> dc, String property) {
-        DataVectorSource<T> dataVectorSource = new DataVectorSource<T>()
-                .withItems(new ContainerDataVectorSourceItems<>(dc, property));
+        DataVectorSource<T> dataVectorSource = createDataVectorSource(dc, property);
         VectorLayer vectorLayer = new VectorLayer()
                 .withSource(dataVectorSource);
+        map.addLayer(vectorLayer);
+        return vectorLayer;
+    }
+
+    public <T> VectorLayer addVectorLayerWithClusterDataVectorSource(InstanceContainer<T> dc, String property) {
+        DataVectorSource<T> dataVectorSource = createDataVectorSource(dc, property);
+        VectorLayer vectorLayer = new VectorLayer()
+                .withSource(new ClusterSource()
+                        .withVectorSource(dataVectorSource));
         map.addLayer(vectorLayer);
         return vectorLayer;
     }
@@ -49,5 +58,10 @@ public class MapFragment extends Fragment<VerticalLayout> {
 
     public void setZoom(double zoom) {
         map.setZoom(zoom);
+    }
+
+    private <T> DataVectorSource<T> createDataVectorSource(InstanceContainer<T> dc, String property) {
+        return new DataVectorSource<T>()
+                .withItems(new ContainerDataVectorSourceItems<>(dc, property));
     }
 }

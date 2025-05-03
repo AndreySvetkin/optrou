@@ -11,16 +11,17 @@
             </fetchPlan>
             <loader id="routeDl"/>
             <collection id="controlPointsDc" property="controlPoints"/>
-            <collection id="fuelStationsDc" property="fuelStations"/>
+            <collection id="routeFuelStationsDc" property="fuelStations"/>
         </instance>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
     </facets>
     <actions>
+        <action id="createRouteAction" text="Рассчитать маршрут"/>
+        <action id="searchFuelStationsAction" text="Найти АЗС"/>
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
-        <action id="createRouteAction" text="Рассчитать маршрут"/>
     </actions>
     <layout height="100%" width="100%">
         <hbox height="100%" width="100%">
@@ -61,25 +62,26 @@
                     </tab>
                     <tab id="fuelStationsTab" label="msg://fuelStationsTab.label">
                         <formLayout id="fuelStationsForm" height="100%" width="100%">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                            </responsiveSteps>
                             <hbox id="fuelStationsButtonsPanel" classNames="buttons-panel">
-                                <button id="addFuelStationButton" action="fuelStationsDataGrid.add"/>
-                                <button id="excludeFuelStationButton" action="fuelStationsDataGrid.exclude"/>
+                                <button id="searchFuelStationsButton" action="searchFuelStationsAction"/>
+                                <button id="removeRouteFuelStationButton" action="fuelStationsDataGrid.remove"/>
                             </hbox>
                             <dataGrid id="fuelStationsDataGrid"
                                       width="100%"
                                       height="100%"
                                       minHeight="20em"
-                                      dataContainer="fuelStationsDc">
+                                      dataContainer="routeFuelStationsDc"
+                                      selectionMode="MULTI">
                                 <actions>
-                                    <action id="add" type="list_add"/>
-                                    <action id="exclude" type="list_exclude"/>
+                                    <action id="remove" type="list_remove"/>
                                 </actions>
                                 <columns resizable="true">
-                                    <column property="name"/>
-                                    <column property="brand" autoWidth="true"/>
-                                    <column property="address"/>
-                                    <column property="latitude" autoWidth="true"/>
-                                    <column property="longitude" autoWidth="true"/>
+                                    <column property="fuelStation.name"/>
+                                    <column property="fuelStation.brand" autoWidth="true"/>
+                                    <column property="distance" autoWidth="true"/>
                                 </columns>
                             </dataGrid>
                         </formLayout>
