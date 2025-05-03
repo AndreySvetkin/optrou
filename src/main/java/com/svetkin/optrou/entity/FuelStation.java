@@ -66,6 +66,9 @@ public class FuelStation {
     @Column(name = "IS_ENABLED")
     private Boolean isEnabled;
 
+    @Column(name = "REGION")
+    private String region;
+
     @Column(name = "ADDRESS")
     private String address;
 
@@ -83,6 +86,14 @@ public class FuelStation {
     @Composition
     @OneToMany(mappedBy = "fuelStation")
     private List<FuelStationPrice> prices;
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
 
     public Double getLongitude() {
         return longitude;

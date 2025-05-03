@@ -1,6 +1,6 @@
 package com.svetkin.optrou.rest;
 
-import com.svetkin.optrou.controller.FuelStationController;
+import com.svetkin.optrou.controller.FuelStationBenzuberController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ public class RestClient {
 
     public static final String NAME = "optrou_RestClient";
 
-    private static final Logger log = LoggerFactory.getLogger(FuelStationController.class);
+    private static final Logger log = LoggerFactory.getLogger(FuelStationBenzuberController.class);
 
     public <RES> ResponseEntity<RES> get(String path, Class<RES> responseType, Map<String, Object> uriVariables) {
         RestTemplate restTemplate = new RestTemplate();

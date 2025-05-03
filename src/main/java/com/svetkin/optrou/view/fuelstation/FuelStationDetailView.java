@@ -1,6 +1,7 @@
 package com.svetkin.optrou.view.fuelstation;
 
 import com.svetkin.optrou.entity.FuelStation;
+import com.svetkin.optrou.service.FuelStationPriceProcessor;
 import com.svetkin.optrou.service.FuelStationProcessor;
 import com.svetkin.optrou.view.main.MainView;
 import com.vaadin.flow.router.Route;
@@ -16,14 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FuelStationDetailView extends StandardDetailView<FuelStation> {
 
     @Autowired
-    private FuelStationProcessor fuelStationProcessor;
+    private FuelStationPriceProcessor fuelStationPriceProcessor;
 
     @ViewComponent
     private InstanceLoader<FuelStation> fuelStationDl;
 
-    @Subscribe("fuelStationPricesDataGrid.refresh")
-    public void onFuelStationPricesDataGridRefresh(final ActionPerformedEvent event) {
-        fuelStationProcessor.processFuelStationPricesByFuelStation(getEditedEntity());
+    @Subscribe("processFuelStationPrices")
+    public void onProcessFuelStationPrices(final ActionPerformedEvent event) {
+        fuelStationPriceProcessor.processFuelStationPricesByFuelStation(getEditedEntity());
         fuelStationDl.load();
     }
 }

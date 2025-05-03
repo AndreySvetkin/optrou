@@ -16,6 +16,7 @@
         <dataLoadCoordinator auto="true"/>
     </facets>
     <actions>
+        <action id="processFuelStationPrices" text="Обработка цен"/>
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
     </actions>
@@ -25,13 +26,18 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <textField id="stationIdField" property="stationId"/>
             <textField id="nameField" property="name"/>
+            <textField id="stationIdField" property="stationId"/>
             <textField id="brandField" property="brand"/>
             <checkbox id="isEnabledField" property="isEnabled"/>
+            <textField id="regionField" property="region"/>
             <textField id="addressField" property="address"/>
-            <textField id="locationField" property="location"/>
+            <textField id="latitudeField" property="latitude"/>
+            <textField id="longitudeField" property="longitude"/>
         </formLayout>
+        <hbox id="processButtonsPanel" classNames="buttons-panel">
+            <button id="processFuelStationPrices" action="processFuelStationPrices"/>
+        </hbox>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="createButton" action="fuelStationPricesDataGrid.create"/>
             <button id="editButton" action="fuelStationPricesDataGrid.edit"/>

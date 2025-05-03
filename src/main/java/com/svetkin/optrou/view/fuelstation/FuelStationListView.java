@@ -1,6 +1,7 @@
 package com.svetkin.optrou.view.fuelstation;
 
 import com.svetkin.optrou.entity.FuelStation;
+import com.svetkin.optrou.service.FuelStationPriceProcessor;
 import com.svetkin.optrou.service.FuelStationProcessor;
 import com.svetkin.optrou.view.main.MainView;
 import com.vaadin.flow.router.Route;
@@ -19,16 +20,27 @@ public class FuelStationListView extends StandardListView<FuelStation> {
 
     @Autowired
     private FuelStationProcessor fuelStationProcessor;
-
+    @Autowired
+    private FuelStationPriceProcessor fuelStationPriceProcessor;
     @ViewComponent
     private CollectionLoader<FuelStation> fuelStationsDl;
 
-    @Subscribe("fuelStationsDataGrid.refresh")
-    public void onFuelStationsDataGridRefresh(final ActionPerformedEvent event) {
+    @Subscribe("processFuelStationsAndPricesAction")
+    public void onProcessFuelStationsAndPricesAction(final ActionPerformedEvent event) {
         fuelStationProcessor.processFuelStations();
-        fuelStationProcessor.processFuelStationPrices();
+        fuelStationPriceProcessor.processFuelStationPrices();
         fuelStationsDl.load();
     }
 
+    @Subscribe("processFuelStationsAction")
+    public void onProcessFuelStationsAction(final ActionPerformedEvent event) {
+        fuelStationProcessor.processFuelStations();
+        fuelStationsDl.load();
+    }
 
+    @Subscribe("processFuelStationsPricesAction")
+    public void onProcessFuelStationPricesAction(final ActionPerformedEvent event) {
+        fuelStationPriceProcessor.processFuelStationPrices();
+        fuelStationsDl.load();
+    }
 }

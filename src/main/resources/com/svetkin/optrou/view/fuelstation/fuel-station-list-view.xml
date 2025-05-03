@@ -22,6 +22,9 @@
         </urlQueryParameters>
     </facets>
     <actions>
+        <action id="processFuelStationsAndPricesAction" text="Обработка АЗС и цен"/>
+        <action id="processFuelStationsAction" text="Обработка АЗС"/>
+        <action id="processFuelStationsPricesAction" text="Обработка цен"/>
         <action id="selectAction" type="lookup_select"/>
         <action id="discardAction" type="lookup_discard"/>
     </actions>
@@ -30,6 +33,11 @@
                        dataLoader="fuelStationsDl">
             <properties include=".*"/>
         </genericFilter>
+        <hbox id="processButtonsPanel" classNames="buttons-panel">
+            <button id="processFuelStationsAndPricesButton" action="processFuelStationsAndPricesAction"/>
+            <button id="processFuelStationsButton" action="processFuelStationsAction"/>
+            <button id="processFuelStationsPricesButton" action="processFuelStationsPricesAction"/>
+        </hbox>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="createButton" action="fuelStationsDataGrid.create"/>
             <button id="editButton" action="fuelStationsDataGrid.edit"/>
@@ -54,8 +62,10 @@
                 <column property="name"/>
                 <column property="brand"/>
                 <column property="isEnabled"/>
+                <column property="region"/>
                 <column property="address"/>
-                <column property="location"/>
+                <column property="latitude"/>
+                <column property="longitude"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">
