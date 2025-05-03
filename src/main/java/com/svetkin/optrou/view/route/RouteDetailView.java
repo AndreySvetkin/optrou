@@ -13,7 +13,9 @@ import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import io.jmix.core.DataManager;
+import io.jmix.core.EntityStates;
 import io.jmix.flowui.Views;
+import io.jmix.flowui.action.list.RemoveAction;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.tabsheet.JmixTabSheet;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -49,6 +51,7 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -64,6 +67,8 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private FuelStationSearchService fuelStationSearchService;
     @Autowired
     private RoutePointRepository routePointRepository;
+    @Autowired
+    private EntityStates entityStates;
 
     @ViewComponent
     private CollectionPropertyContainer<RoutePoint> controlPointsDc;
@@ -74,6 +79,8 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
     @ViewComponent
     private DataGrid<RoutePoint> controlPointsDataGrid;
+    @ViewComponent("routeFuelStationsDataGrid.remove")
+    private RemoveAction<RouteFuelStation> routeFuelStationsDataGridRemove;
     @ViewComponent
     private DataContext dataContext;
     @ViewComponent
@@ -137,6 +144,17 @@ public class RouteDetailView extends StandardDetailView<Route> {
         RoutePoint routePoint = routePointRepository.create();
         routePoint.setName("Новая точка");
         controlPointsDc.getMutableItems().add(routePoint);
+    }
+
+    @Subscribe("routeFuelStationsDataGrid.remove")
+    public void onRouteFuelStationsDataGridRemove(final ActionPerformedEvent event) {
+        List<RouteFuelStation> routeFuelStations = getEditedEntity().getFuelStations();
+
+        if (CollectionUtils.isNotEmpty(routeFuelStations) && entityStates.isNew(routeFuelStations.get(0))) {
+            getEditedEntity().setFuelStations(List.of());
+        }
+
+        routeFuelStationsDataGridRemove.execute();
     }
 
     @Subscribe("createRouteAction")

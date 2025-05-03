@@ -8,6 +8,10 @@
                   class="com.svetkin.optrou.entity.Route">
             <fetchPlan extends="_base">
                 <property name="controlPoints" fetchPlan="_base"/>
+                <property name="fuelStations" fetchPlan="_base">
+                    <property name="route" fetchPlan="_base"/>
+                    <property name="fuelStation" fetchPlan="_base"/>
+                </property>
             </fetchPlan>
             <loader id="routeDl"/>
             <collection id="controlPointsDc" property="controlPoints"/>
@@ -67,9 +71,9 @@
                             </responsiveSteps>
                             <hbox id="fuelStationsButtonsPanel" classNames="buttons-panel">
                                 <button id="searchFuelStationsButton" action="searchFuelStationsAction"/>
-                                <button id="removeRouteFuelStationButton" action="fuelStationsDataGrid.remove"/>
+                                <button id="removeRouteFuelStationButton" action="routeFuelStationsDataGrid.remove"/>
                             </hbox>
-                            <dataGrid id="fuelStationsDataGrid"
+                            <dataGrid id="routeFuelStationsDataGrid"
                                       width="100%"
                                       height="100%"
                                       minHeight="20em"
