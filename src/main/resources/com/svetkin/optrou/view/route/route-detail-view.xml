@@ -92,7 +92,7 @@
                     <button id="closeButton" action="closeAction"/>
                 </hbox>
             </vbox>
-            <vbox height="100%" width="50%">
+            <vbox id="mapFragmentHbox" height="100%" width="50%">
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>

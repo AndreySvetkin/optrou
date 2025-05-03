@@ -10,8 +10,10 @@ import com.svetkin.optrou.service.FuelStationSearchService;
 import com.svetkin.optrou.service.RouteService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import io.jmix.core.DataManager;
+import io.jmix.flowui.Views;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.tabsheet.JmixTabSheet;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -19,18 +21,26 @@ import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;
+import io.jmix.flowui.model.ViewData;
+import io.jmix.flowui.sys.ViewSupport;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
+import io.jmix.flowui.xml.layout.support.ViewLoaderSupport;
 import io.jmix.maps.utils.GeometryUtils;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.data.ContainerDataVectorSourceItems;
+import io.jmix.mapsflowui.component.data.binding.ClusterDataVectorSourceBinding;
+import io.jmix.mapsflowui.component.data.binding.DataVectorSourceBinding;
 import io.jmix.mapsflowui.component.event.MapSingleClickEvent;
+import io.jmix.mapsflowui.component.loader.MapLoaderSupport;
+import io.jmix.mapsflowui.component.model.FitOptions;
 import io.jmix.mapsflowui.component.model.feature.LineStringFeature;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
+import io.jmix.mapsflowui.component.model.source.ClusterSource;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.component.model.source.VectorSource;
 import org.apache.commons.collections4.CollectionUtils;
@@ -54,8 +64,6 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private FuelStationSearchService fuelStationSearchService;
     @Autowired
     private RoutePointRepository routePointRepository;
-    @Autowired
-    private RouteFuelStationRepository routeFuelStationRepository;
 
     @ViewComponent
     private CollectionPropertyContainer<RoutePoint> controlPointsDc;
@@ -63,8 +71,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private InstanceContainer<Route> routeDc;
     @ViewComponent
     private CollectionPropertyContainer<RouteFuelStation> routeFuelStationsDc;
-    @ViewComponent
-    private InstanceLoader<Route> routeDl;
+
     @ViewComponent
     private DataGrid<RoutePoint> controlPointsDataGrid;
     @ViewComponent
@@ -79,7 +86,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private GeoMap map;
     private VectorLayer routeVectorLayer;
     private VectorLayer controlPointsVectorLayer;
-    private VectorLayer fuelStationsVectorLayer;
+    private VectorLayer routeFuelStationsVectorLayer;
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -87,8 +94,10 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
         routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
         controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
-        fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeFuelStationsDc, "fuelStation.location");
+        routeFuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeFuelStationsDc, "fuelStation.location");
+        routeFuelStationsVectorLayer.setVisible(false);
 
+        map.onEnabledStateChanged(true);
         map.addSingleClickListener(this::onMapSingleClick);
     }
 
@@ -102,7 +111,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
     @Subscribe("tabSheet")
     public void onTabSheetSelectedChange(final JmixTabSheet.SelectedChangeEvent event) {
-        fuelStationsVectorLayer.setVisible(fuelStationsTab.isSelected());
+        routeFuelStationsVectorLayer.setVisible(fuelStationsTab.isSelected());
         routeVectorLayer.setVisible(commonTab.isSelected());
         controlPointsVectorLayer.setVisible(commonTab.isSelected());
     }
@@ -146,8 +155,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
     @Subscribe("searchFuelStationsAction")
     public void onSearchFuelStationsAction(final ActionPerformedEvent event) {
-        routeFuelStationsDc.getMutableItems().clear();
-        routeFuelStationsDc.getMutableItems().addAll(fuelStationSearchService.getFuelStations(getEditedEntity()));
+        getEditedEntity().setFuelStations(fuelStationSearchService.getFuelStations(getEditedEntity()));
     }
 
     private void setMapCenterByLine(LineString line) {
