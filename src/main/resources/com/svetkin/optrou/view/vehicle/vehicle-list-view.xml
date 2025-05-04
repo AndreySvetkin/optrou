@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://vehicleListView.title"
+      focusComponent="vehiclesDataGrid">
+    <data>
+        <collection id="vehiclesDc"
+                    class="com.svetkin.optrou.entity.Vehicle">
+            <fetchPlan extends="_base"/>
+            <loader id="vehiclesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from optrou_Vehicle e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="vehiclesDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createButton" action="vehiclesDataGrid.create"/>
+            <button id="editButton" action="vehiclesDataGrid.edit"/>
+            <button id="refreshButton" action="vehiclesDataGrid.refresh"/>
+            <button id="removeButton" action="vehiclesDataGrid.remove"/>
+            <simplePagination id="pagination" dataLoader="vehiclesDl"/>
+        </hbox>
+        <dataGrid id="vehiclesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="vehiclesDc"
+                  columnReorderingAllowed="true"
+                  selectionMode="MULTI">
+            <actions>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="refresh" type="list_refresh"/>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="licensePlate"/>
+                <column property="driverLicenseCategory"/>
+                <column property="fuelType"/>
+                <column property="fuelConsumption"/>
+                <column property="latitude"/>
+                <column property="longitude"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectButton" action="selectAction"/>
+            <button id="discardButton" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

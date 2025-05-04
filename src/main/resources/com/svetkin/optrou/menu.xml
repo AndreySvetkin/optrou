@@ -6,6 +6,8 @@
         <item view="optrou_FuelStation.list"
               title="msg://com.svetkin.optrou.view.fuelstation/fuelStationListView.title"/>
         <item view="optrou_Route.list" title="msg://com.svetkin.optrou.view.route/routeListView.title"/>
+        <item view="optrou_Driver.list" title="msg://com.svetkin.optrou.view.driver/driverListView.title"/>
+        <item view="optrou_Vehicle.list" title="msg://com.svetkin.optrou.view.vehicle/vehicleListView.title"/>
     </menu>
 
 </menu-config>

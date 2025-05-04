@@ -84,7 +84,9 @@ public class RouteListView extends StandardListView<Route> {
             routeDl.setEntityId(route.getId());
             routeDl.load();
 
-            map.setCenter(new Coordinate(route.getLine().getCoordinateN(0)));
+            if (route.getLine() != null) {
+                map.setCenter(new Coordinate(route.getLine().getCoordinateN(0)));
+            }
         });
     }
 }

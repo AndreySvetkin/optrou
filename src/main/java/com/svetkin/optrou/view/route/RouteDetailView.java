@@ -14,8 +14,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import io.jmix.core.DataManager;
 import io.jmix.core.EntityStates;
+import io.jmix.flowui.Notifications;
 import io.jmix.flowui.Views;
 import io.jmix.flowui.action.list.RemoveAction;
+import io.jmix.flowui.action.view.DetailSaveCloseAction;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.tabsheet.JmixTabSheet;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -94,6 +96,10 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private VectorLayer routeVectorLayer;
     private VectorLayer controlPointsVectorLayer;
     private VectorLayer routeFuelStationsVectorLayer;
+    @Autowired
+    private Notifications notifications;
+    @ViewComponent
+    private DetailSaveCloseAction<Object> saveAction;
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -166,9 +172,18 @@ public class RouteDetailView extends StandardDetailView<Route> {
         setMapCenterByLine(routeLine);
     }
 
-    @Subscribe
-    public void onBeforeSave(final BeforeSaveEvent event) {
-        getEditedEntity().getControlPoints().removeIf(point -> point.getLocation() == null);
+    @Subscribe("saveAction")
+    public void onSaveAction(final ActionPerformedEvent event) {
+        boolean hasEmptyLocation = getEditedEntity().getControlPoints().stream()
+                .anyMatch(controlPoint -> controlPoint.getLocation() == null);
+        if (hasEmptyLocation) {
+            notifications.create("Укажите локацию контрольным точкам")
+                    .build()
+                    .open();
+            return;
+        }
+
+        saveAction.execute();
     }
 
     @Subscribe("searchFuelStationsAction")

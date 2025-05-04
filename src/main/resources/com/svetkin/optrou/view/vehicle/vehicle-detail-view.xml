@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://vehicleDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="vehicleDc"
+                  class="com.svetkin.optrou.entity.Vehicle">
+            <fetchPlan extends="_base">
+                <property name="tanks" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="vehicleDl"/>
+            <collection id="tanksDc" property="tanks"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="vehicleDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="licensePlateField" property="licensePlate"/>
+            <textField id="modelField" property="model"/>
+            <select id="driverLicenseCategoryField" property="driverLicenseCategory"/>
+            <select id="fuelTypeField" property="fuelType"/>
+            <textField id="fuelConsumptionField" property="fuelConsumption"/>
+            <textField id="latitudeField" property="latitude"/>
+            <textField id="longitudeField" property="longitude"/>
+        </formLayout>
+        <h4 text="msg://com.svetkin.optrou.entity/Vehicle.tanks"/>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button action="tanksDataGrid.create"/>
+            <button action="tanksDataGrid.edit"/>
+            <button action="tanksDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="tanksDataGrid" dataContainer="tanksDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="create" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="number"/>
+                <column property="capacity"/>
+                <column property="remainingFuel"/>
+                <column property="isEnabled"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

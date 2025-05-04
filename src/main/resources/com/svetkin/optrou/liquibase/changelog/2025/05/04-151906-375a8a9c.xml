@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="optrou">
+        <createTable tableName="OPTROU_DRIVER">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_DRIVER"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+            <column name="FULL_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHONE_NUMBER" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="optrou">
+        <createTable tableName="OPTROU_DRIVER_LICENCE_CATEGORY_RELATION">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="PK_OPTROU_DRIVER_LICENCE_CATEGORY_RELATION"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DRIVER_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LICENSE_CATEGORY" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="optrou">
+        <createTable tableName="OPTROU_FUEL_TANK">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_FUEL_TANK"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER_" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CAPACITY" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REMAINING_FUEL" type="DOUBLE"/>
+            <column name="IS_ENABLED" type="BOOLEAN"/>
+            <column name="VEHICLE_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="optrou">
+        <createTable tableName="OPTROU_VEHICLE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_VEHICLE"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+            <column name="LICENSE_PLATE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODEL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DRIVER_LICENSE_CATEGORY" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FUEL_TYPE" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FUEL_CONSUMPTION" type="DOUBLE"/>
+            <column name="LOCATION" type="varchar(100 BYTE)"/>
+            <column name="LATITUDE" type="DOUBLE"/>
+            <column name="LONGITUDE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="5" author="optrou">
+        <createIndex indexName="IDX_OPTROU_DRIVER_LICENCE_CATEGORY_RELATION_DRIVER"
+                     tableName="OPTROU_DRIVER_LICENCE_CATEGORY_RELATION">
+            <column name="DRIVER_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="DRIVER_ID" baseTableName="OPTROU_DRIVER_LICENCE_CATEGORY_RELATION"
+                                 constraintName="FK_OPTROU_DRIVER_LICENCE_CATEGORY_RELATION_ON_DRIVER"
+                                 referencedColumnNames="ID" referencedTableName="OPTROU_DRIVER"/>
+    </changeSet>
+    <changeSet id="6" author="optrou">
+        <createIndex indexName="IDX_OPTROU_FUEL_TANK_VEHICLE" tableName="OPTROU_FUEL_TANK">
+            <column name="VEHICLE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="VEHICLE_ID" baseTableName="OPTROU_FUEL_TANK"
+                                 constraintName="FK_OPTROU_FUEL_TANK_ON_VEHICLE" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_VEHICLE"/>
+    </changeSet>
+</databaseChangeLog>
