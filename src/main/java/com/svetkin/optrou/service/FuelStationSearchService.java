@@ -58,15 +58,18 @@ public class FuelStationSearchService {
                 order by distance;
             """;
 
+
+
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final RouteFuelStationRepository routeFuelStationRepository;
     private final FuelStationRepository fuelStationRepository;
+    private final RouteFuelStationCreateService routeFuelStationCreateService;
 
-    public FuelStationSearchService(RouteFuelStationRepository routeFuelStationRepository, FuelStationRepository fuelStationRepository) {
-        this.routeFuelStationRepository = routeFuelStationRepository;
+    public FuelStationSearchService(FuelStationRepository fuelStationRepository,
+                                    RouteFuelStationCreateService routeFuelStationCreateService) {
         this.fuelStationRepository = fuelStationRepository;
+        this.routeFuelStationCreateService = routeFuelStationCreateService;
     }
 
     public List<RouteFuelStation> getFuelStations(Route route) {
@@ -87,19 +90,10 @@ public class FuelStationSearchService {
 
         return StreamSupport.stream(fuelStationRepository
                 .findAllById(fuelStationIdsWithDistance.keySet()).spliterator(), false)
-                .map(fuelStation -> createRouteFuelStation(
+                .map(fuelStation -> routeFuelStationCreateService.createRouteFuelStation(
                         route,
                         fuelStation,
                         fuelStationIdsWithDistance.get(fuelStation.getId())))
                 .toList();
     }
-
-    private RouteFuelStation createRouteFuelStation(Route route, FuelStation fuelStation, Double distance) {
-        RouteFuelStation routeFuelStation = routeFuelStationRepository.create();
-        routeFuelStation.setRoute(route);
-        routeFuelStation.setFuelStation(fuelStation);
-        routeFuelStation.setDistance(distance);
-        return routeFuelStation;
-    }
-
 }

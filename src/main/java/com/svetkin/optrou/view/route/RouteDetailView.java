@@ -71,6 +71,8 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private RoutePointRepository routePointRepository;
     @Autowired
     private EntityStates entityStates;
+    @Autowired
+    private Notifications notifications;
 
     @ViewComponent
     private CollectionPropertyContainer<RoutePoint> controlPointsDc;
@@ -84,6 +86,8 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @ViewComponent("routeFuelStationsDataGrid.remove")
     private RemoveAction<RouteFuelStation> routeFuelStationsDataGridRemove;
     @ViewComponent
+    private DetailSaveCloseAction<Object> saveAction;
+    @ViewComponent
     private DataContext dataContext;
     @ViewComponent
     private MapFragment mapFragment;
@@ -92,14 +96,12 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @ViewComponent("tabSheet.commonTab")
     private Tab commonTab;
 
+
     private GeoMap map;
     private VectorLayer routeVectorLayer;
     private VectorLayer controlPointsVectorLayer;
     private VectorLayer routeFuelStationsVectorLayer;
-    @Autowired
-    private Notifications notifications;
-    @ViewComponent
-    private DetailSaveCloseAction<Object> saveAction;
+
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -168,13 +170,22 @@ public class RouteDetailView extends StandardDetailView<Route> {
         Route route = getEditedEntity();
         LineString routeLine = routeService.getLineByPoints(getEditedEntity().getControlPoints()).get(0);
         route.setLine(routeLine);
+        route.setLength(routeLine.getLength());
 
         setMapCenterByLine(routeLine);
     }
 
     @Subscribe("saveAction")
     public void onSaveAction(final ActionPerformedEvent event) {
-        boolean hasEmptyLocation = getEditedEntity().getControlPoints().stream()
+        List<RoutePoint> controlPoints = getEditedEntity().getControlPoints();
+
+        if (CollectionUtils.size(controlPoints.size()) < 2) {
+            notifications.create("Укажите минимум две контрольные точки")
+                    .build()
+                    .open();
+        }
+
+        boolean hasEmptyLocation = controlPoints.stream()
                 .anyMatch(controlPoint -> controlPoint.getLocation() == null);
         if (hasEmptyLocation) {
             notifications.create("Укажите локацию контрольным точкам")

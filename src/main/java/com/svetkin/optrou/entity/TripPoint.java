@@ -1,28 +1,33 @@
 package com.svetkin.optrou.entity;
 
+import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
-import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "OPTROU_ROUTE")
-@Entity(name = "optrou_Route")
-public class Route {
+@Table(name = "OPTROU_TRIP_POINT", indexes = {
+        @Index(name = "IDX_OPTROU_TRIP_POINT_TRIP", columnList = "TRIP_ID")
+})
+@Entity(name = "optrou_TripPoint")
+public class TripPoint {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
@@ -45,43 +50,45 @@ public class Route {
     @NotNull
     private String name;
 
+    @Column(name = "LOCATION", nullable = false)
     @NotNull
-    @Column(name = "LINE", nullable = false)
-    private LineString line;
+    private Point location;
 
-    @Column(name = "LENGTH", nullable = false)
+    @Column(name = "LATITUDE", nullable = false)
     @NotNull
-    private Double length;
+    private Double latitude;
 
-    @Composition
-    @OneToMany(mappedBy = "route")
-    private List<RoutePoint> controlPoints;
+    @Column(name = "LONGITUDE", nullable = false)
+    @NotNull
+    private Double longitude;
 
-    @OneToMany(mappedBy = "route")
-    private List<RouteFuelStation> fuelStations;
+    @OnDeleteInverse(DeletePolicy.CASCADE)
+    @JoinColumn(name = "TRIP_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Trip trip;
 
-    public Double getLength() {
-        return length;
+    public Double getLongitude() {
+        return longitude;
     }
 
-    public void setLength(Double length) {
-        this.length = length;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
-    public void setFuelStations(List<RouteFuelStation> fuelStations) {
-        this.fuelStations = fuelStations;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public List<RouteFuelStation> getFuelStations() {
-        return fuelStations;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public List<RoutePoint> getControlPoints() {
-        return controlPoints;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setControlPoints(List<RoutePoint> controlPoints) {
-        this.controlPoints = controlPoints;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public String getName() {
@@ -92,12 +99,12 @@ public class Route {
         this.name = name;
     }
 
-    public LineString getLine() {
-        return line;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public void setLine(LineString line) {
-        this.line = line;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
     public OffsetDateTime getCreatedDate() {

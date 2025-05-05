@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://routeListView.title"
-      focusComponent="routesDataGrid">
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://tripListView.title"
+      focusComponent="tripsDataGrid">
     <data>
-        <collection id="routesDc"
-                    class="com.svetkin.optrou.entity.Route">
-            <fetchPlan extends="_base"/>
-            <loader id="routesDl" readOnly="true">
+        <collection id="tripsDc"
+                    class="com.svetkin.optrou.entity.Trip">
+            <fetchPlan extends="_base">
+                <property name="route" fetchPlan="_base"/>
+                <property name="driver" fetchPlan="_base"/>
+                <property name="logist" fetchPlan="_base"/>
+                <property name="vehicle" fetchPlan="_base"/>
+                <property name="refuellingPlans" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="tripsDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from optrou_Route e]]>
+                    <![CDATA[select e from optrou_Trip e]]>
                 </query>
             </loader>
         </collection>
@@ -29,7 +36,6 @@
         </urlQueryParameters>
     </facets>
     <actions>
-        <action id="createTrip" text="Создать маршрут"/>
         <action id="selectAction" type="lookup_select"/>
         <action id="discardAction" type="lookup_discard"/>
     </actions>
@@ -37,20 +43,20 @@
         <hbox height="100%" width="100%">
             <vbox height="100%" width="40%">
                 <genericFilter id="genericFilter"
-                               dataLoader="routesDl">
+                               dataLoader="tripsDl">
                     <properties include=".*"/>
                 </genericFilter>
                 <hbox id="buttonsPanel" classNames="buttons-panel">
-                    <button id="createButton" action="routesDataGrid.create"/>
-                    <button id="editButton" action="routesDataGrid.edit"/>
-                    <button id="refreshButton" action="routesDataGrid.refresh"/>
-                    <button id="removeButton" action="routesDataGrid.remove"/>
-                    <simplePagination id="pagination" dataLoader="routesDl"/>
+                    <button id="createButton" action="tripsDataGrid.create"/>
+                    <button id="editButton" action="tripsDataGrid.edit"/>
+                    <button id="refreshButton" action="tripsDataGrid.refresh"/>
+                    <button id="removeButton" action="tripsDataGrid.remove"/>
+                    <simplePagination id="pagination" dataLoader="tripsDl"/>
                 </hbox>
-                <dataGrid id="routesDataGrid"
+                <dataGrid id="tripsDataGrid"
                           width="100%"
                           minHeight="20em"
-                          dataContainer="routesDc"
+                          dataContainer="tripsDc"
                           columnReorderingAllowed="true"
                           selectionMode="MULTI">
                     <actions>
@@ -61,16 +67,24 @@
                     </actions>
                     <columns resizable="true">
                         <column property="name"/>
+                        <column property="dateStart"/>
+                        <column property="planningDateEnd"/>
+                        <column property="factDateEnd"/>
+                        <column property="length"/>
+                        <column property="route"/>
+                        <column property="driver"/>
+                        <column property="logist"/>
+                        <column property="vehicle"/>
                     </columns>
                 </dataGrid>
-
                 <hbox id="lookupActions" visible="false">
                     <button id="selectButton" action="selectAction"/>
                     <button id="discardButton" action="discardAction"/>
                 </hbox>
             </vbox>
             <vbox height="100%" width="60%">
-                <fragment id="mapFragment" class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+                <fragment id="mapFragment"
+                          class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
         </hbox>
     </layout>

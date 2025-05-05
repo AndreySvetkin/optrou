@@ -27,7 +27,7 @@
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
     </actions>
-    <layout height="100%" width="100%">
+    <layout>
         <hbox height="100%" width="100%">
             <vbox height="100%" width="50%" padding="false">
                 <tabSheet id="tabSheet" height="100%" width="100%">
@@ -37,6 +37,7 @@
                                 <responsiveStep minWidth="0" columns="1"/>
                             </responsiveSteps>
                             <textField id="nameField" property="name"/>
+                            <textField id="lengthField" property="length" readOnly="true"/>
                             <hbox id="controlPointsButtonsPanel" classNames="buttons-panel">
                                 <button id="createRouteButton" action="createRouteAction"/>
                                 <button id="createPointButton" action="controlPointsDataGrid.create"/>

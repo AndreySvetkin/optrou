@@ -1,28 +1,32 @@
 package com.svetkin.optrou.entity;
 
+import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.metamodel.annotation.Composition;
-import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
-import org.locationtech.jts.geom.LineString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "OPTROU_ROUTE")
-@Entity(name = "optrou_Route")
-public class Route {
+@Table(name = "OPTROU_TRIP_FUEL_STATION", indexes = {
+        @Index(name = "IDX_OPTROU_TRIP_FUEL_STATION_TRIP", columnList = "TRIP_ID"),
+        @Index(name = "IDX_OPTROU_TRIP_FUEL_STATION_FUEL_STATION", columnList = "FUEL_STATION_ID")
+})
+@Entity(name = "optrou_TripFuelStation")
+public class TripFuelStation {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
@@ -40,64 +44,41 @@ public class Route {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
-    @InstanceName
-    @Column(name = "NAME", nullable = false)
+    @OnDeleteInverse(DeletePolicy.CASCADE)
+    @JoinColumn(name = "TRIP_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Trip trip;
+
+    @JoinColumn(name = "FUEL_STATION_ID", nullable = false)
     @NotNull
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private FuelStation fuelStation;
 
-    @NotNull
-    @Column(name = "LINE", nullable = false)
-    private LineString line;
+    @Column(name = "DISTANCE")
+    private Double distance;
 
-    @Column(name = "LENGTH", nullable = false)
-    @NotNull
-    private Double length;
-
-    @Composition
-    @OneToMany(mappedBy = "route")
-    private List<RoutePoint> controlPoints;
-
-    @OneToMany(mappedBy = "route")
-    private List<RouteFuelStation> fuelStations;
-
-    public Double getLength() {
-        return length;
+    public FuelStation getFuelStation() {
+        return fuelStation;
     }
 
-    public void setLength(Double length) {
-        this.length = length;
+    public void setFuelStation(FuelStation fuelStation) {
+        this.fuelStation = fuelStation;
     }
 
-    public void setFuelStations(List<RouteFuelStation> fuelStations) {
-        this.fuelStations = fuelStations;
+    public Double getDistance() {
+        return distance;
     }
 
-    public List<RouteFuelStation> getFuelStations() {
-        return fuelStations;
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 
-    public List<RoutePoint> getControlPoints() {
-        return controlPoints;
+    public Trip getTrip() {
+        return trip;
     }
 
-    public void setControlPoints(List<RoutePoint> controlPoints) {
-        this.controlPoints = controlPoints;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LineString getLine() {
-        return line;
-    }
-
-    public void setLine(LineString line) {
-        this.line = line;
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
     public OffsetDateTime getCreatedDate() {

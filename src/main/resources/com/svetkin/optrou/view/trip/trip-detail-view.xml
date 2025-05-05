@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://tripDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="tripDc"
+                  class="com.svetkin.optrou.entity.Trip">
+            <fetchPlan extends="_base">
+                <property name="route" fetchPlan="_base">
+                    <property name="controlPoints" fetchPlan="_base"/>
+                </property>
+                <property name="driver" fetchPlan="_base"/>
+                <property name="logist" fetchPlan="_base"/>
+                <property name="vehicle" fetchPlan="_base"/>
+                <property name="refuellingPlans" fetchPlan="_base">
+                    <property name="refuellings" fetchPlan="_base">
+                        <property name="fuelStationPrice" fetchPlan="_base"/>
+                    </property>
+                </property>
+            </fetchPlan>
+            <loader id="tripDl"/>
+            <collection id="controlPointsDc" property="controlPoints"/>
+            <collection id="tripFuelStationsDc" property="fuelStations"/>
+            <collection id="refuellingPlansDc" property="refuellingPlans"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <hbox height="100%" width="100%">
+            <vbox height="100%" width="50%"/>
+            <tabSheet id="tabSheet" height="100%" width="100%">
+                <tab id="commonTab" label="msg://commonTab.label">
+                    <vbox height="100%" width="100%">
+                        <formLayout id="form" dataContainer="tripDc">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                                <responsiveStep minWidth="40em" columns="2"/>
+                            </responsiveSteps>
+                            <h4 id="commonInfoHeader" text="Общая информация"/>
+                            <textField id="nameField" property="name"/>
+                            <datePicker id="dateStartField" property="dateStart"/>
+                            <datePicker id="planningDateEndField" property="planningDateEnd"/>
+                            <datePicker id="factDateEndField" property="factDateEnd"/>
+                            <entityPicker id="driverField" property="driver">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <entityPicker id="logistField" property="logist">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <h4 id="vehicleInfoHeader" text="Транспорт"/>
+                            <entityPicker id="vehicleField" property="vehicle">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <textField id="modelField" property="vehicle.model"/>
+                            <textField id="fuelTypeField" property="vehicle.fuelType"/>
+                            <textField id="capacityField" property="vehicle.capacity"/>
+                            <textField id="remainingFuelField" property="vehicle.remainingFuel"/>
+                        </formLayout>
+                    </vbox>
+                </tab>
+                <tab id="routeTab" label="Маршрут">
+                    <formLayout id="routeForm" dataContainer="tripDc">
+                        <entityPicker id="routeField" property="route" readOnly="true"/>
+                        <textField id="lengthField" property="length"/>
+                        <h4 id="controlPointsHeader" text="Контрольные точки"/>
+                        <dataGrid id="controlPointsDataGrid"
+                                  width="100%"
+                                  height="100%"
+                                  minHeight="20em"
+                                  dataContainer="controlPointsDc"
+                                  rowsDraggable="true">
+                            <columns resizable="true">
+                                <column property="name"/>
+                                <column property="latitude"/>
+                                <column property="longitude"/>
+                            </columns>
+                        </dataGrid>
+                        <h4 id="fuelStationsHeader" text="АЗС на маршруте"/>
+                        <dataGrid id="tripFuelStationDataGrid"
+                                  width="100%"
+                                  height="100%"
+                                  minHeight="20em"
+                                  dataContainer="tripFuelStationsDc"
+                                  rowsDraggable="true">
+                            <columns resizable="true">
+                                <column property="fuelStation"/>
+                                <column property="distance"/>
+                            </columns>
+                        </dataGrid>
+                    </formLayout>
+                </tab>
+                <tab id="refuellingPlanTab" label="Планы заправок">
+                    <formLayout>
+                        <responsiveSteps>
+                            <responsiveStep minWidth="0" columns="1"/>
+                            <responsiveStep minWidth="40em" columns="2"/>
+                        </responsiveSteps>
+                        <hbox id="buttonsPanel" classNames="buttons-panel">
+                            <button action="refuellingPlansDataGrid.create" enabled="false"/>
+                            <button action="refuellingPlansDataGrid.remove"/>
+                        </hbox>
+                        <dataGrid id="refuellingPlansDataGrid" dataContainer="refuellingPlansDc" width="100%" minHeight="20em">
+                            <actions>
+                                <action id="create" type="list_create">
+                                    <properties>
+                                        <property name="openMode" value="DIALOG"/>
+                                    </properties>
+                                </action>
+                                <action id="edit" type="list_edit">
+                                    <properties>
+                                        <property name="openMode" value="DIALOG"/>
+                                    </properties>
+                                </action>
+                                <action id="remove" type="list_remove"/>
+                            </actions>
+                            <columns>
+                                <column property="createdDate"/>
+                                <column property="refuellingsSize"/>
+                                <column property="refuellingsVolume"/>
+                            </columns>
+                        </dataGrid>
+                    </formLayout>
+                </tab>
+            </tabSheet>
+            <vbox height="100%" width="50%">
+                <fragment id="mapFragment"
+                          class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+            </vbox>
+        </hbox>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

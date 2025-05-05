@@ -8,12 +8,15 @@ import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.core.metamodel.annotation.JmixProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import org.locationtech.jts.geom.Point;
@@ -85,6 +88,22 @@ public class Vehicle {
 
     @Column(name = "LONGITUDE")
     private String longitude;
+
+    @DependsOnProperties({"tanks"})
+    @JmixProperty
+    public Double getRemainingFuel() {
+        return tanks.stream()
+                .mapToDouble(FuelTank::getRemainingFuel)
+                .sum();
+    }
+
+    @DependsOnProperties({"tanks"})
+    @JmixProperty
+    public Double getCapacity() {
+        return tanks.stream()
+                .mapToDouble(FuelTank::getCapacity)
+                .sum();
+    }
 
     public String getModel() {
         return model;
