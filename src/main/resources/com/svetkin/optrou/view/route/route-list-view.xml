@@ -29,7 +29,7 @@
         </urlQueryParameters>
     </facets>
     <actions>
-        <action id="createTrip" text="Создать маршрут"/>
+        <action id="createTripAction" text="Создать рейс"/>
         <action id="selectAction" type="lookup_select"/>
         <action id="discardAction" type="lookup_discard"/>
     </actions>
@@ -40,6 +40,9 @@
                                dataLoader="routesDl">
                     <properties include=".*"/>
                 </genericFilter>
+                <hbox id="createTripButtonsPanel" classNames="buttons-panel">
+                    <button id="createTripButton" action="createTripAction"/>
+                </hbox>
                 <hbox id="buttonsPanel" classNames="buttons-panel">
                     <button id="createButton" action="routesDataGrid.create"/>
                     <button id="editButton" action="routesDataGrid.edit"/>

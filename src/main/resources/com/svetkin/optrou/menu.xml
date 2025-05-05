@@ -9,6 +9,8 @@
         <item view="optrou_Driver.list" title="msg://com.svetkin.optrou.view.driver/driverListView.title"/>
         <item view="optrou_Vehicle.list" title="msg://com.svetkin.optrou.view.vehicle/vehicleListView.title"/>
         <item view="optrou_Trip.list" title="msg://com.svetkin.optrou.view.trip/tripListView.title"/>
+        <item view="optrou_FuelStationBrand.list"
+              title="msg://com.svetkin.optrou.view.fuelstationbrand/fuelStationBrandListView.title"/>
     </menu>
 
 </menu-config>

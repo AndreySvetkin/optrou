@@ -36,8 +36,7 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private InstanceLoader<Trip> tripDl;
 
     public void setTrip(Trip trip) {
-        setupEntityToEdit(trip);
-        tripDl.load();
+        setEntityToEdit(trip);
     }
 
     @Subscribe

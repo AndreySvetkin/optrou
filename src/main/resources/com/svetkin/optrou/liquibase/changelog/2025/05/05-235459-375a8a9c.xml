@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="optrou">
+        <createTable tableName="OPTROU_FUEL_STATION_BRAND">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_FUEL_STATION_BRAND"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="optrou">
+        <createTable tableName="OPTROU_TRIP_FUEL_STATION">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_TRIP_FUEL_STATION"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="TRIP_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FUEL_STATION_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISTANCE" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="optrou">
+        <createTable tableName="OPTROU_TRIP_POINT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_TRIP_POINT"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCATION" type="varchar(100 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LATITUDE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LONGITUDE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRIP_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_FUEL_STATION_FUEL_STATION" tableName="OPTROU_TRIP_FUEL_STATION">
+            <column name="FUEL_STATION_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="FUEL_STATION_ID" baseTableName="OPTROU_TRIP_FUEL_STATION"
+                                 constraintName="FK_OPTROU_TRIP_FUEL_STATION_ON_FUEL_STATION" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_FUEL_STATION"/>
+    </changeSet>
+    <changeSet id="5" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_FUEL_STATION_TRIP" tableName="OPTROU_TRIP_FUEL_STATION">
+            <column name="TRIP_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="TRIP_ID" baseTableName="OPTROU_TRIP_FUEL_STATION"
+                                 constraintName="FK_OPTROU_TRIP_FUEL_STATION_ON_TRIP" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_TRIP"/>
+    </changeSet>
+    <changeSet id="6" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_POINT_TRIP" tableName="OPTROU_TRIP_POINT">
+            <column name="TRIP_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="TRIP_ID" baseTableName="OPTROU_TRIP_POINT"
+                                 constraintName="FK_OPTROU_TRIP_POINT_ON_TRIP" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_TRIP"/>
+    </changeSet>
+    <changeSet id="7" author="optrou">
+        <addForeignKeyConstraint baseColumnNames="BRAND_ID" baseTableName="OPTROU_FUEL_STATION"
+                                 constraintName="FK_OPTROU_FUEL_STATION_ON_BRAND" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_FUEL_STATION_BRAND"/>
+    </changeSet>
+    <changeSet id="11" author="optrou">
+        <dropColumn columnName="brand" tableName="optrou_fuel_station"/>
+    </changeSet>
+    <changeSet id="12" author="optrou">
+        <addNotNullConstraint columnDataType="DOUBLE" columnName="DISTANCE" tableName="OPTROU_TRIP" validate="true"/>
+    </changeSet>
+    <changeSet id="13" author="optrou">
+        <addNotNullConstraint columnDataType="varchar(4000 BYTE)" columnName="LINE" tableName="OPTROU_ROUTE"
+                              validate="true"/>
+    </changeSet>
+</databaseChangeLog>

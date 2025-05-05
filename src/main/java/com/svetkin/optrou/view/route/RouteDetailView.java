@@ -167,10 +167,17 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
     @Subscribe("createRouteAction")
     public void onCreateRouteAction(final ActionPerformedEvent event) {
+        List<RoutePoint> controlPoints = getEditedEntity().getControlPoints();
+
+        if (CollectionUtils.size(controlPoints) < 2) {
+            showEmptyControlPointsNotification();
+            return;
+        }
+
         Route route = getEditedEntity();
-        LineString routeLine = routeService.getLineByPoints(getEditedEntity().getControlPoints()).get(0);
+        LineString routeLine = routeService.getLineByPoints(controlPoints).get(0);
         route.setLine(routeLine);
-        route.setLength(routeLine.getLength());
+        route.setLength(routeLine.getLength() * 100);
 
         setMapCenterByLine(routeLine);
     }
@@ -179,10 +186,9 @@ public class RouteDetailView extends StandardDetailView<Route> {
     public void onSaveAction(final ActionPerformedEvent event) {
         List<RoutePoint> controlPoints = getEditedEntity().getControlPoints();
 
-        if (CollectionUtils.size(controlPoints.size()) < 2) {
-            notifications.create("Укажите минимум две контрольные точки")
-                    .build()
-                    .open();
+        if (CollectionUtils.size(controlPoints) < 2) {
+            showEmptyControlPointsNotification();
+            return;
         }
 
         boolean hasEmptyLocation = controlPoints.stream()
@@ -197,9 +203,28 @@ public class RouteDetailView extends StandardDetailView<Route> {
         saveAction.execute();
     }
 
+    private void showEmptyControlPointsNotification() {
+        notifications.create("Укажите минимум две контрольные точки")
+            .build()
+            .open();
+    }
+
     @Subscribe("searchFuelStationsAction")
     public void onSearchFuelStationsAction(final ActionPerformedEvent event) {
-        getEditedEntity().setFuelStations(fuelStationSearchService.getFuelStations(getEditedEntity()));
+        Route editedEntity = getEditedEntity();
+
+        if (editedEntity.getLine() == null) {
+            notifications.create("Рассчитайте маршрут")
+                    .build()
+                    .open();
+            return;
+        }
+
+        List<RouteFuelStation> routeFuelStations = fuelStationSearchService.getFuelStations(editedEntity) ;
+        editedEntity.setFuelStations(routeFuelStations);
+        notifications.create("Найдено АЗС : %s".formatted(routeFuelStations.size()))
+                .build()
+                .open();
     }
 
     private void setMapCenterByLine(LineString line) {

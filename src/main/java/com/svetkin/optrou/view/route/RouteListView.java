@@ -9,10 +9,12 @@ import com.svetkin.optrou.service.TripCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.grid.CellFocusEvent;
+import com.vaadin.flow.router.RouteParameters;
 import io.jmix.core.DataManager;
 import io.jmix.core.Id;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
+import io.jmix.flowui.Notifications;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -66,16 +68,17 @@ public class RouteListView extends StandardListView<Route> {
     private InstanceLoader<Route> routeDl;
     @ViewComponent
     private MapFragment mapFragment;
-
-    private GeoMap map;
-    @Autowired
-    private TripRepository tripRepository;
     @ViewComponent
     private DataGrid<Route> routesDataGrid;
+
+    @Autowired
+    private Notifications notifications;
     @Autowired
     private ViewNavigators viewNavigators;
     @Autowired
     private TripCreateService tripCreateService;
+
+    private GeoMap map;
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -98,17 +101,17 @@ public class RouteListView extends StandardListView<Route> {
         });
     }
 
-    @Subscribe("createTrip")
-    public void onCreateTrip(final ActionPerformedEvent event) {
+    @Subscribe("createTripAction")
+    public void onCreateTripAction(final ActionPerformedEvent event) {
         Set<Route> selectedRoutes = routesDataGrid.getSelectedItems();
 
         if (CollectionUtils.size(selectedRoutes) == 1) {
             Route selectedRoute = selectedRoutes.iterator().next();
-            Trip trip = tripCreateService.createTrip(Id.of(selectedRoute));
-
-            viewNavigators.detailView(this, Trip.class)
-                    .editEntity(trip)
-                    .navigate();
+            tripCreateService.createAndNavigateTrip(Id.of(selectedRoute));
+        } else {
+            notifications.create("Выберите маршрут")
+                    .build()
+                    .open();
         }
     }
 }

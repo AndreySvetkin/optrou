@@ -8,9 +8,13 @@ import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.dto.RouteDto;
 import com.svetkin.optrou.repository.RouteRepository;
 import com.svetkin.optrou.repository.TripRepository;
+import com.svetkin.optrou.view.trip.TripDetailView;
+import com.vaadin.flow.router.RouteParameters;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlans;
 import io.jmix.core.Id;
+import io.jmix.flowui.ViewNavigators;
+import io.jmix.flowui.component.UiComponentUtils;
 import io.jmix.maps.utils.GeometryUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -31,13 +35,32 @@ public class TripCreateService {
     private final TripFuelStationCreateService tripFuelStationCreateService;
     private final RouteRepository routeRepository;
     private final FetchPlans fetchPlans;
+    private final ViewNavigators viewNavigators;
 
-    public TripCreateService(TripRepository tripRepository, TripPointCreateService tripPointCreateService, TripFuelStationCreateService tripFuelStationCreateService, RouteRepository routeRepository, FetchPlans fetchPlans) {
+    public TripCreateService(TripRepository tripRepository,
+                             TripPointCreateService tripPointCreateService,
+                             TripFuelStationCreateService tripFuelStationCreateService,
+                             RouteRepository routeRepository,
+                             FetchPlans fetchPlans,
+                             ViewNavigators viewNavigators) {
         this.tripRepository = tripRepository;
         this.tripPointCreateService = tripPointCreateService;
         this.tripFuelStationCreateService = tripFuelStationCreateService;
         this.routeRepository = routeRepository;
         this.fetchPlans = fetchPlans;
+        this.viewNavigators = viewNavigators;
+    }
+
+    public void createAndNavigateTrip(Id<Route> routeId) {
+        Trip trip = createTrip(routeId);
+
+        viewNavigators.view(UiComponentUtils.getCurrentView(), TripDetailView.class)
+                .withRouteParameters(new RouteParameters("id", "new"))
+                .withAfterNavigationHandler(afterViewNavigationEvent -> {
+                    TripDetailView tripDetailView = afterViewNavigationEvent.getView();
+                    tripDetailView.setTrip(trip);
+                })
+                .navigate();
     }
 
     public Trip createTrip(Id<Route> routeId) {
@@ -45,7 +68,7 @@ public class TripCreateService {
         Trip trip = tripRepository.create();
         trip.setRoute(route);
         trip.setLine(route.getLine());
-        trip.setLength(route.getLine().getLength());
+        trip.setLength(route.getLine().getLength() * 100);
         trip.setControlPoints(route.getControlPoints().stream()
                 .map(routePoint -> tripPointCreateService.createTripPoint(trip, routePoint))
                 .toList());
@@ -58,7 +81,6 @@ public class TripCreateService {
     private FetchPlan getRouteFetchPlan() {
         return fetchPlans.builder(Route.class)
                 .addFetchPlan(FetchPlan.BASE)
-                .add("route")
                 .add("controlPoints", rpfpb -> rpfpb.addFetchPlan(FetchPlan.BASE))
                 .add("fuelStations", fsfpb -> fsfpb.addFetchPlan(FetchPlan.BASE))
                 .build();

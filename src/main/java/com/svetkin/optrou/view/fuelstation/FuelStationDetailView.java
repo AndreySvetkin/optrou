@@ -4,10 +4,13 @@ import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.service.FuelStationPriceProcessor;
 import com.svetkin.optrou.service.FuelStationProcessor;
 import com.svetkin.optrou.view.main.MainView;
+import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
+import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;
 import io.jmix.flowui.view.*;
+import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "fuelStations/:id", layout = MainView.class)
@@ -21,6 +24,22 @@ public class FuelStationDetailView extends StandardDetailView<FuelStation> {
 
     @ViewComponent
     private InstanceLoader<FuelStation> fuelStationDl;
+    @ViewComponent
+    private InstanceContainer<FuelStation> fuelStationDc;
+    @ViewComponent
+    private MapFragment mapFragment;
+
+    @Subscribe
+    public void onInit(final InitEvent event) {
+        mapFragment.addVectorLayerWithDataVectorSource(fuelStationDc, "location");
+    }
+
+    @Subscribe
+    public void onBeforeShow(final BeforeShowEvent event) {
+        FuelStation editedEntity = getEditedEntity();
+        mapFragment.setCenter(new Coordinate(editedEntity.getLatitude(), editedEntity.getLongitude()));
+        mapFragment.setZoom(10.0);
+    }
 
     @Subscribe("processFuelStationPrices")
     public void onProcessFuelStationPrices(final ActionPerformedEvent event) {

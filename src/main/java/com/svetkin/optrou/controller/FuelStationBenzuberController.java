@@ -18,7 +18,7 @@ public class FuelStationBenzuberController {
 
     private static final String API_KEY = "apikey";
 
-    private final ObjectMapper objectMapper;
+
 
     @Value("${optrou.benzuber.base-url}")
     private String baseUrl;
@@ -27,6 +27,7 @@ public class FuelStationBenzuberController {
     private String apikey;
 
     private final RestClient restClient;
+    private final ObjectMapper objectMapper;
 
     public FuelStationBenzuberController(RestClient restClient, ObjectMapper objectMapper) {
         this.restClient = restClient;

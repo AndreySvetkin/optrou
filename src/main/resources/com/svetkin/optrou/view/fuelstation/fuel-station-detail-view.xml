@@ -21,46 +21,54 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="fuelStationDc">
-            <responsiveSteps>
-                <responsiveStep minWidth="0" columns="1"/>
-                <responsiveStep minWidth="40em" columns="2"/>
-            </responsiveSteps>
-            <textField id="nameField" property="name"/>
-            <textField id="stationIdField" property="stationId"/>
-            <textField id="brandField" property="brand"/>
-            <checkbox id="isEnabledField" property="isEnabled"/>
-            <textField id="regionField" property="region"/>
-            <textField id="addressField" property="address"/>
-            <textField id="latitudeField" property="latitude"/>
-            <textField id="longitudeField" property="longitude"/>
-        </formLayout>
-        <hbox id="processButtonsPanel" classNames="buttons-panel">
-            <button id="processFuelStationPrices" action="processFuelStationPrices"/>
+        <hbox height="100%" width="100%">
+            <vbox height="100%" width="50%" padding="false">
+                <formLayout id="form" dataContainer="fuelStationDc">
+                    <responsiveSteps>
+                        <responsiveStep minWidth="0" columns="1"/>
+                        <responsiveStep minWidth="40em" columns="2"/>
+                    </responsiveSteps>
+                    <textField id="nameField" property="name"/>
+                    <textField id="stationIdField" property="stationId"/>
+                    <textField id="brandField" property="brand"/>
+                    <checkbox id="isEnabledField" property="isEnabled"/>
+                    <textField id="regionField" property="region"/>
+                    <textField id="addressField" property="address"/>
+                    <textField id="latitudeField" property="latitude"/>
+                    <textField id="longitudeField" property="longitude"/>
+                </formLayout>
+                <hbox id="processButtonsPanel" classNames="buttons-panel">
+                    <button id="processFuelStationPrices" action="processFuelStationPrices"/>
+                </hbox>
+                <hbox id="buttonsPanel" classNames="buttons-panel">
+                    <button id="createButton" action="fuelStationPricesDataGrid.create"/>
+                    <button id="editButton" action="fuelStationPricesDataGrid.edit"/>
+                    <button id="refreshButton" action="fuelStationPricesDataGrid.refresh"/>
+                    <button id="removeButton" action="fuelStationPricesDataGrid.remove"/>
+                </hbox>
+                <dataGrid id="fuelStationPricesDataGrid"
+                          width="100%"
+                          minHeight="20em"
+                          dataContainer="fuelStationPrices"
+                          columnReorderingAllowed="true"
+                          selectionMode="MULTI">
+                    <actions>
+                        <action id="create" type="list_create"/>
+                        <action id="edit" type="list_edit"/>
+                        <action id="refresh" type="list_refresh"/>
+                        <action id="remove" type="list_remove"/>
+                    </actions>
+                    <columns resizable="true">
+                        <column property="fuelType"/>
+                        <column property="value"/>
+                    </columns>
+                </dataGrid>
+            </vbox>
+            <vbox height="100%" width="50%" padding="false">
+                <fragment id="mapFragment"
+                          class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+            </vbox>
         </hbox>
-        <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button id="createButton" action="fuelStationPricesDataGrid.create"/>
-            <button id="editButton" action="fuelStationPricesDataGrid.edit"/>
-            <button id="refreshButton" action="fuelStationPricesDataGrid.refresh"/>
-            <button id="removeButton" action="fuelStationPricesDataGrid.remove"/>
-        </hbox>
-        <dataGrid id="fuelStationPricesDataGrid"
-                  width="100%"
-                  minHeight="20em"
-                  dataContainer="fuelStationPrices"
-                  columnReorderingAllowed="true"
-                  selectionMode="MULTI">
-            <actions>
-                <action id="create" type="list_create"/>
-                <action id="edit" type="list_edit"/>
-                <action id="refresh" type="list_refresh"/>
-                <action id="remove" type="list_remove"/>
-            </actions>
-            <columns resizable="true">
-                <column property="fuelType"/>
-                <column property="value"/>
-            </columns>
-        </dataGrid>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>

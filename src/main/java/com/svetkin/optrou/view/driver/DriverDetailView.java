@@ -9,6 +9,7 @@ import io.jmix.flowui.Notifications;
 import io.jmix.flowui.action.view.DetailSaveCloseAction;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
+import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.Subscribe;
@@ -34,13 +35,14 @@ public class DriverDetailView extends StandardDetailView<Driver> {
     @ViewComponent
     private CollectionPropertyContainer<DriverLicenceCategoryRelation> licenseCategoriesDc;
     @ViewComponent
-    private DetailSaveCloseAction<Object> saveAction;
+    private DataContext dataContext;
 
     @Subscribe("licenseCategoriesDataGrid.create")
     public void onLicenseCategoriesDataGridCreate(final ActionPerformedEvent event) {
-        DriverLicenceCategoryRelation relation = driverLicenceCategoryRelationRepository.create();
-        relation.setDriver(getEditedEntity());
-        licenseCategoriesDc.getMutableItems().add(relation);
+        DriverLicenceCategoryRelation licenceCategory = driverLicenceCategoryRelationRepository.create();
+        licenceCategory = dataContext.merge(licenceCategory);
+        licenceCategory.setDriver(getEditedEntity());
+        licenseCategoriesDc.getMutableItems().add(licenceCategory);
     }
 
     @Subscribe("saveAction")
@@ -54,7 +56,7 @@ public class DriverDetailView extends StandardDetailView<Driver> {
             return;
         }
 
-        saveAction.execute();
+        closeWithSave();
     }
 
 }

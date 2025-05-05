@@ -6,7 +6,9 @@
     <data>
         <collection id="fuelStationsDc"
                     class="com.svetkin.optrou.entity.FuelStation">
-            <fetchPlan extends="_base"/>
+            <fetchPlan extends="_base">
+                <property name="brand" fetchPlan="_base"/>
+            </fetchPlan>
             <loader id="fuelStationsDl" readOnly="true">
                 <query>
                     <![CDATA[select e from optrou_FuelStation e]]>
@@ -29,45 +31,49 @@
         <action id="discardAction" type="lookup_discard"/>
     </actions>
     <layout>
-        <genericFilter id="genericFilter"
-                       dataLoader="fuelStationsDl">
-            <properties include=".*"/>
-        </genericFilter>
-        <hbox id="processButtonsPanel" classNames="buttons-panel">
-            <button id="processFuelStationsAndPricesButton" action="processFuelStationsAndPricesAction"/>
-            <button id="processFuelStationsButton" action="processFuelStationsAction"/>
-            <button id="processFuelStationsPricesButton" action="processFuelStationsPricesAction"/>
+        <hbox height="100%" width="100%">
+            <vbox height="100%" width="50%" padding="false">
+                <genericFilter id="genericFilter"
+                               dataLoader="fuelStationsDl">
+                    <properties include=".*"/>
+                </genericFilter>
+                <hbox id="processButtonsPanel" classNames="buttons-panel">
+                    <button id="processFuelStationsAndPricesButton" action="processFuelStationsAndPricesAction"/>
+                    <button id="processFuelStationsButton" action="processFuelStationsAction"/>
+                    <button id="processFuelStationsPricesButton" action="processFuelStationsPricesAction"/>
+                </hbox>
+                <hbox id="buttonsPanel" classNames="buttons-panel">
+                    <button id="createButton" action="fuelStationsDataGrid.create"/>
+                    <button id="editButton" action="fuelStationsDataGrid.edit"/>
+                    <button id="refreshButton" action="fuelStationsDataGrid.refresh"/>
+                    <button id="removeButton" action="fuelStationsDataGrid.remove"/>
+                    <simplePagination id="pagination" dataLoader="fuelStationsDl"/>
+                </hbox>
+                <dataGrid id="fuelStationsDataGrid"
+                          width="100%"
+                          minHeight="20em"
+                          dataContainer="fuelStationsDc"
+                          columnReorderingAllowed="true"
+                          selectionMode="MULTI">
+                    <actions>
+                        <action id="create" type="list_create"/>
+                        <action id="edit" type="list_edit"/>
+                        <action id="refresh" type="list_refresh"/>
+                        <action id="remove" type="list_remove"/>
+                    </actions>
+                    <columns resizable="true">
+                        <column property="name"/>
+                        <column property="brand"/>
+                        <column property="isEnabled"/>
+                        <column property="region"/>
+                    </columns>
+                </dataGrid>
+            </vbox>
+            <vbox height="100%" width="50%" padding="false">
+                <fragment id="mapFragment"
+                          class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+            </vbox>
         </hbox>
-        <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button id="createButton" action="fuelStationsDataGrid.create"/>
-            <button id="editButton" action="fuelStationsDataGrid.edit"/>
-            <button id="refreshButton" action="fuelStationsDataGrid.refresh"/>
-            <button id="removeButton" action="fuelStationsDataGrid.remove"/>
-            <simplePagination id="pagination" dataLoader="fuelStationsDl"/>
-        </hbox>
-        <dataGrid id="fuelStationsDataGrid"
-                  width="100%"
-                  minHeight="20em"
-                  dataContainer="fuelStationsDc"
-                  columnReorderingAllowed="true"
-                  selectionMode="MULTI">
-            <actions>
-                <action id="create" type="list_create"/>
-                <action id="edit" type="list_edit"/>
-                <action id="refresh" type="list_refresh"/>
-                <action id="remove" type="list_remove"/>
-            </actions>
-            <columns resizable="true">
-                <column property="stationId"/>
-                <column property="name"/>
-                <column property="brand"/>
-                <column property="isEnabled"/>
-                <column property="region"/>
-                <column property="address"/>
-                <column property="latitude"/>
-                <column property="longitude"/>
-            </columns>
-        </dataGrid>
         <hbox id="lookupActions" visible="false">
             <button id="selectButton" action="selectAction"/>
             <button id="discardButton" action="discardAction"/>

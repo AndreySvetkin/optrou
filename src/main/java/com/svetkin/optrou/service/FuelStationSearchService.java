@@ -58,8 +58,6 @@ public class FuelStationSearchService {
                 order by distance;
             """;
 
-
-
     @PersistenceContext
     private EntityManager entityManager;
 

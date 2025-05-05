@@ -12,7 +12,10 @@ import io.jmix.maps.converter.wkt.PointWKTConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -60,8 +63,9 @@ public class FuelStation {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "BRAND")
-    private String brand;
+    @JoinColumn(name = "BRAND_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FuelStationBrand brand;
 
     @Column(name = "IS_ENABLED")
     private Boolean isEnabled;
@@ -86,6 +90,14 @@ public class FuelStation {
     @Composition
     @OneToMany(mappedBy = "fuelStation")
     private List<FuelStationPrice> prices;
+
+    public void setBrand(FuelStationBrand brand) {
+        this.brand = brand;
+    }
+
+    public FuelStationBrand getBrand() {
+        return brand;
+    }
 
     public String getRegion() {
         return region;
@@ -117,14 +129,6 @@ public class FuelStation {
 
     public Point getLocation() {
         return location;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
     public Boolean getIsEnabled() {
