@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="4" author="optrou">
+        <dropColumn columnName="LONGITUDE" tableName="OPTROU_VEHICLE"/>
+    </changeSet>
+    <changeSet id="5" author="optrou">
+        <addColumn tableName="OPTROU_VEHICLE">
+            <column name="LONGITUDE" type="DOUBLE"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

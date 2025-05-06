@@ -9,6 +9,7 @@ import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.maps.converter.wkt.PointWKTConverter;
+import io.jmix.maps.utils.GeometryUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -112,6 +113,9 @@ public class FuelStation {
     }
 
     public void setLongitude(Double longitude) {
+        if (longitude != null && this.latitude != null) {
+            setLocation(GeometryUtils.createPoint(this.latitude, longitude));
+        }
         this.longitude = longitude;
     }
 
@@ -120,6 +124,9 @@ public class FuelStation {
     }
 
     public void setLatitude(Double latitude) {
+        if (latitude != null && this.longitude != null) {
+            setLocation(GeometryUtils.createPoint(latitude, this.longitude));
+        }
         this.latitude = latitude;
     }
 

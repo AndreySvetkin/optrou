@@ -63,15 +63,15 @@
                         <column property="value"/>
                     </columns>
                 </dataGrid>
+                <hbox id="detailActions">
+                    <button id="saveAndCloseButton" action="saveAction"/>
+                    <button id="closeButton" action="closeAction"/>
+                </hbox>
             </vbox>
             <vbox height="100%" width="50%" padding="false">
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
-        </hbox>
-        <hbox id="detailActions">
-            <button id="saveAndCloseButton" action="saveAction"/>
-            <button id="closeButton" action="closeAction"/>
         </hbox>
     </layout>
 </view>

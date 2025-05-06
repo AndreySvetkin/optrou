@@ -11,6 +11,7 @@ import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;
 import io.jmix.flowui.view.*;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "fuelStations/:id", layout = MainView.class)
@@ -36,9 +37,12 @@ public class FuelStationDetailView extends StandardDetailView<FuelStation> {
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
-        FuelStation editedEntity = getEditedEntity();
-        mapFragment.setCenter(new Coordinate(editedEntity.getLatitude(), editedEntity.getLongitude()));
-        mapFragment.setZoom(10.0);
+        Point location = getEditedEntity().getLocation();
+
+        if (location != null) {
+            mapFragment.setCenter(new Coordinate(location.getCoordinate()));
+            mapFragment.setZoom(10.0);
+        }
     }
 
     @Subscribe("processFuelStationPrices")

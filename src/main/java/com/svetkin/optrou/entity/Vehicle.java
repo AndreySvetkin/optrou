@@ -13,6 +13,7 @@ import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.JmixProperty;
+import io.jmix.maps.utils.GeometryUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -88,7 +89,7 @@ public class Vehicle {
     private Double latitude;
 
     @Column(name = "LONGITUDE")
-    private String longitude;
+    private Double longitude;
 
     @DependsOnProperties({"tanks"})
     @JmixProperty
@@ -154,12 +155,15 @@ public class Vehicle {
         this.driverLicenseCategory = driverLicenseCategory == null ? null : driverLicenseCategory.getId();
     }
 
-    public String getLongitude() {
-        return longitude;
+    public void setLongitude(Double longitude) {
+        if (longitude != null && this.latitude != null) {
+            setLocation(GeometryUtils.createPoint(this.latitude, longitude));
+        }
+        this.longitude = longitude;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
     public Double getLatitude() {
@@ -167,6 +171,9 @@ public class Vehicle {
     }
 
     public void setLatitude(Double latitude) {
+        if (latitude != null && this.longitude != null) {
+            setLocation(GeometryUtils.createPoint(latitude, this.longitude));
+        }
         this.latitude = latitude;
     }
 
