@@ -25,12 +25,6 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <entityPicker id="refuellingPlanField" property="refuellingPlan">
-                <actions>
-                    <action id="entityLookup" type="entity_lookup"/>
-                    <action id="entityClear" type="entity_clear"/>
-                </actions>
-            </entityPicker>
             <entityPicker id="fuelStationPriceField" property="fuelStationPrice">
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>

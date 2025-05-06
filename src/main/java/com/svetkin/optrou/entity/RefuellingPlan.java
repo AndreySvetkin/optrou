@@ -8,6 +8,7 @@ import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import io.jmix.core.metamodel.annotation.JmixProperty;
 import jakarta.persistence.Column;
@@ -26,7 +27,6 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @JmixEntity
 @Table(name = "OPTROU_REFUELLING_PLAN", indexes = {
@@ -47,6 +47,7 @@ public class RefuellingPlan {
     @Column(name = "CREATED_BY")
     private String createdBy;
 
+    @InstanceName
     @CreatedDate
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;

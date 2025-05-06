@@ -35,7 +35,7 @@
     </actions>
     <layout>
         <hbox height="100%" width="100%">
-            <vbox height="100%" width="40%">
+            <vbox height="100%" width="50%">
                 <genericFilter id="genericFilter"
                                dataLoader="routesDl">
                     <properties include=".*"/>
@@ -72,7 +72,7 @@
                     <button id="discardButton" action="discardAction"/>
                 </hbox>
             </vbox>
-            <vbox height="100%" width="60%">
+            <vbox height="100%" width="50%">
                 <fragment id="mapFragment" class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
         </hbox>

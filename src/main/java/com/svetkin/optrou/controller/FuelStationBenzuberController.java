@@ -18,8 +18,6 @@ public class FuelStationBenzuberController {
 
     private static final String API_KEY = "apikey";
 
-
-
     @Value("${optrou.benzuber.base-url}")
     private String baseUrl;
 

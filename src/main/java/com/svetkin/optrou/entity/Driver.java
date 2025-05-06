@@ -1,11 +1,10 @@
 package com.svetkin.optrou.entity;
 
-import io.jmix.core.DeletePolicy;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +49,7 @@ public class Driver {
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
 
+    @InstanceName
     @Column(name = "FULL_NAME", nullable = false)
     @NotNull
     private String fullName;

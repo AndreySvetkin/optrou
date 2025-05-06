@@ -112,7 +112,6 @@ public class RouteDetailView extends StandardDetailView<Route> {
         routeFuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeFuelStationsDc, "fuelStation.location");
         routeFuelStationsVectorLayer.setVisible(false);
 
-        map.onEnabledStateChanged(true);
         map.addSingleClickListener(this::onMapSingleClick);
     }
 

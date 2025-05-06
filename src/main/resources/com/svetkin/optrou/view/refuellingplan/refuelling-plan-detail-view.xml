@@ -54,6 +54,9 @@
                 <action id="remove" type="list_remove"/>
             </actions>
             <columns>
+                <column property="fuelStationPrice.fuelStation"/>
+                <column property="fuelStationPrice.fuelType"/>
+                <column property="fuelStationPrice.value"/>
                 <column property="volume"/>
             </columns>
         </dataGrid>

@@ -71,10 +71,10 @@
                                     <action id="entityClear" type="entity_clear"/>
                                 </actions>
                             </entityPicker>
-                            <textField id="modelField" property="vehicle.model"/>
-                            <textField id="fuelTypeField" property="vehicle.fuelType"/>
-                            <textField id="capacityField" property="vehicle.capacity"/>
-                            <textField id="remainingFuelField" property="vehicle.remainingFuel"/>
+                            <textField id="modelField" property="vehicle.model" readOnly="true"/>
+                            <textField id="fuelTypeField" property="vehicle.fuelType" readOnly="true"/>
+                            <textField id="capacityField" property="vehicle.capacity" readOnly="true"/>
+                            <textField id="remainingFuelField" property="vehicle.remainingFuel" readOnly="true"/>
                         </formLayout>
                     </vbox>
                 </tab>
@@ -112,11 +112,7 @@
                     </vbox>
                 </tab>
                 <tab id="refuellingPlanTab" label="Планы заправок">
-                    <formLayout>
-                        <responsiveSteps>
-                            <responsiveStep minWidth="0" columns="1"/>
-                            <responsiveStep minWidth="40em" columns="2"/>
-                        </responsiveSteps>
+                    <vbox height="100%" width="100%" padding="false">
                         <hbox id="buttonsPanel" classNames="buttons-panel">
                             <button action="refuellingPlansDataGrid.create" enabled="false"/>
                             <button action="refuellingPlansDataGrid.remove"/>
@@ -141,7 +137,7 @@
                                 <column property="refuellingsVolume"/>
                             </columns>
                         </dataGrid>
-                    </formLayout>
+                    </vbox>
                 </tab>
             </tabSheet>
             <vbox height="100%" width="50%">

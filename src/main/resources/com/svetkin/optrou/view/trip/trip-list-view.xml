@@ -41,7 +41,7 @@
     </actions>
     <layout>
         <hbox height="100%" width="100%">
-            <vbox height="100%" width="40%">
+            <vbox height="100%" width="50%">
                 <genericFilter id="genericFilter"
                                dataLoader="tripsDl">
                     <properties include=".*"/>
@@ -69,12 +69,7 @@
                         <column property="name"/>
                         <column property="dateStart"/>
                         <column property="planningDateEnd"/>
-                        <column property="factDateEnd"/>
                         <column property="length"/>
-                        <column property="route"/>
-                        <column property="driver"/>
-                        <column property="logist"/>
-                        <column property="vehicle"/>
                     </columns>
                 </dataGrid>
                 <hbox id="lookupActions" visible="false">
@@ -82,7 +77,7 @@
                     <button id="discardButton" action="discardAction"/>
                 </hbox>
             </vbox>
-            <vbox height="100%" width="60%">
+            <vbox height="100%" width="50%">
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
