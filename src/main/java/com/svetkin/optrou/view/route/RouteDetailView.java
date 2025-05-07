@@ -13,6 +13,7 @@ import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import io.jmix.core.DataManager;
+import io.jmix.core.EntitySet;
 import io.jmix.core.EntityStates;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.Views;
@@ -101,7 +102,6 @@ public class RouteDetailView extends StandardDetailView<Route> {
     private VectorLayer routeVectorLayer;
     private VectorLayer controlPointsVectorLayer;
     private VectorLayer routeFuelStationsVectorLayer;
-
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -199,7 +199,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
             return;
         }
 
-        saveAction.execute();
+        closeWithSave();
     }
 
     private void showEmptyControlPointsNotification() {
@@ -219,8 +219,10 @@ public class RouteDetailView extends StandardDetailView<Route> {
             return;
         }
 
-        List<RouteFuelStation> routeFuelStations = fuelStationSearchService.getFuelStations(editedEntity) ;
-        editedEntity.setFuelStations(routeFuelStations);
+        List<RouteFuelStation> routeFuelStations = fuelStationSearchService.getFuelStations(editedEntity);
+        EntitySet mergedSet = dataContext.merge(routeFuelStations);
+        editedEntity.setFuelStations(mergedSet.getAll(RouteFuelStation.class).stream().toList());
+
         notifications.create("Найдено АЗС : %s".formatted(routeFuelStations.size()))
                 .build()
                 .open();

@@ -12,10 +12,12 @@
                     <property name="route" fetchPlan="_base"/>
                     <property name="fuelStation" fetchPlan="_base"/>
                 </property>
+                <property name="trips" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="routeDl"/>
             <collection id="controlPointsDc" property="controlPoints"/>
             <collection id="routeFuelStationsDc" property="fuelStations"/>
+            <collection id="routeTripsDc" property="trips"/>
         </instance>
     </data>
     <facets>
@@ -90,6 +92,21 @@
                                 </columns>
                             </dataGrid>
                         </formLayout>
+                    </tab>
+                    <tab id="routeTripsTab" label="msg://routeTripsTab.label">
+                        <dataGrid id="routeTripsDataGrid"
+                                  width="100%"
+                                  height="100%"
+                                  minHeight="20em"
+                                  dataContainer="routeTripsDc"
+                                  selectionMode="NONE">
+                            <columns resizable="true">
+                                <column property="name"/>
+                                <column property="createdDate"/>
+                                <column property="dateStart"/>
+                                <column property="factDateEnd"/>
+                            </columns>
+                        </dataGrid>
                     </tab>
                 </tabSheet>
                 <hbox id="detailActions">

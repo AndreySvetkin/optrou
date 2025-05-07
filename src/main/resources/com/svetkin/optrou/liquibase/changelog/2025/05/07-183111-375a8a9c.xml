@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="optrou">
+        <dropForeignKeyConstraint baseTableName="OPTROU_ROUTE_FUEL_STATION"
+                                  constraintName="FK_OPTROU_ROUTE_FUEL_STATION_ON_ROUTE"/>
+    </changeSet>
+    <changeSet id="2" author="optrou">
+        <dropForeignKeyConstraint baseTableName="OPTROU_ROUTE_POINT" constraintName="FK_OPTROU_ROUTE_POINT_ON_ROUTE"/>
+    </changeSet>
+    <changeSet id="3" author="optrou">
+        <addColumn tableName="OPTROU_ROUTE">
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="7" author="optrou">
+        <addForeignKeyConstraint baseColumnNames="ROUTE_ID" baseTableName="OPTROU_ROUTE_FUEL_STATION"
+                                 constraintName="FK_OPTROU_ROUTE_FUEL_STATION_ON_ROUTE" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_ROUTE"/>
+    </changeSet>
+    <changeSet id="8" author="optrou">
+        <addForeignKeyConstraint baseColumnNames="ROUTE_ID" baseTableName="OPTROU_ROUTE_POINT"
+                                 constraintName="FK_OPTROU_ROUTE_POINT_ON_ROUTE" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_ROUTE"/>
+    </changeSet>
+</databaseChangeLog>

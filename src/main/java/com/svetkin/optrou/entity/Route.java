@@ -1,5 +1,7 @@
 package com.svetkin.optrou.entity;
 
+import io.jmix.core.annotation.DeletedBy;
+import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
@@ -40,6 +42,14 @@ public class Route {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
+    @DeletedBy
+    @Column(name = "DELETED_BY")
+    private String deletedBy;
+
+    @DeletedDate
+    @Column(name = "DELETED_DATE")
+    private OffsetDateTime deletedDate;
+
     @InstanceName
     @Column(name = "NAME", nullable = false)
     @NotNull
@@ -59,6 +69,33 @@ public class Route {
 
     @OneToMany(mappedBy = "route")
     private List<RouteFuelStation> fuelStations;
+
+    @OneToMany(mappedBy = "route")
+    private List<Trip> trips;
+
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
+    }
+
+    public OffsetDateTime getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(OffsetDateTime deletedDate) {
+        this.deletedDate = deletedDate;
+    }
+
+    public String getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(String deletedBy) {
+        this.deletedBy = deletedBy;
+    }
 
     public Double getLength() {
         return length;
