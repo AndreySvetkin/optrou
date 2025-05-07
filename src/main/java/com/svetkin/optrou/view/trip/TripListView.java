@@ -3,6 +3,7 @@ package com.svetkin.optrou.view.trip;
 import com.svetkin.optrou.entity.Route;
 import com.svetkin.optrou.entity.RoutePoint;
 import com.svetkin.optrou.entity.Trip;
+import com.svetkin.optrou.entity.TripPoint;
 import com.svetkin.optrou.repository.TripRepository;
 import com.svetkin.optrou.service.TripCreateService;
 import com.svetkin.optrou.view.main.MainView;
@@ -16,6 +17,7 @@ import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
+import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;
@@ -31,6 +33,7 @@ import io.jmix.flowui.view.navigation.DetailViewNavigator;
 import io.jmix.flowui.view.navigation.ViewNavigationSupport;
 import io.jmix.mapsflowui.component.GeoMap;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @com.vaadin.flow.router.Route(value = "trips", layout = MainView.class)
@@ -44,37 +47,35 @@ public class TripListView extends StandardListView<Trip> {
     private TripCreateService tripCreateService;
     @Autowired
     private Dialogs dialogs;
-    @Autowired
-    private ViewNavigators viewNavigators;
 
     @ViewComponent
-    private InstanceLoader<Route> routeDl;
+    private CollectionContainer<Trip> tripsDc;
     @ViewComponent
-    private InstanceContainer<Route> routeDc;
-    @ViewComponent
-    private CollectionPropertyContainer<RoutePoint> controlPointsDc;
+    private CollectionPropertyContainer<TripPoint> controlPointsDc;
     @ViewComponent
     private MapFragment mapFragment;
 
     private GeoMap map;
-
+    @ViewComponent
+    private InstanceContainer<Trip> tripDc;
 
     @Subscribe
     public void onInit(final InitEvent event) {
         map = mapFragment.getMap();
-        mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
+
+        mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
         mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
     }
 
     @Subscribe("tripsDataGrid")
     public void onTripsDataGridCellFocus(final CellFocusEvent<Trip> event) {
         event.getItem().ifPresent(trip -> {
-            routeDl.setEntityId(trip.getRoute().getId());
-            routeDl.load();
-            Route loadedRoute = routeDc.getItem();
+            tripDc.setItem(trip);
 
-            if (loadedRoute.getLine() != null) {
-                map.setCenter(new Coordinate(loadedRoute.getLine().getCoordinateN(0)));
+            LineString line = trip.getLine();
+            if (line != null) {
+                mapFragment.setCenter(new Coordinate(line.getCoordinateN(0)));
+                mapFragment.setZoom(7.0);
             }
         });
     }

@@ -54,10 +54,10 @@
                 <action id="remove" type="list_remove"/>
             </actions>
             <columns>
-                <column property="fuelStationPrice.fuelStation"/>
-                <column property="fuelStationPrice.fuelType"/>
-                <column property="fuelStationPrice.value"/>
-                <column property="volume"/>
+                <column property="fuelStationPrice.fuelStation" filterable="true"/>
+                <column property="fuelStationPrice.fuelType" filterable="true"/>
+                <column property="fuelStationPrice.value" filterable="true"/>
+                <column property="volume" filterable="true"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">

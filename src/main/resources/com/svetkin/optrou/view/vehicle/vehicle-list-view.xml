@@ -52,12 +52,12 @@
                         <action id="remove" type="list_remove"/>
                     </actions>
                     <columns resizable="true">
-                        <column property="licensePlate"/>
-                        <column property="driverLicenseCategory"/>
-                        <column property="fuelType"/>
-                        <column property="fuelConsumption"/>
-                        <column property="latitude"/>
-                        <column property="longitude"/>
+                        <column property="licensePlate" filterable="true"/>
+                        <column property="driverLicenseCategory" filterable="true"/>
+                        <column property="fuelType" filterable="true"/>
+                        <column property="fuelConsumption" filterable="true"/>
+                        <column property="latitude" filterable="true"/>
+                        <column property="longitude" filterable="true"/>
                     </columns>
                 </dataGrid>
                 <hbox id="lookupActions" visible="false">

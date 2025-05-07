@@ -62,10 +62,10 @@
                         <action id="remove" type="list_remove"/>
                     </actions>
                     <columns resizable="true">
-                        <column property="name"/>
-                        <column property="brand"/>
-                        <column property="isEnabled"/>
-                        <column property="region"/>
+                        <column property="name" filterable="true"/>
+                        <column property="brand" filterable="true"/>
+                        <column property="isEnabled" filterable="true"/>
+                        <column property="region" filterable="true"/>
                     </columns>
                 </dataGrid>
             </vbox>

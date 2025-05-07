@@ -27,7 +27,7 @@ import org.locationtech.jts.geom.Point;
 @ViewController(id = "optrou_Vehicle.list")
 @ViewDescriptor(path = "vehicle-list-view.xml")
 @LookupComponent("vehiclesDataGrid")
-@DialogMode(width = "64em")
+@DialogMode(width = "80em")
 public class VehicleListView extends StandardListView<Vehicle> {
 
     @ViewComponent
@@ -57,6 +57,7 @@ public class VehicleListView extends StandardListView<Vehicle> {
             Point location = vehicle.getLocation();
             if (location != null) {
                 mapFragment.setCenter(location.getCoordinate());
+                mapFragment.setZoom(5.0);
             }
         });
     }

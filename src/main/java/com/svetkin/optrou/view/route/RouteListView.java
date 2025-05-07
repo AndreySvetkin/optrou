@@ -60,6 +60,11 @@ import java.util.Vector;
 @DialogMode(width = "64em")
 public class RouteListView extends StandardListView<Route> {
 
+    @Autowired
+    private Notifications notifications;
+    @Autowired
+    private TripCreateService tripCreateService;
+
     @ViewComponent
     private InstanceContainer<Route> routeDc;
     @ViewComponent
@@ -70,13 +75,6 @@ public class RouteListView extends StandardListView<Route> {
     private MapFragment mapFragment;
     @ViewComponent
     private DataGrid<Route> routesDataGrid;
-
-    @Autowired
-    private Notifications notifications;
-    @Autowired
-    private ViewNavigators viewNavigators;
-    @Autowired
-    private TripCreateService tripCreateService;
 
     private GeoMap map;
 
@@ -91,12 +89,11 @@ public class RouteListView extends StandardListView<Route> {
     @Subscribe("routesDataGrid")
     public void onRoutesDataGridCellFocus(final CellFocusEvent<Route> event) {
         event.getItem().ifPresent(route -> {
-            routeDl.setEntityId(route.getId());
-            routeDl.load();
-            Route loadedRoute = routeDc.getItem();
+            routeDc.setItem(route);
 
-            if (loadedRoute.getLine() != null) {
-                map.setCenter(new Coordinate(loadedRoute.getLine().getCoordinateN(0)));
+            if (route.getLine() != null) {
+                mapFragment.setCenter(new Coordinate(route.getLine().getCoordinateN(0)));
+                mapFragment.setZoom(7.0);
             }
         });
     }

@@ -12,6 +12,7 @@
                 <property name="logist" fetchPlan="_base"/>
                 <property name="vehicle" fetchPlan="_base"/>
                 <property name="refuellingPlans" fetchPlan="_base"/>
+                <property name="controlPoints" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="tripsDl" readOnly="true">
                 <query>
@@ -19,13 +20,8 @@
                 </query>
             </loader>
         </collection>
-        <instance id="routeDc"
-                  class="com.svetkin.optrou.entity.Route">
-            <fetchPlan extends="_base">
-                <property name="controlPoints" fetchPlan="_base"/>
-            </fetchPlan>
-            <loader id="routeDl"/>
-            <collection id="controlPointsDc" property="controlPoints"/>
+        <instance id="tripDc" class="com.svetkin.optrou.entity.Trip">
+             <collection id="controlPointsDc" property="controlPoints"/>
         </instance>
     </data>
     <facets>
@@ -66,10 +62,10 @@
                         <action id="remove" type="list_remove"/>
                     </actions>
                     <columns resizable="true">
-                        <column property="name"/>
-                        <column property="dateStart"/>
-                        <column property="planningDateEnd"/>
-                        <column property="length"/>
+                        <column property="name" filterable="true"/>
+                        <column property="dateStart" filterable="true"/>
+                        <column property="planningDateEnd" filterable="true"/>
+                        <column property="length" filterable="true"/>
                     </columns>
                 </dataGrid>
                 <hbox id="lookupActions" visible="false">

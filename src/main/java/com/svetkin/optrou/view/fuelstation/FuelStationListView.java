@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ViewController(id = "optrou_FuelStation.list")
 @ViewDescriptor(path = "fuel-station-list-view.xml")
 @LookupComponent("fuelStationsDataGrid")
-@DialogMode(width = "64em")
+@DialogMode(width = "80em")
 public class FuelStationListView extends StandardListView<FuelStation> {
 
     @Autowired
@@ -59,6 +59,7 @@ public class FuelStationListView extends StandardListView<FuelStation> {
             Point location = fuelStation.getLocation();
             if (location != null) {
                 mapFragment.setCenter(location.getCoordinate());
+                mapFragment.setZoom(5.0);
             }
         });
     }

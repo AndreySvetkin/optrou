@@ -5,7 +5,9 @@
     <data>
         <collection id="routesDc"
                     class="com.svetkin.optrou.entity.Route">
-            <fetchPlan extends="_base"/>
+            <fetchPlan extends="_base">
+                <property name="controlPoints" fetchPlan="_base"/>
+            </fetchPlan>
             <loader id="routesDl" readOnly="true">
                 <query>
                     <![CDATA[select e from optrou_Route e]]>
@@ -14,10 +16,6 @@
         </collection>
         <instance id="routeDc"
                   class="com.svetkin.optrou.entity.Route">
-            <fetchPlan extends="_base">
-                <property name="controlPoints" fetchPlan="_base"/>
-            </fetchPlan>
-            <loader id="routeDl"/>
             <collection id="controlPointsDc" property="controlPoints"/>
         </instance>
     </data>
@@ -64,9 +62,10 @@
                     </actions>
                     <columns resizable="true">
                         <column property="name"/>
+                        <column property="createdDate"/>
+                        <column property="length"/>
                     </columns>
                 </dataGrid>
-
                 <hbox id="lookupActions" visible="false">
                     <button id="selectButton" action="selectAction"/>
                     <button id="discardButton" action="discardAction"/>

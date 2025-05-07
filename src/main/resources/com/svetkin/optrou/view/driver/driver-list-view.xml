@@ -52,8 +52,9 @@
                 <action id="remove" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="fullName"/>
-                <column property="phoneNumber"/>
+                <column property="fullName" filterable="true"/>
+                <column property="phoneNumber" filterable="true"/>
+                <column property="createdDate" filterable="true"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">
