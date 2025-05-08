@@ -59,6 +59,18 @@ public class Refuelling {
     @NotNull
     private Double volume;
 
+    @Column(name = "PRICE", nullable = false)
+    @NotNull
+    private Double price;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public Double getVolume() {
         return volume;
     }

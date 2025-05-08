@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="optrou">
+        <addColumn tableName="OPTROU_REFUELLING_PLAN">
+            <column name="FUEL_TYPE" type="INT"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="FUEL_TYPE" tableName="OPTROU_REFUELLING_PLAN"/>
+    </changeSet>
+    <changeSet id="2" author="optrou">
+        <addColumn tableName="OPTROU_ROUTE">
+            <column name="LENGTH" type="DOUBLE"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="LENGTH" defaultNullValue="0" tableName="OPTROU_ROUTE"/>
+    </changeSet>
+    <changeSet id="3" author="optrou">
+        <addColumn tableName="OPTROU_TRIP">
+            <column name="LINE" type="varchar(4000 BYTE)"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="LINE" tableName="OPTROU_TRIP"/>
+    </changeSet>
+    <changeSet id="4" author="optrou">
+        <addColumn tableName="OPTROU_REFUELLING">
+            <column name="PRICE" type="DOUBLE"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="PRICE" defaultNullValue="0" tableName="OPTROU_REFUELLING"/>
+    </changeSet>
+    <changeSet id="8" author="optrou">
+        <dropColumn columnName="VALUE_" tableName="OPTROU_FUEL_STATION_PRICE"/>
+    </changeSet>
+    <changeSet id="9" author="optrou">
+        <addColumn tableName="OPTROU_FUEL_STATION_PRICE">
+            <column name="VALUE_" type="DOUBLE">
+                <constraints nullable="false" validateNullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

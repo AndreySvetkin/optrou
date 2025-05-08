@@ -7,14 +7,21 @@ import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -57,9 +64,9 @@ public class FuelStationPrice {
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
 
-    @Column(name = "VALUE_", nullable = false, precision = 19, scale = 2)
     @NotNull
-    private BigDecimal value;
+    @Column(name = "VALUE_", nullable = false)
+    private Double value;
 
     @Column(name = "FUEL_TYPE", nullable = false)
     @NotNull
@@ -69,6 +76,14 @@ public class FuelStationPrice {
     @JoinColumn(name = "FUEL_STATION_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private FuelStation fuelStation;
+
+    public void setValue(Double value) {
+        this.value = value;
+    }
+
+    public Double getValue() {
+        return value;
+    }
 
     public FuelStation getFuelStation() {
         return fuelStation;
@@ -84,14 +99,6 @@ public class FuelStationPrice {
 
     public void setFuelType(FuelType fuelType) {
         this.fuelType = fuelType == null ? null : fuelType.getId();
-    }
-
-    public BigDecimal getValue() {
-        return value;
-    }
-
-    public void setValue(BigDecimal value) {
-        this.value = value;
     }
 
     public OffsetDateTime getDeletedDate() {

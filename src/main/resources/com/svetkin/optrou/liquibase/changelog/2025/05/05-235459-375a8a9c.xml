@@ -96,17 +96,22 @@
                                  referencedTableName="OPTROU_TRIP"/>
     </changeSet>
     <changeSet id="7" author="optrou">
+        <dropColumn columnName="brand" tableName="optrou_fuel_station"/>
+    </changeSet>
+    <changeSet id="8" author="optrou">
+        <addColumn tableName="OPTROU_FUEL_STATION">
+            <column name="BRAND_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="9" author="optrou">
         <addForeignKeyConstraint baseColumnNames="BRAND_ID" baseTableName="OPTROU_FUEL_STATION"
                                  constraintName="FK_OPTROU_FUEL_STATION_ON_BRAND" referencedColumnNames="ID"
                                  referencedTableName="OPTROU_FUEL_STATION_BRAND"/>
     </changeSet>
-    <changeSet id="11" author="optrou">
-        <dropColumn columnName="brand" tableName="optrou_fuel_station"/>
-    </changeSet>
-    <changeSet id="12" author="optrou">
+    <changeSet id="10" author="optrou">
         <addNotNullConstraint columnDataType="DOUBLE" columnName="DISTANCE" tableName="OPTROU_TRIP" validate="true"/>
     </changeSet>
-    <changeSet id="13" author="optrou">
+    <changeSet id="11" author="optrou">
         <addNotNullConstraint columnDataType="varchar(4000 BYTE)" columnName="LINE" tableName="OPTROU_ROUTE"
                               validate="true"/>
     </changeSet>

@@ -16,7 +16,7 @@ public class FuelStationPriceMapper {
 
     public FuelStationPrice mapDtoToEntity(FuelStationPrice fuelStationPrice, FuelStationPriceDto fuelStationPriceDto) {
         fuelStationPrice.setFuelType(FuelType.fromBenzuberId(fuelStationPriceDto.getFuelTypeId()));
-        fuelStationPrice.setValue(BigDecimal.valueOf(fuelStationPriceDto.getPrice()));
+        fuelStationPrice.setValue(fuelStationPriceDto.getPrice());
         return fuelStationPrice;
     }
 }

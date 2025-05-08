@@ -1,5 +1,6 @@
 package com.svetkin.optrou.entity;
 
+import com.svetkin.optrou.entity.type.FuelType;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
@@ -21,6 +22,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -65,10 +67,22 @@ public class RefuellingPlan {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
+    @Column(name = "FUEL_TYPE", nullable = false)
+    @NotNull
+    private Integer fuelType;
+
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "refuellingPlan")
     private List<Refuelling> refuellings;
+
+    public FuelType getFuelType() {
+        return fuelType == null ? null : FuelType.fromId(fuelType);
+    }
+
+    public void setFuelType(FuelType fuelType) {
+        this.fuelType = fuelType == null ? null : fuelType.getId();
+    }
 
     @DependsOnProperties({"refuellings"})
     @JmixProperty

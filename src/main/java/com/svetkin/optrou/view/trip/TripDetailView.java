@@ -3,6 +3,7 @@ package com.svetkin.optrou.view.trip;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.TripPoint;
+import com.svetkin.optrou.service.RefuellingPlanCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
@@ -49,6 +50,8 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private DataContext dataContext;
     @Autowired
     private Notifications notifications;
+    @Autowired
+    private RefuellingPlanCreateService refuellingPlanCreateService;
 
     public void setTrip(Trip trip) {
         dataContext.clear();
@@ -104,5 +107,10 @@ public class TripDetailView extends StandardDetailView<Trip> {
         if (value != null && startDate != null && value.isBefore(startDate)) {
             throw new ValidationException("Дата окончания должна быть позже даты начала");
         }
+    }
+
+    @Subscribe("refuellingPlansDataGrid.create")
+    public void onRefuellingPlansDataGridCreate(final ActionPerformedEvent event) {
+        refuellingPlanCreateService.createRefuellingPlan(getEditedEntity());
     }
 }
