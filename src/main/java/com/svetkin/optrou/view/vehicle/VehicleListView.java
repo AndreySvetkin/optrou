@@ -57,7 +57,7 @@ public class VehicleListView extends StandardListView<Vehicle> {
             Point location = vehicle.getLocation();
             if (location != null) {
                 mapFragment.setCenter(location.getCoordinate());
-                mapFragment.setZoom(5.0);
+                mapFragment.setZoom(10.0);
             }
         });
     }

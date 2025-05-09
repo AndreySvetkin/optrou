@@ -11,8 +11,6 @@
         <item view="optrou_Trip.list" title="msg://com.svetkin.optrou.view.trip/tripListView.title"/>
         <item view="optrou_FuelStationBrand.list"
               title="msg://com.svetkin.optrou.view.fuelstationbrand/fuelStationBrandListView.title"/>
-        <item view="optrou_RefuellingPlan.list"
-              title="msg://com.svetkin.optrou.view.refuellingplan/refuellingPlanListView.title"/>
     </menu>
 
 </menu-config>

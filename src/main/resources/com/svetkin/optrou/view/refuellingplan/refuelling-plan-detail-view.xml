@@ -7,11 +7,23 @@
                   class="com.svetkin.optrou.entity.RefuellingPlan">
             <fetchPlan extends="_base">
                 <property name="trip" fetchPlan="_base"/>
-                <property name="refuellings" fetchPlan="_base"/>
+                <property name="refuellings" fetchPlan="_base">
+                    <property name="fuelStationPrice" fetchPlan="_base">
+                        <property name="fuelStation" fetchPlan="_base"/>
+                    </property>
+                </property>
             </fetchPlan>
             <loader id="refuellingPlanDl"/>
-            <collection id="refuellingsDc" property="refuellings"/>
         </instance>
+        <collection id="refuellingsDc"
+                    class="com.svetkin.optrou.entity.Refuelling">
+            <fetchPlan extends="_base">
+                <property name="fuelStationPrice" fetchPlan="_base">
+                    <property name="fuelStation" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader id="refuellingsDl"/>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -35,17 +47,14 @@
         </formLayout>
         <h4 text="msg://com.svetkin.optrou.entity/RefuellingPlan.refuellings"/>
         <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button action="refuellingsDataGrid.create"/>
             <button action="refuellingsDataGrid.edit"/>
             <button action="refuellingsDataGrid.remove"/>
         </hbox>
-        <dataGrid id="refuellingsDataGrid" dataContainer="refuellingsDc" width="100%" minHeight="20em">
+        <dataGrid id="refuellingsDataGrid"
+                  dataContainer="refuellingsDc"
+                  width="100%"
+                  minHeight="20em">
             <actions>
-                <action id="create" type="list_create">
-                    <properties>
-                        <property name="openMode" value="DIALOG"/>
-                    </properties>
-                </action>
                 <action id="edit" type="list_edit">
                     <properties>
                         <property name="openMode" value="DIALOG"/>

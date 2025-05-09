@@ -6,12 +6,16 @@
         <instance id="tripDc"
                   class="com.svetkin.optrou.entity.Trip">
             <fetchPlan extends="_base">
-                <property name="route" fetchPlan="_base">
-                    <property name="controlPoints" fetchPlan="_base"/>
-                </property>
+                <property name="route" fetchPlan="_base"/>
                 <property name="driver" fetchPlan="_base"/>
                 <property name="logist" fetchPlan="_base"/>
                 <property name="vehicle" fetchPlan="_base"/>
+                <property name="controlPoints" fetchPlan="_base"/>
+                <property name="fuelStations" fetchPlan="_base">
+                    <property name="fuelStation" fetchPlan="_base">
+                        <property name="prices" fetchPlan="_base"/>
+                    </property>
+                </property>
                 <property name="refuellingPlans" fetchPlan="_base">
                     <property name="refuellings" fetchPlan="_base">
                         <property name="fuelStationPrice" fetchPlan="_base"/>
@@ -114,17 +118,14 @@
                 <tab id="refuellingPlanTab" label="Планы заправок">
                     <vbox height="100%" width="100%" padding="false">
                         <hbox id="buttonsPanel" classNames="buttons-panel">
-                            <button action="refuellingPlansDataGrid.create" enabled="false"/>
+                            <button action="refuellingPlansDataGrid.create"/>
+                            <button action="refuellingPlansDataGrid.read"/>
                             <button action="refuellingPlansDataGrid.remove"/>
                         </hbox>
                         <dataGrid id="refuellingPlansDataGrid" dataContainer="refuellingPlansDc" width="100%" minHeight="20em">
                             <actions>
-                                <action id="create" type="list_create">
-                                    <properties>
-                                        <property name="openMode" value="DIALOG"/>
-                                    </properties>
-                                </action>
-                                <action id="edit" type="list_edit">
+                                <action id="create" type="list_create"/>
+                                <action id="read" type="list_read">
                                     <properties>
                                         <property name="openMode" value="DIALOG"/>
                                     </properties>

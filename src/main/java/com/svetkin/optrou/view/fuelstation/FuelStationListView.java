@@ -59,7 +59,7 @@ public class FuelStationListView extends StandardListView<FuelStation> {
             Point location = fuelStation.getLocation();
             if (location != null) {
                 mapFragment.setCenter(location.getCoordinate());
-                mapFragment.setZoom(5.0);
+                mapFragment.setZoom(10.0);
             }
         });
     }

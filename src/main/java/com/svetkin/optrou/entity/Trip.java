@@ -25,6 +25,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,7 +98,7 @@ public class Trip {
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "trip")
-    private List<TripFuelStation> fuelStations;
+    private List<TripFuelStation> fuelStations = new ArrayList<>();
 
     @JoinColumn(name = "DRIVER_ID", nullable = false)
     @NotNull
@@ -117,7 +118,7 @@ public class Trip {
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "trip")
-    private List<RefuellingPlan> refuellingPlans;
+    private List<RefuellingPlan> refuellingPlans = new ArrayList<>();
 
     public List<TripFuelStation> getFuelStations() {
         return fuelStations;

@@ -1,11 +1,13 @@
 package com.svetkin.optrou.view.fuelstation;
 
 import com.svetkin.optrou.entity.FuelStation;
+import com.svetkin.optrou.entity.FuelStationPrice;
 import com.svetkin.optrou.service.FuelStationPriceProcessor;
 import com.svetkin.optrou.service.FuelStationProcessor;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
+import io.jmix.flowui.action.list.CreateAction;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;
@@ -29,6 +31,8 @@ public class FuelStationDetailView extends StandardDetailView<FuelStation> {
     private InstanceContainer<FuelStation> fuelStationDc;
     @ViewComponent
     private MapFragment mapFragment;
+    @ViewComponent("fuelStationPricesDataGrid.create")
+    private CreateAction<FuelStationPrice> fuelStationPricesDataGridCreate;
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -43,6 +47,8 @@ public class FuelStationDetailView extends StandardDetailView<FuelStation> {
             mapFragment.setCenter(new Coordinate(location.getCoordinate()));
             mapFragment.setZoom(10.0);
         }
+
+        fuelStationPricesDataGridCreate.setOpenMode(OpenMode.DIALOG);
     }
 
     @Subscribe("processFuelStationPrices")

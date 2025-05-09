@@ -7,17 +7,22 @@ import com.svetkin.optrou.entity.RefuellingPlan;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.Vehicle;
+import com.svetkin.optrou.entity.dto.RefuellingPlanDto;
 import com.svetkin.optrou.entity.type.FuelType;
+import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
 import com.svetkin.optrou.repository.RefuellingPlanRepository;
 import com.svetkin.optrou.repository.RefuellingRepository;
 import com.svetkin.optrou.repository.RouteRepository;
 import com.svetkin.optrou.repository.TripFuelStationRepository;
 import com.svetkin.optrou.repository.TripRepository;
 import io.jmix.core.FetchPlans;
+import io.jmix.core.Metadata;
 import io.jmix.flowui.ViewNavigators;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -29,14 +34,16 @@ public class RefuellingPlanCreateService {
 
     private final RefuellingPlanRepository refuellingPlanRepository;
     private final RefuellingRepository refuellingRepository;
+    private final Metadata metadata;
 
     public RefuellingPlanCreateService(RefuellingPlanRepository refuellingPlanRepository,
-                                       RefuellingRepository refuellingRepository) {
+                                       RefuellingRepository refuellingRepository, Metadata metadata) {
         this.refuellingPlanRepository = refuellingPlanRepository;
         this.refuellingRepository = refuellingRepository;
+        this.metadata = metadata;
     }
 
-    public RefuellingPlan createRefuellingPlan(Trip trip) {
+    public RefuellingPlanDto createRefuellingPlan(Trip trip) {
         double length = trip.getLength();
 
         Vehicle vehicle = trip.getVehicle();
@@ -47,6 +54,12 @@ public class RefuellingPlanCreateService {
         double traveledDistance = 0;
         double volume;
 
+        RefuellingPlan refuellingPlan = refuellingPlanRepository.create();
+        refuellingPlan.setTrip(trip);
+        refuellingPlan.setFuelType(fuelType);
+        RefuellingPlanDto refuellingPlanDto = metadata.create(RefuellingPlanDto.class);
+        refuellingPlanDto.setRefuellingPlan(refuellingPlan);
+
         List<TripFuelStation> fuelStations = trip.getFuelStations().stream()
                 .filter(fuelStation -> isExistsFuelType(fuelType, fuelStation))
                 .toList();
@@ -54,22 +67,37 @@ public class RefuellingPlanCreateService {
         TripFuelStation minimalPricePossibleTraveledFuelStation;
         TripFuelStation nextMinimalPricePossibleTraveledFuelStation;
 
+        if (CollectionUtils.isEmpty(remainingFuelStations)) {
+            refuellingPlanDto.setStatus(RefuellingPlanCreateStatus.IS_EMPTY_FUEL_STATIONS_WITH_FUEL_TYPE);
+            return refuellingPlanDto;
+        }
+
         TripFuelStation basicTripFuelStation;
         double basicTripFuelStationDistance;
 
-        RefuellingPlan refuellingPlan = refuellingPlanRepository.create();
         List<Refuelling> refuellings = new ArrayList<>();
+        refuellingPlan.setRefuellings(refuellings);
 
         while (true) {
-            basicTripFuelStation = remainingFuelStations.get(0);
-            basicTripFuelStationDistance = basicTripFuelStation.getDistance();
-
             if (isPossibleTravel(traveledDistance, remainingFuel, fuelConsumption, length)) {
-                return refuellingPlan;
+                refuellingPlanDto.setStatus(RefuellingPlanCreateStatus.DONE);
+                return refuellingPlanDto;
+            }
+
+            if (CollectionUtils.isNotEmpty(remainingFuelStations)) {
+                basicTripFuelStation = remainingFuelStations.get(0);
+                basicTripFuelStationDistance = basicTripFuelStation.getDistance();
+            } else {
+                FuelStation lastFuelStation = CollectionUtils.isNotEmpty(refuellings)
+                        ? refuellings.get(refuellings.size() - 1).getFuelStationPrice().getFuelStation()
+                        : null;
+                refuellingPlanDto.setLastFuelStation(lastFuelStation);
+                refuellingPlanDto.setStatus(RefuellingPlanCreateStatus.NEXT_STATION_OR_END_ROUTE_FAR_AWAY);
+                return refuellingPlanDto;
             }
 
             if (isPossibleTravel(traveledDistance, remainingFuel, fuelConsumption, basicTripFuelStationDistance)) {
-                volume = capacity - remainingFuel - ((basicTripFuelStationDistance - traveledDistance) / 100 * fuelConsumption);
+                volume = capacity - (remainingFuel - fuelAmountForLength(traveledDistance, basicTripFuelStationDistance, fuelConsumption));
                 remainingFuel = capacity;
                 traveledDistance = basicTripFuelStationDistance;
 
@@ -83,43 +111,38 @@ public class RefuellingPlanCreateService {
                     traveledDistance, remainingFuel, fuelConsumption, remainingFuelStations);
 
             if (minimalPricePossibleTraveledFuelStation == null) {
-                throw new RuntimeException();
+                FuelStation lastFuelStation = CollectionUtils.isNotEmpty(refuellings)
+                        ? refuellings.get(refuellings.size() - 1).getFuelStationPrice().getFuelStation()
+                        : null;
+                refuellingPlanDto.setLastFuelStation(lastFuelStation);
+                refuellingPlanDto.setStatus(RefuellingPlanCreateStatus.NEXT_STATION_OR_END_ROUTE_FAR_AWAY);
+                return refuellingPlanDto;
             }
+
             double minimalPricePossibleTraveledFuelStationDistance = minimalPricePossibleTraveledFuelStation.getDistance();
 
-            if (isPossibleTravel(minimalPricePossibleTraveledFuelStationDistance, capacity, fuelConsumption, length)) {
-                Refuelling refuelling = createRefuelling(
-                        fuelAmountForLength(minimalPricePossibleTraveledFuelStationDistance, length, fuelConsumption),
-                        fuelType,
-                        minimalPricePossibleTraveledFuelStation,
-                        refuellingPlan
-                );
-                refuellings.add(refuelling);
-                return refuellingPlan;
-            } else {
-                nextMinimalPricePossibleTraveledFuelStation = getMinimalPricePossibleTraveledFuelStation(
-                        minimalPricePossibleTraveledFuelStationDistance,
-                        capacity,
-                        fuelConsumption,
-                        remainingFuelStations
-                );
+            nextMinimalPricePossibleTraveledFuelStation = getMinimalPricePossibleTraveledFuelStation(
+                    minimalPricePossibleTraveledFuelStationDistance,
+                    capacity,
+                    fuelConsumption,
+                    remainingFuelStations
+            );
 
-                if (nextMinimalPricePossibleTraveledFuelStation == null) {
-                    throw new RuntimeException();
-                }
+            if (nextMinimalPricePossibleTraveledFuelStation == null) {
+                refuellingPlanDto.setLastFuelStation(minimalPricePossibleTraveledFuelStation.getFuelStation());
+                refuellingPlanDto.setStatus(RefuellingPlanCreateStatus.NEXT_STATION_OR_END_ROUTE_FAR_AWAY);
+                return refuellingPlanDto;
             }
+
+            volume = fuelAmountForLength(minimalPricePossibleTraveledFuelStationDistance, nextMinimalPricePossibleTraveledFuelStation.getDistance(), fuelConsumption)
+                    + fuelAmountForLength(traveledDistance, minimalPricePossibleTraveledFuelStationDistance, fuelConsumption)
+                    - remainingFuel;
+            Refuelling refuelling = createRefuelling(volume, fuelType, minimalPricePossibleTraveledFuelStation, refuellingPlan);
+            refuellings.add(refuelling);
 
             remainingFuel = fuelAmountForLength(minimalPricePossibleTraveledFuelStationDistance, nextMinimalPricePossibleTraveledFuelStation.getDistance(), fuelConsumption);
             traveledDistance = minimalPricePossibleTraveledFuelStationDistance;
             remainingFuelStations = getRemainingFuelStations(traveledDistance, fuelType, fuelStations);
-
-            Refuelling refuelling = createRefuelling(
-                    fuelAmountForLength(minimalPricePossibleTraveledFuelStationDistance, nextMinimalPricePossibleTraveledFuelStation.getDistance(), fuelConsumption),
-                    fuelType,
-                    minimalPricePossibleTraveledFuelStation,
-                    refuellingPlan
-            );
-            refuellings.add(refuelling);
         }
     }
 
@@ -135,7 +158,7 @@ public class RefuellingPlanCreateService {
     }
 
     private boolean isPossibleTravel(double traveledDistance, double remainingFuel, double fuelConsumption, double length) {
-        return (traveledDistance + (remainingFuel / fuelConsumption) * 100) <= length;
+        return (traveledDistance + (remainingFuel / fuelConsumption) * 100) >= length;
     }
 
     private double fuelAmountForLength(double traveledDistance, double destinationDistance, double fuelConsumption) {
@@ -149,7 +172,7 @@ public class RefuellingPlanCreateService {
         double possibleTraveledDistance = traveledDistance + remainingFuel / fuelConsumption * 100;
 
         for(TripFuelStation fuelStation : fuelStations) {
-            if (fuelStation.getDistance() < possibleTraveledDistance) {
+            if (fuelStation.getDistance() <= possibleTraveledDistance) {
                 return fuelStation;
             }
         };

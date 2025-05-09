@@ -1,8 +1,12 @@
 package com.svetkin.optrou.view.trip;
 
+import com.svetkin.optrou.entity.FuelStation;
+import com.svetkin.optrou.entity.RefuellingPlan;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.TripPoint;
+import com.svetkin.optrou.entity.dto.RefuellingPlanDto;
+import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
 import com.svetkin.optrou.service.RefuellingPlanCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
@@ -25,6 +29,7 @@ import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
+import org.apache.commons.collections4.CollectionUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +43,11 @@ import java.time.LocalDate;
 @EditedEntityContainer("tripDc")
 public class TripDetailView extends StandardDetailView<Trip> {
 
+    @Autowired
+    private Notifications notifications;
+    @Autowired
+    private RefuellingPlanCreateService refuellingPlanCreateService;
+
     @ViewComponent
     private InstanceContainer<Trip> tripDc;
     @ViewComponent
@@ -48,10 +58,8 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private CollectionPropertyContainer<TripFuelStation> tripFuelStationsDc;
     @ViewComponent
     private DataContext dataContext;
-    @Autowired
-    private Notifications notifications;
-    @Autowired
-    private RefuellingPlanCreateService refuellingPlanCreateService;
+    @ViewComponent
+    private CollectionPropertyContainer<RefuellingPlan> refuellingPlansDc;
 
     public void setTrip(Trip trip) {
         dataContext.clear();
@@ -111,6 +119,65 @@ public class TripDetailView extends StandardDetailView<Trip> {
 
     @Subscribe("refuellingPlansDataGrid.create")
     public void onRefuellingPlansDataGridCreate(final ActionPerformedEvent event) {
-        refuellingPlanCreateService.createRefuellingPlan(getEditedEntity());
+        Trip editedEntity = getEditedEntity();
+
+        if (!validateCreatingRefuellingPlanTrip(editedEntity)) {
+            return;
+        }
+
+        RefuellingPlanDto refuellingPlanDto = refuellingPlanCreateService.createRefuellingPlan(editedEntity);
+
+        if (refuellingPlanDto.getStatus() == RefuellingPlanCreateStatus.NEXT_STATION_OR_END_ROUTE_FAR_AWAY) {
+            FuelStation lastFuelStation = refuellingPlanDto.getLastFuelStation();
+            String lastFuelStationString = lastFuelStation != null
+                    ? lastFuelStation.getName() + lastFuelStation.getBrand()
+                    : "Отсутсвует";
+
+            notifications.create("Не удалось доехать до следующей АЗС или конца пути. Последняя АЗС %s".formatted(lastFuelStationString))
+                    .withCloseable(true)
+                    .build()
+                    .open();
+
+            return;
+        }
+
+        if (refuellingPlanDto.getStatus() == RefuellingPlanCreateStatus.IS_EMPTY_FUEL_STATIONS_WITH_FUEL_TYPE) {
+            notifications.create("Не удалось построить план заправок. Нет АЗС с типом топлива %s".formatted(editedEntity.getVehicle().getFuelType()))
+                    .withCloseable(true)
+                    .build()
+                    .open();
+
+            return;
+        }
+
+        RefuellingPlan refuellingPlan = refuellingPlanDto.getRefuellingPlan();
+        refuellingPlan = dataContext.merge(refuellingPlan);
+        refuellingPlansDc.getMutableItems().add(refuellingPlan);
+
+        notifications.create("План заправок построен успешно. Количество дозаправок %s".formatted(refuellingPlan.getRefuellings().size()))
+                .withCloseable(true)
+                .build()
+                .open();
+    }
+
+    private boolean validateCreatingRefuellingPlanTrip(Trip trip) {
+        if (trip.getRoute() == null) {
+            notifications.create("Укажите маршрут")
+                    .build()
+                    .open();
+
+            return false;
+        }
+
+        if (trip.getVehicle() == null) {
+
+            notifications.create("Укажите автомобиль")
+                    .build()
+                    .open();
+
+            return false;
+        }
+
+        return true;
     }
 }

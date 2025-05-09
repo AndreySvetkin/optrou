@@ -70,8 +70,6 @@ public class RouteListView extends StandardListView<Route> {
     @ViewComponent
     private CollectionPropertyContainer<RoutePoint> controlPointsDc;
     @ViewComponent
-    private InstanceLoader<Route> routeDl;
-    @ViewComponent
     private MapFragment mapFragment;
     @ViewComponent
     private DataGrid<Route> routesDataGrid;

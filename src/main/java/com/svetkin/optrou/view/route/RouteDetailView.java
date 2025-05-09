@@ -97,7 +97,6 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @ViewComponent("tabSheet.commonTab")
     private Tab commonTab;
 
-
     private GeoMap map;
     private VectorLayer routeVectorLayer;
     private VectorLayer controlPointsVectorLayer;
