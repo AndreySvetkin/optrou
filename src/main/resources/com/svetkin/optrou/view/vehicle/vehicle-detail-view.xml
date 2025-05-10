@@ -5,11 +5,8 @@
     <data>
         <instance id="vehicleDc"
                   class="com.svetkin.optrou.entity.Vehicle">
-            <fetchPlan extends="_base">
-                <property name="tanks" fetchPlan="_base"/>
-            </fetchPlan>
+            <fetchPlan extends="_base"/>
             <loader id="vehicleDl"/>
-            <collection id="tanksDc" property="tanks"/>
         </instance>
     </data>
     <facets>
@@ -32,36 +29,11 @@
                     <select id="driverLicenseCategoryField" property="driverLicenseCategory"/>
                     <select id="fuelTypeField" property="fuelType"/>
                     <textField id="fuelConsumptionField" property="fuelConsumption"/>
+                    <textField id="remainingFuelField" property="remainingFuel"/>
+                    <textField id="capacityField" property="capacity"/>
                     <textField id="latitudeField" property="latitude"/>
                     <textField id="longitudeField" property="longitude"/>
                 </formLayout>
-                <h4 text="msg://com.svetkin.optrou.entity/Vehicle.tanks"/>
-                <hbox id="buttonsPanel" classNames="buttons-panel">
-                    <button action="tanksDataGrid.create"/>
-                    <button action="tanksDataGrid.edit"/>
-                    <button action="tanksDataGrid.remove"/>
-                </hbox>
-                <dataGrid id="tanksDataGrid" dataContainer="tanksDc" width="100%" minHeight="20em">
-                    <actions>
-                        <action id="create" type="list_create">
-                            <properties>
-                                <property name="openMode" value="DIALOG"/>
-                            </properties>
-                        </action>
-                        <action id="edit" type="list_edit">
-                            <properties>
-                                <property name="openMode" value="DIALOG"/>
-                            </properties>
-                        </action>
-                        <action id="remove" type="list_remove"/>
-                    </actions>
-                    <columns>
-                        <column property="number"/>
-                        <column property="capacity"/>
-                        <column property="remainingFuel"/>
-                        <column property="isEnabled"/>
-                    </columns>
-                </dataGrid>
                 <hbox id="detailActions">
                     <button id="saveAndCloseButton" action="saveAction"/>
                     <button id="closeButton" action="closeAction"/>
