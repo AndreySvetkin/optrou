@@ -9,13 +9,14 @@ import java.util.List;
 public class GlonassSoftResponseVehicleLocationsDto {
 
     @JsonProperty("messages")
-    private List<GlonassSoftRefuellingDto> locations;
+    private List<GlonassSoftVehicleLocationDto> locations;
 
-    public List<GlonassSoftRefuellingDto> getLocations() {
+    public void setLocations(List<GlonassSoftVehicleLocationDto> locations) {
+        this.locations = locations;
+    }
+
+    public List<GlonassSoftVehicleLocationDto> getLocations() {
         return locations;
     }
 
-    public void setLocations(List<GlonassSoftRefuellingDto> locations) {
-        this.locations = locations;
-    }
 }

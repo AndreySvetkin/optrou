@@ -103,7 +103,7 @@
                             <columns resizable="true">
                                 <column property="name"/>
                                 <column property="createdDate"/>
-                                <column property="dateStart"/>
+                                <column property="planningDateStart"/>
                                 <column property="factDateEnd"/>
                             </columns>
                         </dataGrid>

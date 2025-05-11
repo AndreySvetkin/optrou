@@ -1,10 +1,6 @@
 package com.svetkin.optrou.entity;
 
-import io.jmix.core.DeletePolicy;
-import io.jmix.core.annotation.DeletedBy;
-import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
@@ -15,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
@@ -25,17 +21,18 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "OPTROU_TRIP", indexes = {
-        @Index(name = "IDX_OPTROU_TRIP_ROUTE", columnList = "ROUTE_ID"),
-        @Index(name = "IDX_OPTROU_TRIP_LOGIST", columnList = "LOGIST_ID")
+@Table(name = "OPTROU_TRIP_REPORT", indexes = {
+        @Index(name = "IDX_OPTROU_TRIP_REPORT_ROUTE", columnList = "ROUTE_ID"),
+        @Index(name = "IDX_OPTROU_TRIP_REPORT_LOGIST", columnList = "LOGIST_ID"),
+        @Index(name = "IDX_OPTROU_TRIP_REPORT_FACT_REFUELLING_PLAN", columnList = "FACT_REFUELLING_PLAN_ID"),
+        @Index(name = "IDX_OPTROU_TRIP_REPORT_REFUELLING_PLANS", columnList = "REFUELLING_PLANS_ID"),
+        @Index(name = "IDX_OPTROU_TRIP_REPORT_TRIP", columnList = "TRIP_ID")
 })
-@Entity(name = "optrou_Trip")
-public class Trip {
+@Entity(name = "optrou_TripReport")
+public class TripReport {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
@@ -53,13 +50,10 @@ public class Trip {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
-    @DeletedBy
-    @Column(name = "DELETED_BY")
-    private String deletedBy;
-
-    @DeletedDate
-    @Column(name = "DELETED_DATE")
-    private OffsetDateTime deletedDate;
+    @JoinColumn(name = "TRIP_ID", nullable = false)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Trip trip;
 
     @InstanceName
     @Column(name = "NAME", nullable = false)
@@ -89,19 +83,15 @@ public class Trip {
     @Column(name = "DISTANCE", nullable = false)
     private Double length;
 
+    @Column(name = "FACT_LENGTH")
+    private Double factLength;
+
     @Column(name = "LINE", nullable = false)
     @NotNull
     private LineString line;
 
-    @OnDelete(DeletePolicy.CASCADE)
-    @Composition
-    @OneToMany(mappedBy = "trip")
-    private List<TripPoint> controlPoints;
-
-    @OnDelete(DeletePolicy.CASCADE)
-    @Composition
-    @OneToMany(mappedBy = "trip")
-    private List<TripFuelStation> fuelStations = new ArrayList<>();
+    @Column(name = "FACT_LINE")
+    private String factLine;
 
     @JoinColumn(name = "DRIVER_ID", nullable = false)
     @NotNull
@@ -118,10 +108,55 @@ public class Trip {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Vehicle vehicle;
 
-    @OnDelete(DeletePolicy.CASCADE)
+    @JoinColumn(name = "REFUELLING_PLANS_ID")
+    @OneToOne(fetch = FetchType.LAZY)
     @Composition
-    @OneToMany(mappedBy = "trip")
-    private List<RefuellingPlan> refuellingPlans = new ArrayList<>();
+    private RefuellingPlan refuellingPlan;
+
+    @Composition
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FACT_REFUELLING_PLAN_ID")
+    private FactRefuellingPlan factRefuellingPlan;
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
+    public void setRefuellingPlan(RefuellingPlan refuellingPlan) {
+        this.refuellingPlan = refuellingPlan;
+    }
+
+    public RefuellingPlan getRefuellingPlan() {
+        return refuellingPlan;
+    }
+
+    public FactRefuellingPlan getFactRefuellingPlan() {
+        return factRefuellingPlan;
+    }
+
+    public void setFactRefuellingPlan(FactRefuellingPlan factRefuellingPlan) {
+        this.factRefuellingPlan = factRefuellingPlan;
+    }
+
+    public String getFactLine() {
+        return factLine;
+    }
+
+    public void setFactLine(String factLine) {
+        this.factLine = factLine;
+    }
+
+    public Double getFactLength() {
+        return factLength;
+    }
+
+    public void setFactLength(Double factLength) {
+        this.factLength = factLength;
+    }
 
     public void setPlanningDateStart(LocalDateTime planningDateStart) {
         this.planningDateStart = planningDateStart;
@@ -155,22 +190,6 @@ public class Trip {
         this.factDateStart = factDateStart;
     }
 
-    public List<TripFuelStation> getFuelStations() {
-        return fuelStations;
-    }
-
-    public void setFuelStations(List<TripFuelStation> fuelStations) {
-        this.fuelStations = fuelStations;
-    }
-
-    public List<TripPoint> getControlPoints() {
-        return controlPoints;
-    }
-
-    public void setControlPoints(List<TripPoint> controlPoints) {
-        this.controlPoints = controlPoints;
-    }
-
     public LineString getLine() {
         return line;
     }
@@ -185,14 +204,6 @@ public class Trip {
 
     public void setLogist(User logist) {
         this.logist = logist;
-    }
-
-    public List<RefuellingPlan> getRefuellingPlans() {
-        return refuellingPlans;
-    }
-
-    public void setRefuellingPlans(List<RefuellingPlan> refuellingPlans) {
-        this.refuellingPlans = refuellingPlans;
     }
 
     public Double getLength() {
@@ -233,22 +244,6 @@ public class Trip {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public OffsetDateTime getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(OffsetDateTime deletedDate) {
-        this.deletedDate = deletedDate;
-    }
-
-    public String getDeletedBy() {
-        return deletedBy;
-    }
-
-    public void setDeletedBy(String deletedBy) {
-        this.deletedBy = deletedBy;
     }
 
     public OffsetDateTime getCreatedDate() {

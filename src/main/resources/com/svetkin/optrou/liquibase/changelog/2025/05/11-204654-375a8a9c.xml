@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="optrou">
+        <createTable tableName="OPTROU_FACT_REFUELLING">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_FACT_REFUELLING"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="VOLUME" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BEFORE_LEVEL_FUEL" type="DOUBLE"/>
+            <column name="AFTER_LEVEL_FUEL" type="DOUBLE"/>
+            <column name="FACT_REFUELLING_PLAN_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="optrou">
+        <createTable tableName="OPTROU_FACT_REFUELLING_PLAN">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_FACT_REFUELLING_PLAN"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="TRIP_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FUEL_TYPE" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="optrou">
+        <createTable tableName="OPTROU_TRIP_REPORT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OPTROU_TRIP_REPORT"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="${offsetDateTime.type}"/>
+            <column name="TRIP_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PLANNING_DATE_START" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PLANNING_DATE_END" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FACT_DATE_START" type="DATETIME"/>
+            <column name="FACT_DATE_END" type="DATETIME"/>
+            <column name="ROUTE_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISTANCE" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FACT_LENGTH" type="DOUBLE"/>
+            <column name="LINE" type="varchar(4000 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FACT_LINE" type="VARCHAR(255)"/>
+            <column name="DRIVER_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOGIST_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VEHICLE_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REFUELLING_PLANS_ID" type="UUID"/>
+            <column name="FACT_REFUELLING_PLAN_ID" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="optrou">
+        <createIndex indexName="IDX_OPTROU_FACT_REFUELLING_FACT_REFUELLING_PLAN" tableName="OPTROU_FACT_REFUELLING">
+            <column name="FACT_REFUELLING_PLAN_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="FACT_REFUELLING_PLAN_ID" baseTableName="OPTROU_FACT_REFUELLING"
+                                 constraintName="FK_OPTROU_FACT_REFUELLING_ON_FACT_REFUELLING_PLAN" onDelete="CASCADE"
+                                 referencedColumnNames="ID" referencedTableName="OPTROU_FACT_REFUELLING_PLAN"/>
+    </changeSet>
+    <changeSet id="5" author="optrou">
+        <createIndex indexName="IDX_OPTROU_FACT_REFUELLING_PLAN_TRIP" tableName="OPTROU_FACT_REFUELLING_PLAN">
+            <column name="TRIP_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="TRIP_ID" baseTableName="OPTROU_FACT_REFUELLING_PLAN"
+                                 constraintName="FK_OPTROU_FACT_REFUELLING_PLAN_ON_TRIP" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_TRIP_REPORT"/>
+    </changeSet>
+    <changeSet id="6" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_REPORT_FACT_REFUELLING_PLAN" tableName="OPTROU_TRIP_REPORT">
+            <column name="FACT_REFUELLING_PLAN_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="FACT_REFUELLING_PLAN_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_FACT_REFUELLING_PLAN"
+                                 referencedColumnNames="ID" referencedTableName="OPTROU_FACT_REFUELLING_PLAN"/>
+    </changeSet>
+    <changeSet id="7" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_REPORT_LOGIST" tableName="OPTROU_TRIP_REPORT">
+            <column name="LOGIST_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="LOGIST_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_LOGIST" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_USER"/>
+    </changeSet>
+    <changeSet id="8" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_REPORT_REFUELLING_PLANS" tableName="OPTROU_TRIP_REPORT">
+            <column name="REFUELLING_PLANS_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="REFUELLING_PLANS_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_REFUELLING_PLANS" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_REFUELLING_PLAN"/>
+    </changeSet>
+    <changeSet id="9" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_REPORT_ROUTE" tableName="OPTROU_TRIP_REPORT">
+            <column name="ROUTE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="ROUTE_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_ROUTE" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_ROUTE"/>
+    </changeSet>
+    <changeSet id="10" author="optrou">
+        <createIndex indexName="IDX_OPTROU_TRIP_REPORT_TRIP" tableName="OPTROU_TRIP_REPORT">
+            <column name="TRIP_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="TRIP_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_TRIP" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_TRIP"/>
+    </changeSet>
+    <changeSet id="11" author="optrou">
+        <addForeignKeyConstraint baseColumnNames="DRIVER_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_DRIVER" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_DRIVER"/>
+    </changeSet>
+    <changeSet id="12" author="optrou">
+        <addForeignKeyConstraint baseColumnNames="VEHICLE_ID" baseTableName="OPTROU_TRIP_REPORT"
+                                 constraintName="FK_OPTROU_TRIP_REPORT_ON_VEHICLE" referencedColumnNames="ID"
+                                 referencedTableName="OPTROU_VEHICLE"/>
+    </changeSet>
+</databaseChangeLog>

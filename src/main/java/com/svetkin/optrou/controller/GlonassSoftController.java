@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.svetkin.optrou.entity.Vehicle;
 import com.svetkin.optrou.entity.dto.GlonassSoftAuthenticationDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftResponseRefuellingsDto;
+import com.svetkin.optrou.entity.dto.GlonassSoftResponseVehicleLocationsDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftVehicleInfoRequestDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftVehicleLocationDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftVehicleLocationRequestDto;
@@ -118,7 +119,7 @@ public class GlonassSoftController {
                 .getBody();
     }
 
-    public GlonassSoftVehicleLocationDto getFactLocations(Vehicle vehicle, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public GlonassSoftResponseVehicleLocationsDto getFactLocations(Vehicle vehicle, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         if (!checkAuthorize()) {
             authorize();
         }
@@ -138,7 +139,7 @@ public class GlonassSoftController {
         HttpEntity<?> request = new HttpEntity<>(requestBody, headers);
 
         return restClient
-                .post(path, GlonassSoftVehicleLocationDto.class, request, Map.of())
+                .post(path, GlonassSoftResponseVehicleLocationsDto.class, request, Map.of())
                 .getBody();
     }
 

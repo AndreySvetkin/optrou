@@ -63,7 +63,7 @@
                     </actions>
                     <columns resizable="true">
                         <column property="name" filterable="true"/>
-                        <column property="dateStart" filterable="true"/>
+                        <column property="planningDateStart" filterable="true"/>
                         <column property="planningDateEnd" filterable="true"/>
                         <column property="length" filterable="true"/>
                     </columns>

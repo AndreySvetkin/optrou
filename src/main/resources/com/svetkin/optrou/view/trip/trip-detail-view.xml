@@ -47,9 +47,10 @@
                                 <responsiveStep minWidth="40em" columns="2"/>
                             </responsiveSteps>
                             <textField id="nameField" property="name"/>
-                            <datePicker id="dateStartField" property="dateStart"/>
-                            <datePicker id="planningDateEndField" property="planningDateEnd"/>
-                            <datePicker id="factDateEndField" property="factDateEnd"/>
+                            <dateTimePicker id="planningDateTimeStartField" property="planningDateStart"/>
+                            <dateTimePicker id="planningDateTimeEndField" property="planningDateEnd"/>
+                            <dateTimePicker id="factDateTimeStartField" property="factDateStart"/>
+                            <dateTimePicker id="factDateTimeEndField" property="factDateEnd"/>
                             <entityPicker id="driverField" property="driver">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
