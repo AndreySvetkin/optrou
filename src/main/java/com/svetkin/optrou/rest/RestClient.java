@@ -3,6 +3,8 @@ package com.svetkin.optrou.rest;
 import com.svetkin.optrou.controller.FuelStationBenzuberController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +18,26 @@ public class RestClient {
 
     private static final Logger log = LoggerFactory.getLogger(FuelStationBenzuberController.class);
 
+    public <RES> ResponseEntity<RES> getWithRequest(String path, Class<RES> responseType, HttpEntity<?> request, Map<String, Object> uriVariables) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<RES> responseEntity;
+        try {
+            responseEntity = restTemplate.getForEntity(path, responseType, uriVariables);
+
+            if (!responseEntity.getStatusCode().is2xxSuccessful()) {
+                log.debug("Received non 200 custom request http GET response {}", responseEntity);
+            }
+
+            log.debug("Successfully received custom request http GET response {}", responseEntity);
+            return responseEntity;
+        } catch (Exception e) {
+            log.debug("Not received custom request http GET response {}", e);
+        }
+
+        return null;
+    }
+
     public <RES> ResponseEntity<RES> get(String path, Class<RES> responseType, Map<String, Object> uriVariables) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -24,13 +46,33 @@ public class RestClient {
             responseEntity = restTemplate.getForEntity(path, responseType, uriVariables);
 
             if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-                log.debug("Received non 200 http response {}", responseEntity);
+                log.debug("Received non 200 http GET response {}", responseEntity);
             }
 
-            log.debug("Fuel stations successfully loaded from benzuber");
+            log.debug("Successfully received http GET response {}", responseEntity);
             return responseEntity;
         } catch (Exception e) {
-            log.debug("Error for load fuel stations from benzuber", e);
+            log.debug("Not received http GET response {}", e);
+        }
+
+        return null;
+    }
+
+    public <RES> ResponseEntity<RES> post(String path, Class<RES> responseType, Object request, Map<String, Object> uriVariables) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<RES> responseEntity;
+        try {
+            responseEntity = restTemplate.postForEntity(path, request, responseType, uriVariables);
+
+            if (!responseEntity.getStatusCode().is2xxSuccessful()) {
+                log.debug("Received non 200 http POST response {}", responseEntity);
+            }
+
+            log.debug("Successfully received http POST response {}", responseEntity);
+            return responseEntity;
+        } catch (Exception e) {
+            log.debug("Not received http POST response {}", e);
         }
 
         return null;
