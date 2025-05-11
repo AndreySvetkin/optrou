@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://tripReportDetailView.title"
+      focusComponent="form">
+    <data readOnly="true">
+        <instance id="tripReportDc"
+                  class="com.svetkin.optrou.entity.TripReport">
+            <fetchPlan extends="_base">
+                <property name="trip" fetchPlan="_base">
+                    <property name="controlPoints" fetchPlan="_base"/>
+                    <property name="fuelStations" fetchPlan="_base"/>
+                </property>
+                <property name="route" fetchPlan="_base"/>
+                <property name="driver" fetchPlan="_base"/>
+                <property name="logist" fetchPlan="_base"/>
+                <property name="vehicle" fetchPlan="_base"/>
+                <property name="refuellingPlan" fetchPlan="_base">
+                    <property name="trip" fetchPlan="_base"/>
+                    <property name="refuellings" fetchPlan="_base">
+                        <property name="fuelStationPrice" fetchPlan="_base">
+                            <property name="fuelStation" fetchPlan="_base"/>
+                        </property>
+                    </property>
+                    <property name="refuellingsVolume"/>
+                    <property name="refuellingsSize"/>
+                </property>
+                <property name="factRefuellingPlan" fetchPlan="_base">
+                    <property name="refuellings" fetchPlan="_base"/>
+                    <property name="refuellingsVolume"/>
+                    <property name="refuellingsSize"/>
+                </property>
+            </fetchPlan>
+            <loader id="tripReportDl"/>
+            <instance id="tripDc" property="trip">
+                <collection id="controlPointsDc" property="controlPoints"/>
+                <collection id="tripFuelStationsDc" property="fuelStations"/>
+            </instance>
+            <instance id="refuellingPlanDc" property="refuellingPlan">
+                <collection id="refuellingsDc" property="refuellings"/>
+            </instance>
+            <instance id="factRefuellingPlanDc" property="factRefuellingPlan">
+                <collection id="factRefuellingsDc" property="refuellings"/>
+            </instance>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <hbox height="100%" width="100%">
+            <tabSheet id="tabSheet" height="100%" width="50%">
+                <tab id="commonTab" label="msg://commonTab.label">
+                    <vbox height="100%" width="100%">
+                        <h4 id="commonInfoHeader" text="Общая информация"/>
+                        <formLayout id="form" dataContainer="tripReportDc">
+                            <responsiveSteps>
+                                <responsiveStep minWidth="0" columns="1"/>
+                                <responsiveStep minWidth="40em" columns="2"/>
+                            </responsiveSteps>
+                            <entityPicker id="tripField" property="trip">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <textField id="nameField" property="name"/>
+                            <dateTimePicker id="planningDateStartField" property="planningDateStart"/>
+                            <dateTimePicker id="planningDateEndField" property="planningDateEnd"/>
+                            <dateTimePicker id="factDateStartField" property="factDateStart"/>
+                            <dateTimePicker id="factDateEndField" property="factDateEnd"/>
+                            <entityPicker id="routeField" property="route">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <textField id="lengthField" property="length"/>
+                            <textField id="factLengthField" property="factLength"/>
+                            <textField id="lineField" property="line"/>
+                            <textField id="factLineField" property="factLine"/>
+                            <entityPicker id="driverField" property="driver">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <entityPicker id="logistField" property="logist">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <entityPicker id="vehicleField" property="vehicle">
+                                <actions>
+                                    <action id="entityLookup" type="entity_lookup"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <entityPicker id="refuellingPlanField" property="refuellingPlan">
+                                <actions>
+                                    <action id="entityOpenComposition" type="entity_openComposition"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                            <entityPicker id="factRefuellingPlanField" property="factRefuellingPlan">
+                                <actions>
+                                    <action id="entityOpenComposition" type="entity_openComposition"/>
+                                    <action id="entityClear" type="entity_clear"/>
+                                </actions>
+                            </entityPicker>
+                        </formLayout>
+                    </vbox>
+                </tab>
+                <tab id="refuellingPlanTab" label="Заправки">
+                    <hbox height="100%" width="100%" padding="false">
+                        <dataGrid id="refuellingsDataGrid"
+                                  dataContainer="refuellingsDc"
+                                  width="50%"
+                                  minHeight="20em">
+                            <columns>
+                                <column property="createdDate"/>
+                                <column property="fuelStationPrice.fuelStation"/>
+                                <column property="volume"/>
+                                <column property="price"/>
+                            </columns>
+                        </dataGrid>
+                        <dataGrid id="factRefuellingsDataGrid"
+                                  dataContainer="factRefuellingsDc"
+                                  width="50%"
+                                  minHeight="20em">
+                            <columns>
+                                <column property="startDate"/>
+                                <column property="endDate"/>
+                                <column property="volume"/>
+                                <column property="beforeLevelFuel"/>
+                                <column property="afterLevelFuel"/>
+                            </columns>
+                        </dataGrid>
+                    </hbox>
+                </tab>
+            </tabSheet>
+            <vbox height="100%" width="50%">
+                <fragment id="mapFragment"
+                          class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
+            </vbox>
+        </hbox>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

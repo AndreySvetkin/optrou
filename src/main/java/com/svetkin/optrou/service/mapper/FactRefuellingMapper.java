@@ -19,6 +19,8 @@ public class FactRefuellingMapper {
 
     public FactRefuelling mapDtoToEntity(FactRefuelling factRefuelling, GlonassSoftRefuellingDto refuellingDto, FactRefuellingPlan factRefuellingPlan) {
         factRefuelling.setFactRefuellingPlan(factRefuellingPlan);
+        factRefuelling.setStartDate(refuellingDto.getStartDate());
+        factRefuelling.setEndDate(refuellingDto.getEndDate());
         factRefuelling.setVolume(refuellingDto.getVolume());
         factRefuelling.setBeforeLevelFuel(refuellingDto.getBeforeLevelFuel());
         factRefuelling.setAfterLevelFuel(refuellingDto.getAfterLevelFuel());

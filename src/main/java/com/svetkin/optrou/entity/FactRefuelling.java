@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -43,6 +44,12 @@ public class FactRefuelling {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
+    @Column(name = "START_DATE")
+    private LocalDateTime startDate;
+
+    @Column(name = "END_DATE")
+    private LocalDateTime endDate;
+
     @Column(name = "VOLUME", nullable = false)
     @NotNull
     private Double volume;
@@ -57,6 +64,22 @@ public class FactRefuelling {
     @JoinColumn(name = "FACT_REFUELLING_PLAN_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private FactRefuellingPlan factRefuellingPlan;
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
 
     public Double getAfterLevelFuel() {
         return afterLevelFuel;

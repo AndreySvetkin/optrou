@@ -91,7 +91,7 @@ public class TripReport {
     private LineString line;
 
     @Column(name = "FACT_LINE")
-    private String factLine;
+    private LineString factLine;
 
     @JoinColumn(name = "DRIVER_ID", nullable = false)
     @NotNull
@@ -118,6 +118,14 @@ public class TripReport {
     @JoinColumn(name = "FACT_REFUELLING_PLAN_ID")
     private FactRefuellingPlan factRefuellingPlan;
 
+    public void setFactLine(LineString factLine) {
+        this.factLine = factLine;
+    }
+
+    public LineString getFactLine() {
+        return factLine;
+    }
+
     public Trip getTrip() {
         return trip;
     }
@@ -140,14 +148,6 @@ public class TripReport {
 
     public void setFactRefuellingPlan(FactRefuellingPlan factRefuellingPlan) {
         this.factRefuellingPlan = factRefuellingPlan;
-    }
-
-    public String getFactLine() {
-        return factLine;
-    }
-
-    public void setFactLine(String factLine) {
-        this.factLine = factLine;
     }
 
     public Double getFactLength() {

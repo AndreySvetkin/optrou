@@ -32,7 +32,7 @@
         <action id="discardAction" type="lookup_discard"/>
     </actions>
     <layout>
-        <hbox height="100%" width="100%">
+        <split height="100%" width="100%" orientation="HORIZONTAL">
             <vbox height="100%" width="50%">
                 <genericFilter id="genericFilter"
                                dataLoader="routesDl">
@@ -74,6 +74,6 @@
             <vbox height="100%" width="50%">
                 <fragment id="mapFragment" class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
-        </hbox>
+        </split>
     </layout>
 </view>

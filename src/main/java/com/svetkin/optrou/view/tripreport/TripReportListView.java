@@ -1,27 +1,20 @@
-package com.svetkin.optrou.view.trip;
+package com.svetkin.optrou.view.tripreport;
 
-import com.svetkin.optrou.entity.Route;
-import com.svetkin.optrou.entity.RoutePoint;
 import com.svetkin.optrou.entity.Trip;
-import com.svetkin.optrou.entity.TripPoint;
-import com.svetkin.optrou.repository.TripRepository;
-import com.svetkin.optrou.service.TripCreateService;
+import com.svetkin.optrou.entity.TripReport;
+import com.svetkin.optrou.service.TripReportCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.grid.CellFocusEvent;
-import com.vaadin.flow.router.RouteParameters;
+import com.vaadin.flow.router.Route;
 import io.jmix.core.Id;
 import io.jmix.flowui.Dialogs;
-import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
-import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.InstanceContainer;
-import io.jmix.flowui.model.InstanceLoader;
-import io.jmix.flowui.sys.ViewSupport;
 import io.jmix.flowui.view.DialogMode;
 import io.jmix.flowui.view.LookupComponent;
 import io.jmix.flowui.view.StandardListView;
@@ -29,45 +22,43 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
-import io.jmix.flowui.view.navigation.DetailViewNavigator;
-import io.jmix.flowui.view.navigation.ViewNavigationSupport;
 import io.jmix.mapsflowui.component.GeoMap;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@com.vaadin.flow.router.Route(value = "trips", layout = MainView.class)
-@ViewController(id = "optrou_Trip.list")
-@ViewDescriptor(path = "trip-list-view.xml")
-@LookupComponent("tripsDataGrid")
-@DialogMode(width = "64em")
-public class TripListView extends StandardListView<Trip> {
 
-    @Autowired
-    private TripCreateService tripCreateService;
+@Route(value = "tripReports", layout = MainView.class)
+@ViewController(id = "optrou_TripReport.list")
+@ViewDescriptor(path = "trip-report-list-view.xml")
+@LookupComponent("tripReportsDataGrid")
+@DialogMode(width = "64em")
+public class TripReportListView extends StandardListView<TripReport> {
+
     @Autowired
     private Dialogs dialogs;
+    @Autowired
+    private TripReportCreateService tripReportCreateService;
 
     @ViewComponent
-    private CollectionPropertyContainer<TripPoint> controlPointsDc;
-    @ViewComponent
-    private MapFragment mapFragment;
+    private CollectionPropertyContainer<TripReport> controlPointsDc;
     @ViewComponent
     private InstanceContainer<Trip> tripDc;
+    @ViewComponent
+    private MapFragment mapFragment;
 
     private GeoMap map;
 
     @Subscribe
-    public void onInit(final InitEvent event) {
-        map = mapFragment.getMap();
-
+    public void onBeforeShow(final BeforeShowEvent event) {
         mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
         mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
     }
 
-    @Subscribe("tripsDataGrid")
-    public void onTripsDataGridCellFocus(final CellFocusEvent<Trip> event) {
-        event.getItem().ifPresent(trip -> {
+    @Subscribe("tripReportsDataGrid")
+    public void onTripReportsDataGridCellFocus(final CellFocusEvent<TripReport> event) {
+        event.getItem().ifPresent(tripReport -> {
+            Trip trip = tripReport.getTrip();
             tripDc.setItem(trip);
 
             LineString line = trip.getLine();
@@ -78,20 +69,19 @@ public class TripListView extends StandardListView<Trip> {
         });
     }
 
-    @SuppressWarnings("DataFlowIssue")
-    @Subscribe("tripsDataGrid.create")
-    public void onTripsDataGridCreate(final ActionPerformedEvent event) {
+    @Subscribe("tripReportsDataGrid.create")
+    public void onTripReportsDataGridCreate(final ActionPerformedEvent event) {
         dialogs.createInputDialog(this)
-                .withHeader("Создание маршрута")
+                .withHeader("Создание отчета по рейсу")
                 .withParameter(InputParameter
-                        .entityParameter("route", Route.class)
-                        .withLabel("Маршрут")
+                        .entityParameter("trip", Trip.class)
+                        .withLabel("Рейс")
                         .withRequired(true))
                 .withActions(DialogActions.OK_CANCEL)
                 .withCloseListener(closeEvent -> {
                     if (closeEvent.closedWith(DialogOutcome.OK)) {
-                        Route route = closeEvent.getValue("route");
-                        tripCreateService.createAndNavigateTrip(Id.of(route));
+                        Trip trip = closeEvent.getValue("trip");
+                        tripReportCreateService.createAndNavigateTripReport(Id.of(trip));
                     }
                 })
                 .open();
