@@ -55,6 +55,10 @@ public class TripReport {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
 
+    @Column(name = "NUMBER_", nullable = false)
+    @NotNull
+    private Long number;
+
     @InstanceName
     @Column(name = "NAME", nullable = false)
     @NotNull
@@ -117,6 +121,14 @@ public class TripReport {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FACT_REFUELLING_PLAN_ID")
     private FactRefuellingPlan factRefuellingPlan;
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
+    }
 
     public void setFactLine(LineString factLine) {
         this.factLine = factLine;

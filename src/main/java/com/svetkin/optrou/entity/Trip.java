@@ -1,13 +1,16 @@
 package com.svetkin.optrou.entity;
 
 import io.jmix.core.DeletePolicy;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.core.metamodel.datatype.DatatypeFormatter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -61,7 +64,10 @@ public class Trip {
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
 
-    @InstanceName
+    @Column(name = "NUMBER_", nullable = false)
+    @NotNull
+    private Long number;
+
     @Column(name = "NAME", nullable = false)
     @NotNull
     private String name;
@@ -122,6 +128,14 @@ public class Trip {
     @Composition
     @OneToMany(mappedBy = "trip")
     private List<RefuellingPlan> refuellingPlans = new ArrayList<>();
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
+    }
 
     public void setPlanningDateStart(LocalDateTime planningDateStart) {
         this.planningDateStart = planningDateStart;
@@ -281,5 +295,13 @@ public class Trip {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    @InstanceName
+    @DependsOnProperties({"number", "name"})
+    public String getInstanceName(MetadataTools metadataTools, DatatypeFormatter datatypeFormatter) {
+        return String.format("%s %s",
+                datatypeFormatter.formatLong(number),
+                metadataTools.format(name));
     }
 }

@@ -46,6 +46,7 @@
                                 <responsiveStep minWidth="0" columns="1"/>
                                 <responsiveStep minWidth="40em" columns="2"/>
                             </responsiveSteps>
+                            <textField id="numberField" property="number" readOnly="true"/>
                             <textField id="nameField" property="name"/>
                             <dateTimePicker id="planningDateTimeStartField" property="planningDateStart"/>
                             <dateTimePicker id="planningDateTimeEndField" property="planningDateEnd"/>
@@ -123,7 +124,10 @@
                             <button action="refuellingPlansDataGrid.read"/>
                             <button action="refuellingPlansDataGrid.remove"/>
                         </hbox>
-                        <dataGrid id="refuellingPlansDataGrid" dataContainer="refuellingPlansDc" width="100%" minHeight="20em">
+                        <dataGrid id="refuellingPlansDataGrid"
+                                  dataContainer="refuellingPlansDc"
+                                  width="100%"
+                                  minHeight="20em">
                             <actions>
                                 <action id="create" type="list_create"/>
                                 <action id="read" type="list_read">

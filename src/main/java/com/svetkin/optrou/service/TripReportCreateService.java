@@ -57,6 +57,7 @@ public class TripReportCreateService {
     public TripReport createAndSaveTripReport(Id<Trip> tripId) {
         Trip trip = tripRepository.getById((UUID) tripId.getValue(), getTripFetchPlan());
         TripReport tripReport = tripReportRepository.create();
+        tripReport.setNumber(trip.getNumber());
         tripReport.setName(trip.getName());
         tripReport.setPlanningDateStart(trip.getPlanningDateStart());
         tripReport.setPlanningDateEnd(trip.getPlanningDateEnd());

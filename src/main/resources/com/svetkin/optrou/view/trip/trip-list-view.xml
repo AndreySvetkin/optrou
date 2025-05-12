@@ -21,7 +21,7 @@
             </loader>
         </collection>
         <instance id="tripDc" class="com.svetkin.optrou.entity.Trip">
-             <collection id="controlPointsDc" property="controlPoints"/>
+            <collection id="controlPointsDc" property="controlPoints"/>
         </instance>
     </data>
     <facets>
@@ -66,6 +66,7 @@
                         <column property="planningDateStart" filterable="true"/>
                         <column property="planningDateEnd" filterable="true"/>
                         <column property="length" filterable="true"/>
+                        <column property="number"/>
                     </columns>
                 </dataGrid>
                 <hbox id="lookupActions" visible="false">

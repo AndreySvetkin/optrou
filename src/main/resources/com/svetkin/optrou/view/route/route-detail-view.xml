@@ -38,6 +38,7 @@
                             <responsiveSteps>
                                 <responsiveStep minWidth="0" columns="1"/>
                             </responsiveSteps>
+                            <textField id="numberField" property="number" readOnly="true"/>
                             <textField id="nameField" property="name"/>
                             <textField id="lengthField" property="length" readOnly="true"/>
                             <hbox id="controlPointsButtonsPanel" classNames="buttons-panel">
