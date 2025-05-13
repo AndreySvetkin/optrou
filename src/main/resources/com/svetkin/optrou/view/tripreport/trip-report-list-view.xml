@@ -31,6 +31,7 @@
         </urlQueryParameters>
     </facets>
     <actions>
+        <action id="outerReportAction" text="Выгрузить общий отчет"/>
         <action id="selectAction" type="lookup_select"/>
         <action id="discardAction" type="lookup_discard"/>
     </actions>

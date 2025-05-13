@@ -4,12 +4,14 @@ import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripReport;
 import com.svetkin.optrou.entity.type.TripStatus;
 import com.svetkin.optrou.repository.TripRepository;
+import com.svetkin.optrou.service.TripOuterReportCreateService;
 import com.svetkin.optrou.service.TripReportCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.grid.CellFocusEvent;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.Id;
+import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Dialogs;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.UiComponents;
@@ -17,6 +19,7 @@ import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
 import io.jmix.flowui.component.combobox.EntityComboBox;
+import io.jmix.flowui.download.Downloader;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.InstanceContainer;
@@ -27,7 +30,9 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
+import io.jmix.flowui.view.builder.LookupWindowBuilder;
 import io.jmix.mapsflowui.component.GeoMap;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +46,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TripReportListView extends StandardListView<TripReport> {
 
     @Autowired
-    private UiComponents uiComponents;
+    private Notifications notifications;
     @Autowired
-    private TripRepository tripRepository;
+    private DialogWindows dialogWindows;
+    @Autowired
+    private TripOuterReportCreateService tripOuterReportCreateService;
+    @Autowired
+    private Downloader downloader;
     @Autowired
     private Dialogs dialogs;
     @Autowired
@@ -57,8 +66,6 @@ public class TripReportListView extends StandardListView<TripReport> {
     private MapFragment mapFragment;
 
     private GeoMap map;
-    @Autowired
-    private Notifications notifications;
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
@@ -102,6 +109,16 @@ public class TripReportListView extends StandardListView<TripReport> {
 
                         tripReportCreateService.createAndNavigateTripReport(Id.of(trip));
                     }
+                })
+                .open();
+    }
+
+    @Subscribe("outerReportAction")
+    public void onOuterReportAction(final ActionPerformedEvent event) {
+        dialogWindows.lookup(this, Trip.class)
+                .withSelectHandler(trips -> {
+                    byte[] report = tripOuterReportCreateService.createTripsReport(trips.stream().toList());
+                    downloader.download(report, "Отчет по рейсам");
                 })
                 .open();
     }
