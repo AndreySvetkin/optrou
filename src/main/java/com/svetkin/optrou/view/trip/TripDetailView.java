@@ -7,6 +7,7 @@ import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.TripPoint;
 import com.svetkin.optrou.entity.dto.RefuellingPlanDto;
 import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
+import com.svetkin.optrou.entity.type.TripStatus;
 import com.svetkin.optrou.service.RefuellingPlanCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
@@ -16,8 +17,12 @@ import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.SupportsTypedValue;
 import io.jmix.flowui.component.datepicker.TypedDatePicker;
 import io.jmix.flowui.component.datetimepicker.TypedDateTimePicker;
+import io.jmix.flowui.component.select.JmixSelect;
+import io.jmix.flowui.data.value.ContainerValueSource;
 import io.jmix.flowui.exception.ValidationException;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
+import io.jmix.flowui.kit.action.BaseAction;
+import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
@@ -58,12 +63,28 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private DataContext dataContext;
     @ViewComponent
     private CollectionPropertyContainer<RefuellingPlan> refuellingPlansDc;
+    @ViewComponent
+    private JmixSelect<TripStatus> statusField;
+    @ViewComponent
+    private JmixButton toProgressButton;
+    @ViewComponent
+    private BaseAction toProgressAction;
+    @ViewComponent
+    private BaseAction cancelAction;
+    @ViewComponent
+    private BaseAction approveAction;
 
     public void setTrip(Trip trip) {
+        statusField.setValue(TripStatus.NEW);
+        statusField.setReadOnly(true);
         dataContext.clear();
         trip = dataContext.merge(trip);
-        setEntityToEdit(trip);
         tripDc.setItem(trip);
+    }
+
+    @Subscribe
+    public void onAfterSave(final AfterSaveEvent event) {
+        statusField.setReadOnly(false);
     }
 
     @Subscribe
@@ -75,7 +96,10 @@ public class TripDetailView extends StandardDetailView<Trip> {
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
-        LineString routeLine = getEditedEntity().getLine();
+        Trip editedEntity = getEditedEntity();
+        onChangeStatus(editedEntity.getStatus());
+
+        LineString routeLine = editedEntity.getLine();
         if (routeLine != null) {
             setMapCenterByLine(routeLine);
         }
@@ -86,24 +110,24 @@ public class TripDetailView extends StandardDetailView<Trip> {
         mapFragment.setZoom(10.0);
     }
 
-    @Subscribe("planningDateTimeStartField")
-    public void onPlanningDateTimeStartFieldTypedValueChange(final SupportsTypedValue.TypedValueChangeEvent<TypedDateTimePicker<LocalDateTime>, LocalDateTime> event) {
-        dateTimeValidator(event.getValue(), getEditedEntity().getPlanningDateEnd());
+    @Install(to = "planningDateTimeStartField", subject = "validator")
+    private void planningDateTimeStartFieldValidator(final LocalDateTime value) {
+        dateTimeValidator(value, getEditedEntity().getPlanningDateEnd());
     }
 
-    @Subscribe("planningDateTimeEndField")
-    public void onPlanningDateTimeEndFieldComponentValueChange(final SupportsTypedValue.TypedValueChangeEvent<TypedDateTimePicker<LocalDateTime>, LocalDateTime> event) {
-        dateTimeValidator(getEditedEntity().getPlanningDateStart(), event.getValue());
+    @Install(to = "planningDateTimeEndField", subject = "validator")
+    private void planningDateTimeEndFieldValidator(final LocalDateTime value) {
+        dateTimeValidator(getEditedEntity().getPlanningDateStart(), value);
     }
 
-    @Subscribe("factDateTimeStartField")
-    public void onFactDateTimeStartFieldTypedValueChange(final SupportsTypedValue.TypedValueChangeEvent<TypedDateTimePicker<LocalDateTime>, LocalDateTime> event) {
-        dateTimeValidator(event.getValue(), getEditedEntity().getFactDateEnd());
+    @Install(to = "factDateTimeStartField", subject = "validator")
+    private void factDateTimeStartFieldValidator(final LocalDateTime value) {
+        dateTimeValidator(value, getEditedEntity().getFactDateEnd());
     }
 
-    @Subscribe("factDateTimeEndField")
-    public void onFactDateTimeEndFieldTypedValueChange(final SupportsTypedValue.TypedValueChangeEvent<TypedDateTimePicker<LocalDateTime>, LocalDateTime> event) {
-        dateTimeValidator(getEditedEntity().getFactDateStart(), event.getValue());
+    @Install(to = "factDateTimeEndField", subject = "validator")
+    private void factDateTimeEndFieldValidator(final LocalDateTime value) {
+        dateTimeValidator(getEditedEntity().getFactDateStart(), value);
     }
 
     private void dateTimeValidator(LocalDateTime startDateTime, LocalDateTime endDateTime) {
@@ -111,9 +135,49 @@ public class TripDetailView extends StandardDetailView<Trip> {
             return;
         }
 
-        if (startDateTime.isBefore(endDateTime)) {
+        if (startDateTime.isAfter(endDateTime)) {
             throw new ValidationException("Дата окончания должна быть позже даты начала");
         }
+    }
+
+    @Subscribe("toProgressAction")
+    public void onToProgressAction(final ActionPerformedEvent event) {
+        getEditedEntity().setStatus(TripStatus.IN_PROGRESS);
+    }
+
+    @Subscribe("approveAction")
+    public void onApproveAction(final ActionPerformedEvent event) {
+        getEditedEntity().setStatus(TripStatus.DONE);
+    }
+
+    @Subscribe("cancelAction")
+    public void onCancelAction(final ActionPerformedEvent event) {
+        getEditedEntity().setStatus(TripStatus.CANCELLED);
+    }
+
+    @Subscribe("statusField")
+    public void onStatusFieldComponentValueChange(final AbstractField.ComponentValueChangeEvent<JmixSelect<TripStatus>, TripStatus> event) {
+        onChangeStatus(event.getValue());
+    }
+
+    private void onChangeStatus(TripStatus status) {
+        toProgressAction.setVisible(false);
+        approveAction.setVisible(false);
+        cancelAction.setVisible(false);
+
+        if (status == TripStatus.NEW) {
+            toProgressAction.setVisible(true);
+            cancelAction.setVisible(true);
+        }
+
+        if (status == TripStatus.IN_PROGRESS) {
+            approveAction.setVisible(true);
+            cancelAction.setVisible(true);
+        }
+
+        if (status == TripStatus.DONE || status == TripStatus.CANCELLED) {
+            setReadOnly(true);
+        };
     }
 
     @Subscribe("refuellingPlansDataGrid.create")

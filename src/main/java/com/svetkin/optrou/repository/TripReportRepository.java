@@ -1,9 +1,11 @@
 package com.svetkin.optrou.repository;
 
+import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripReport;
 import io.jmix.core.repository.JmixDataRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository

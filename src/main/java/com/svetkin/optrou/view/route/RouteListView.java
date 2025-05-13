@@ -57,7 +57,7 @@ import java.util.Vector;
 @ViewController(id = "optrou_Route.list")
 @ViewDescriptor(path = "route-list-view.xml")
 @LookupComponent("routesDataGrid")
-@DialogMode(width = "64em")
+@DialogMode(width = "80em")
 public class RouteListView extends StandardListView<Route> {
 
     @Autowired

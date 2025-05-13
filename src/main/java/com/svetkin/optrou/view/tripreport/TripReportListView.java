@@ -2,6 +2,8 @@ package com.svetkin.optrou.view.tripreport;
 
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripReport;
+import com.svetkin.optrou.entity.type.TripStatus;
+import com.svetkin.optrou.repository.TripRepository;
 import com.svetkin.optrou.service.TripReportCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
@@ -9,9 +11,12 @@ import com.vaadin.flow.component.grid.CellFocusEvent;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.Id;
 import io.jmix.flowui.Dialogs;
+import io.jmix.flowui.Notifications;
+import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
+import io.jmix.flowui.component.combobox.EntityComboBox;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.InstanceContainer;
@@ -36,6 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TripReportListView extends StandardListView<TripReport> {
 
     @Autowired
+    private UiComponents uiComponents;
+    @Autowired
+    private TripRepository tripRepository;
+    @Autowired
     private Dialogs dialogs;
     @Autowired
     private TripReportCreateService tripReportCreateService;
@@ -48,6 +57,8 @@ public class TripReportListView extends StandardListView<TripReport> {
     private MapFragment mapFragment;
 
     private GeoMap map;
+    @Autowired
+    private Notifications notifications;
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
@@ -81,6 +92,14 @@ public class TripReportListView extends StandardListView<TripReport> {
                 .withCloseListener(closeEvent -> {
                     if (closeEvent.closedWith(DialogOutcome.OK)) {
                         Trip trip = closeEvent.getValue("trip");
+                        if (trip.getStatus() != TripStatus.DONE) {
+                            notifications.create("Выберите рейс со статусом Исполнено")
+                                    .build()
+                                    .open();
+
+                            return;
+                        }
+
                         tripReportCreateService.createAndNavigateTripReport(Id.of(trip));
                     }
                 })

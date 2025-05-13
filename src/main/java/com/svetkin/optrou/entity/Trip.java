@@ -1,5 +1,6 @@
 package com.svetkin.optrou.entity;
 
+import com.svetkin.optrou.entity.type.TripStatus;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.annotation.DeletedBy;
@@ -72,6 +73,10 @@ public class Trip {
     @NotNull
     private String name;
 
+    @Column(name = "STATUS", nullable = false)
+    @NotNull
+    private String status = TripStatus.NEW.getId();
+
     @NotNull
     @Column(name = "PLANNING_DATE_START", nullable = false)
     private LocalDateTime planningDateStart;
@@ -128,6 +133,14 @@ public class Trip {
     @Composition
     @OneToMany(mappedBy = "trip")
     private List<RefuellingPlan> refuellingPlans = new ArrayList<>();
+
+    public TripStatus getStatus() {
+        return status == null ? null : TripStatus.fromId(status);
+    }
+
+    public void setStatus(TripStatus status) {
+        this.status = status == null ? null : status.getId();
+    }
 
     public Long getNumber() {
         return number;

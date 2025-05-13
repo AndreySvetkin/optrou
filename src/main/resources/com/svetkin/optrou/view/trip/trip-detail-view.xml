@@ -34,6 +34,9 @@
     <actions>
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
+        <action id="toProgressAction" text="На исполнении"/>
+        <action id="approveAction" text="Выполнить"/>
+        <action id="cancelAction" text="Отменить"/>
     </actions>
     <layout>
         <hbox height="100%" width="100%">
@@ -48,10 +51,11 @@
                             </responsiveSteps>
                             <textField id="numberField" property="number" readOnly="true"/>
                             <textField id="nameField" property="name"/>
-                            <dateTimePicker id="planningDateTimeStartField" property="planningDateStart"/>
-                            <dateTimePicker id="planningDateTimeEndField" property="planningDateEnd"/>
-                            <dateTimePicker id="factDateTimeStartField" property="factDateStart"/>
-                            <dateTimePicker id="factDateTimeEndField" property="factDateEnd"/>
+                            <select id="statusField" property="status"/>
+                            <datePicker id="planningDateTimeStartField" property="planningDateStart"/>
+                            <datePicker id="planningDateTimeEndField" property="planningDateEnd"/>
+                            <datePicker id="factDateTimeStartField" property="factDateStart"/>
+                            <datePicker id="factDateTimeEndField" property="factDateEnd"/>
                             <entityPicker id="driverField" property="driver">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
@@ -152,6 +156,9 @@
             </vbox>
         </hbox>
         <hbox id="detailActions">
+            <button id="toProgressButton" action="toProgressAction"/>
+            <button id="approveButton" action="approveAction"/>
+            <button id="cancelButton" action="cancelAction"/>
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>
         </hbox>

@@ -8,7 +8,6 @@ import org.springframework.lang.Nullable;
 public enum TripStatus implements EnumClass<String> {
 
     NEW("NEW"),
-    CONFIRMATION("CONFIRMATION"),
     IN_PROGRESS("IN_PROGRESS"),
     DONE("DONE"),
     CANCELLED("CANCELLED");
