@@ -31,7 +31,7 @@
         <action id="discardAction" type="lookup_discard"/>
     </actions>
     <layout>
-        <hbox height="100%" width="100%">
+        <split height="100%" width="100%" orientation="HORIZONTAL">
             <vbox height="100%" width="50%" padding="false">
                 <genericFilter id="genericFilter"
                                dataLoader="fuelStationsDl">
@@ -73,7 +73,7 @@
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
-        </hbox>
+        </split>
         <hbox id="lookupActions" visible="false">
             <button id="selectButton" action="selectAction"/>
             <button id="discardButton" action="discardAction"/>

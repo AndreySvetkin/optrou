@@ -51,7 +51,7 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <hbox height="100%" width="100%">
+        <split height="100%" width="100%" orientation="HORIZONTAL">
             <tabSheet id="tabSheet" height="100%" width="50%">
                 <tab id="commonTab" label="msg://commonTab.label">
                     <vbox height="100%" width="100%">
@@ -147,7 +147,7 @@
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
-        </hbox>
+        </split>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveAction"/>
             <button id="closeButton" action="closeAction"/>

@@ -30,7 +30,7 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <hbox height="100%" width="100%">
+        <split height="100%" width="100%" orientation="HORIZONTAL">
             <vbox height="100%" width="50%" padding="false">
                 <tabSheet id="tabSheet" height="100%" width="100%">
                     <tab id="commonTab" label="msg://commonTab.label">
@@ -119,6 +119,6 @@
                 <fragment id="mapFragment"
                           class="com.svetkin.optrou.view.mapfragment.MapFragment"/>
             </vbox>
-        </hbox>
+        </split>
     </layout>
 </view>
