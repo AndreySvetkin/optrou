@@ -44,7 +44,10 @@ public class VehicleListView extends StandardListView<Vehicle> {
         map = mapFragment.getMap();
 
         VectorLayer vehiclesVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(vehiclesDc, "location");
+
         vehiclesVectorLayer.<DataVectorSource<Vehicle>>getSource().addGeoObjectClickListener(this::onGeoObjectClick);
+
+        mapFragment.setVehiclesStyleProvider(vehiclesVectorLayer);
     }
 
     private void onGeoObjectClick(GeoObjectClickNotifier.GeoObjectClickEvent<Vehicle> event) {

@@ -8,6 +8,11 @@
                     <maps:tile>
                         <maps:osmSource/>
                     </maps:tile>
+                    <maps:vector>
+                        <maps:dataVectorSource>
+
+                        </maps:dataVectorSource>
+                    </maps:vector>
                 </maps:layers>
             </maps:geoMap>
         </vbox>

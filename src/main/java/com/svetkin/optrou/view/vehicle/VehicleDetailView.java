@@ -11,6 +11,7 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
+import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 
@@ -27,7 +28,9 @@ public class VehicleDetailView extends StandardDetailView<Vehicle> {
 
     @Subscribe
     public void onInit(final InitEvent event) {
-        mapFragment.addVectorLayerWithDataVectorSource(vehicleDc, "location");
+        VectorLayer vehicleVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(vehicleDc, "location");
+
+        mapFragment.setVehiclesStyleProvider(vehicleVectorLayer);
     }
 
     @Subscribe

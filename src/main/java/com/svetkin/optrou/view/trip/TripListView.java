@@ -32,6 +32,7 @@ import io.jmix.flowui.view.ViewDescriptor;
 import io.jmix.flowui.view.navigation.DetailViewNavigator;
 import io.jmix.flowui.view.navigation.ViewNavigationSupport;
 import io.jmix.mapsflowui.component.GeoMap;
+import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,11 @@ public class TripListView extends StandardListView<Trip> {
     public void onInit(final InitEvent event) {
         map = mapFragment.getMap();
 
-        mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
-        mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+        VectorLayer routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
+        VectorLayer controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+
+        mapFragment.setLineStringStyleProvider(routeVectorLayer);
+        mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
     }
 
     @Subscribe("tripsDataGrid")

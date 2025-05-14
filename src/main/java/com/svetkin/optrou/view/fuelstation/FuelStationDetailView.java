@@ -12,6 +12,7 @@ import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.model.InstanceLoader;
 import io.jmix.flowui.view.*;
+import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,9 @@ public class FuelStationDetailView extends StandardDetailView<FuelStation> {
 
     @Subscribe
     public void onInit(final InitEvent event) {
-        mapFragment.addVectorLayerWithDataVectorSource(fuelStationDc, "location");
+        VectorLayer fuelStationVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(fuelStationDc, "location");
+
+        mapFragment.setFuelStationStyleProvider(fuelStationVectorLayer);
     }
 
     @Subscribe

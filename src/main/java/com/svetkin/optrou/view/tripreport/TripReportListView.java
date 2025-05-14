@@ -32,6 +32,7 @@ import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
 import io.jmix.flowui.view.builder.LookupWindowBuilder;
 import io.jmix.mapsflowui.component.GeoMap;
+import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -69,8 +70,13 @@ public class TripReportListView extends StandardListView<TripReport> {
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
-        mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
-        mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+        VectorLayer routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
+        VectorLayer factRouteVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripDc, "factLine");
+        VectorLayer controlPointsVector = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+
+        mapFragment.setLineStringStyleProvider(routeVectorLayer);
+        mapFragment.setFactLineStringStyleProvider(factRouteVectorLayer);
+        mapFragment.setControlPointStyleProvider(controlPointsVector);
     }
 
     @Subscribe("tripReportsDataGrid")

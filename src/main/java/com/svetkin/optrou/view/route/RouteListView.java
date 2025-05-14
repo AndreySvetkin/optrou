@@ -80,8 +80,11 @@ public class RouteListView extends StandardListView<Route> {
     public void onInit(final InitEvent event) {
         map = mapFragment.getMap();
 
-        mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
-        mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+        VectorLayer routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
+        VectorLayer controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+
+        mapFragment.setLineStringStyleProvider(routeVectorLayer);
+        mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
     }
 
     @Subscribe("routesDataGrid")

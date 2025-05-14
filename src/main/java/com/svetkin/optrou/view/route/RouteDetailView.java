@@ -48,6 +48,7 @@ import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import io.jmix.mapsflowui.component.model.source.ClusterSource;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.component.model.source.VectorSource;
+import io.jmix.mapsflowui.kit.component.model.style.Style;
 import org.apache.commons.collections4.CollectionUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -105,12 +106,14 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @Subscribe
     public void onInit(final InitEvent event) {
         map = mapFragment.getMap();
-
         routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
         controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
         routeFuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeFuelStationsDc, "fuelStation.location");
         routeFuelStationsVectorLayer.setVisible(false);
 
+        mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
+        mapFragment.setLineStringStyleProvider(routeVectorLayer);
+        mapFragment.setFuelStationStyleProvider(routeFuelStationsVectorLayer);
         map.addSingleClickListener(this::onMapSingleClick);
     }
 

@@ -16,6 +16,7 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
+import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 
@@ -36,10 +37,15 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
 
     @Subscribe
     public void onInit(final InitEvent event) {
-        mapFragment.addVectorLayerWithDataVectorSource(tripReportDc, "line");
-        mapFragment.addVectorLayerWithDataVectorSource(tripReportDc, "factLine");
-        mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
-        mapFragment.addVectorLayerWithDataVectorSource(tripFuelStationsDc, "fuelStation.location");
+        VectorLayer routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripReportDc, "line");
+        VectorLayer factRouteVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripReportDc, "factLine");
+        VectorLayer controlPointsVector = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
+        VectorLayer fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripFuelStationsDc, "fuelStation.location");
+
+        mapFragment.setLineStringStyleProvider(routeVectorLayer);
+        mapFragment.setControlPointStyleProvider(factRouteVectorLayer);
+        mapFragment.setControlPointStyleProvider(controlPointsVector);
+        mapFragment.setFuelStationStyleProvider(fuelStationsVectorLayer);
     }
 
     @Subscribe

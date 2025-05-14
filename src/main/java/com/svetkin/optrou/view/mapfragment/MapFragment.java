@@ -1,5 +1,6 @@
 package com.svetkin.optrou.view.mapfragment;
 
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.flowui.fragment.Fragment;
 import io.jmix.flowui.fragment.FragmentDescriptor;
@@ -11,7 +12,18 @@ import io.jmix.mapsflowui.component.data.ContainerDataVectorSourceItems;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import io.jmix.mapsflowui.component.model.source.ClusterSource;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
+import io.jmix.mapsflowui.component.model.source.VectorSource;
 import io.jmix.mapsflowui.kit.component.model.layer.Layer;
+import io.jmix.mapsflowui.kit.component.model.style.Fill;
+import io.jmix.mapsflowui.kit.component.model.style.PointStyle;
+import io.jmix.mapsflowui.kit.component.model.style.Style;
+import io.jmix.mapsflowui.kit.component.model.style.image.Anchor;
+import io.jmix.mapsflowui.kit.component.model.style.image.CircleStyle;
+import io.jmix.mapsflowui.kit.component.model.style.image.IconOrigin;
+import io.jmix.mapsflowui.kit.component.model.style.image.IconStyle;
+import io.jmix.mapsflowui.kit.component.model.style.image.ImageStyle;
+import io.jmix.mapsflowui.kit.component.model.style.image.RegularShape;
+import io.jmix.mapsflowui.kit.component.model.style.stroke.Stroke;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -58,6 +70,63 @@ public class MapFragment extends Fragment<VerticalLayout> {
 
     public void setZoom(double zoom) {
         map.setZoom(zoom);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setControlPointStyleProvider(VectorLayer vectorLayer) {
+        DataVectorSource dataVectorSource = vectorLayer.getSource();
+        dataVectorSource.setStyleProvider(location ->
+            new Style()
+                    .withImage(new IconStyle()
+                            .withSrc("icons/nav.png")
+                            .withScale(0.07d)
+                            .withAnchor(new Anchor(0.49, 0.12))
+                            .withAnchorOrigin(IconOrigin.BOTTOM_LEFT)
+                            .withColor("#12E327")));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setVehiclesStyleProvider(VectorLayer vectorLayer) {
+        DataVectorSource dataVectorSource = vectorLayer.getSource();
+        dataVectorSource.setStyleProvider(location ->
+                new Style()
+                        .withImage(new IconStyle()
+                                .withSrc("icons/veh.png")
+                                .withScale(0.07d)
+                                .withAnchor(new Anchor(0.49, 0.12))
+                                .withAnchorOrigin(IconOrigin.BOTTOM_LEFT)));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setFuelStationStyleProvider(VectorLayer vectorLayer) {
+        DataVectorSource dataVectorSource = vectorLayer.getSource();
+        dataVectorSource.setStyleProvider(location ->
+                new Style()
+                        .withImage(new IconStyle()
+                                .withSrc("icons/gas.png")
+                                .withScale(0.07d)
+                                .withAnchor(new Anchor(0.49, 0.12))
+                                .withAnchorOrigin(IconOrigin.BOTTOM_LEFT)));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setLineStringStyleProvider(VectorLayer vectorLayer) {
+        DataVectorSource dataVectorSource = vectorLayer.getSource();
+        dataVectorSource.setStyleProvider(location ->
+                new Style()
+                        .withStroke(new Stroke()
+                                .withColor("#000000")
+                                .withWidth(2.0d)));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setFactLineStringStyleProvider(VectorLayer vectorLayer) {
+        DataVectorSource dataVectorSource = vectorLayer.getSource();
+        dataVectorSource.setStyleProvider(location ->
+                new Style()
+                        .withStroke(new Stroke()
+                                .withColor("#EB2DCB")
+                                .withWidth(2.0d)));
     }
 
     private <T> DataVectorSource<T> createDataVectorSource(InstanceContainer<T> dc, String property) {

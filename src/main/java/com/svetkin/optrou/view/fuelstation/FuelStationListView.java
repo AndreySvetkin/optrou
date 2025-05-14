@@ -46,6 +46,9 @@ public class FuelStationListView extends StandardListView<FuelStation> {
     @Subscribe
     public void onInit(final InitEvent event) {
         VectorLayer fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(fuelStationsDc, "location");
+
+        mapFragment.setFuelStationStyleProvider(fuelStationsVectorLayer);
+
         fuelStationsVectorLayer.<DataVectorSource<FuelStation>>getSource().addGeoObjectClickListener(this::onGeoObjectClick);
     }
 
