@@ -1,11 +1,8 @@
 package com.svetkin.optrou.service;
 
-import com.mapbox.geojson.utils.PolylineUtils;
-import com.svetkin.optrou.controller.OsrmRouteController;
 import com.svetkin.optrou.entity.Route;
-import com.svetkin.optrou.entity.RoutePoint;
 import com.svetkin.optrou.entity.Trip;
-import com.svetkin.optrou.entity.dto.RouteDto;
+import com.svetkin.optrou.entity.User;
 import com.svetkin.optrou.repository.RouteRepository;
 import com.svetkin.optrou.repository.TripRepository;
 import com.svetkin.optrou.view.trip.TripDetailView;
@@ -13,16 +10,11 @@ import com.vaadin.flow.router.RouteParameters;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlans;
 import io.jmix.core.Id;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.UiComponentUtils;
-import io.jmix.maps.utils.GeometryUtils;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.LineString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.UUID;
 
 @Component(TripCreateService.NAME)
@@ -36,19 +28,22 @@ public class TripCreateService {
     private final RouteRepository routeRepository;
     private final FetchPlans fetchPlans;
     private final ViewNavigators viewNavigators;
+    private final CurrentAuthentication currentAuthentication;
 
     public TripCreateService(TripRepository tripRepository,
                              TripPointCreateService tripPointCreateService,
                              TripFuelStationCreateService tripFuelStationCreateService,
                              RouteRepository routeRepository,
                              FetchPlans fetchPlans,
-                             ViewNavigators viewNavigators) {
+                             ViewNavigators viewNavigators,
+                             CurrentAuthentication currentAuthentication) {
         this.tripRepository = tripRepository;
         this.tripPointCreateService = tripPointCreateService;
         this.tripFuelStationCreateService = tripFuelStationCreateService;
         this.routeRepository = routeRepository;
         this.fetchPlans = fetchPlans;
         this.viewNavigators = viewNavigators;
+        this.currentAuthentication = currentAuthentication;
     }
 
     public void createAndNavigateTrip(Id<Route> routeId) {
@@ -69,6 +64,7 @@ public class TripCreateService {
         trip.setRoute(route);
         trip.setLine(route.getLine());
         trip.setLength(route.getLine().getLength() * 100);
+        trip.setLogist((User) currentAuthentication.getUser());
         trip.setControlPoints(route.getControlPoints().stream()
                 .map(routePoint -> tripPointCreateService.createTripPoint(trip, routePoint))
                 .toList());

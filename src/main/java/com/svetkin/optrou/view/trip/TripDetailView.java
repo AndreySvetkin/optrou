@@ -14,15 +14,10 @@ import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.Notifications;
-import io.jmix.flowui.component.SupportsTypedValue;
-import io.jmix.flowui.component.datepicker.TypedDatePicker;
-import io.jmix.flowui.component.datetimepicker.TypedDateTimePicker;
 import io.jmix.flowui.component.select.JmixSelect;
-import io.jmix.flowui.data.value.ContainerValueSource;
 import io.jmix.flowui.exception.ValidationException;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.action.BaseAction;
-import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
@@ -38,7 +33,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Route(value = "trips/:id", layout = MainView.class)
@@ -66,8 +60,6 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private CollectionPropertyContainer<RefuellingPlan> refuellingPlansDc;
     @ViewComponent
     private JmixSelect<TripStatus> statusField;
-    @ViewComponent
-    private JmixButton toProgressButton;
     @ViewComponent
     private BaseAction toProgressAction;
     @ViewComponent

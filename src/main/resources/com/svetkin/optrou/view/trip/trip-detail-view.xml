@@ -62,7 +62,7 @@
                                     <action id="entityClear" type="entity_clear"/>
                                 </actions>
                             </entityPicker>
-                            <entityPicker id="logistField" property="logist">
+                            <entityPicker id="logistField" property="logist" readOnly="true">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
                                     <action id="entityClear" type="entity_clear"/>
