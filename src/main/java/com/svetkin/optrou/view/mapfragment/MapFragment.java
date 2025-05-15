@@ -1,5 +1,6 @@
 package com.svetkin.optrou.view.mapfragment;
 
+import com.svetkin.optrou.entity.trait.HasLine;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.flowui.fragment.Fragment;
@@ -7,15 +8,20 @@ import io.jmix.flowui.fragment.FragmentDescriptor;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
+import io.jmix.maps.utils.GeometryUtils;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.data.ContainerDataVectorSourceItems;
+import io.jmix.mapsflowui.component.model.feature.PointFeature;
+import io.jmix.mapsflowui.component.model.feature.PolygonFeature;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import io.jmix.mapsflowui.component.model.source.ClusterSource;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.component.model.source.VectorSource;
 import io.jmix.mapsflowui.kit.component.model.layer.Layer;
 import io.jmix.mapsflowui.kit.component.model.style.Fill;
+import io.jmix.mapsflowui.kit.component.model.style.LineStringStyle;
 import io.jmix.mapsflowui.kit.component.model.style.PointStyle;
+import io.jmix.mapsflowui.kit.component.model.style.PolygonStyle;
 import io.jmix.mapsflowui.kit.component.model.style.Style;
 import io.jmix.mapsflowui.kit.component.model.style.image.Anchor;
 import io.jmix.mapsflowui.kit.component.model.style.image.CircleStyle;
@@ -24,7 +30,10 @@ import io.jmix.mapsflowui.kit.component.model.style.image.IconStyle;
 import io.jmix.mapsflowui.kit.component.model.style.image.ImageStyle;
 import io.jmix.mapsflowui.kit.component.model.style.image.RegularShape;
 import io.jmix.mapsflowui.kit.component.model.style.stroke.Stroke;
+import io.jmix.mapsflowui.kit.component.model.style.text.TextPlacement;
+import io.jmix.mapsflowui.kit.component.model.style.text.TextStyle;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -109,9 +118,8 @@ public class MapFragment extends Fragment<VerticalLayout> {
                                 .withAnchorOrigin(IconOrigin.BOTTOM_LEFT)));
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public void setLineStringStyleProvider(VectorLayer vectorLayer) {
-        DataVectorSource dataVectorSource = vectorLayer.getSource();
+        DataVectorSource<HasLine> dataVectorSource = vectorLayer.getSource();
         dataVectorSource.setStyleProvider(location ->
                 new Style()
                         .withStroke(new Stroke()

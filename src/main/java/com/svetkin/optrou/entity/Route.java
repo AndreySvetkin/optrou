@@ -1,5 +1,6 @@
 package com.svetkin.optrou.entity;
 
+import com.svetkin.optrou.entity.trait.HasLine;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @JmixEntity
 @Table(name = "OPTROU_ROUTE")
 @Entity(name = "optrou_Route")
-public class Route {
+public class Route implements HasLine {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
