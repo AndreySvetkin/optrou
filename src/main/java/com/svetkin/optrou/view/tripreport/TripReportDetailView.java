@@ -1,6 +1,5 @@
 package com.svetkin.optrou.view.tripreport;
 
-import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.TripPoint;
 import com.svetkin.optrou.entity.TripReport;
@@ -8,8 +7,8 @@ import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.model.CollectionPropertyContainer;
+import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
-import io.jmix.flowui.model.InstancePropertyContainer;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.Subscribe;
@@ -34,6 +33,14 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
     private CollectionPropertyContainer<TripPoint> controlPointsDc;
     @ViewComponent
     private InstanceContainer<TripReport> tripReportDc;
+    @ViewComponent
+    private DataContext dataContext;
+
+    public void setTripReport(TripReport tripReport) {
+        dataContext.clear();
+        tripReport = dataContext.merge(tripReport);
+        tripReportDc.setItem(tripReport);
+    }
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -43,7 +50,7 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
         VectorLayer fuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripFuelStationsDc, "fuelStation.location");
 
         mapFragment.setLineStringStyleProvider(routeVectorLayer);
-        mapFragment.setControlPointStyleProvider(factRouteVectorLayer);
+        mapFragment.setFactLineStringStyleProvider(factRouteVectorLayer);
         mapFragment.setControlPointStyleProvider(controlPointsVector);
         mapFragment.setFuelStationStyleProvider(fuelStationsVectorLayer);
     }

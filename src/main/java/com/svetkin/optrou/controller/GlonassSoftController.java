@@ -2,6 +2,7 @@ package com.svetkin.optrou.controller;
 
 import com.svetkin.optrou.entity.Vehicle;
 import com.svetkin.optrou.entity.dto.GlonassSoftAuthenticationDto;
+import com.svetkin.optrou.entity.dto.GlonassSoftAuthenticationRequestDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftResponseRefuellingsDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftResponseVehicleLocationsDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftVehicleInfoRequestDto;
@@ -64,6 +65,7 @@ public class GlonassSoftController {
 
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add(GLONASSSOFT_TOKEN_HEADER_KEY, token);
+            headers.add("Content-Type", "application/json");
             HttpEntity<?> request = new HttpEntity<>(headers);
 
             ResponseEntity<?> response = restClient
@@ -80,7 +82,13 @@ public class GlonassSoftController {
         sleepOneSecond();
 
         String path = baseUrl + "/api/v3/auth/login";
-        HttpEntity<?> request = new HttpEntity<>(Map.of("login", login, "password", password));
+        GlonassSoftAuthenticationRequestDto requestBody = metadata.create(GlonassSoftAuthenticationRequestDto.class);
+        requestBody.setLogin(login);
+        requestBody.setPassword(password);
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json");
+        HttpEntity request = new HttpEntity<>(requestBody,headers);
+
         GlonassSoftAuthenticationDto responseDto = restClient
                 .post(path, GlonassSoftAuthenticationDto.class, request, Map.of())
                 .getBody();
@@ -104,6 +112,7 @@ public class GlonassSoftController {
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add(GLONASSSOFT_TOKEN_HEADER_KEY, token);
+        headers.add("Content-Type", "application/json");
         HttpEntity<?> request = new HttpEntity<>(requestBody, headers);
 
         return restClient
@@ -128,6 +137,7 @@ public class GlonassSoftController {
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add(GLONASSSOFT_TOKEN_HEADER_KEY, token);
+        headers.add("Content-Type", "application/json");
         HttpEntity<?> request = new HttpEntity<>(requestBody, headers);
 
         return restClient

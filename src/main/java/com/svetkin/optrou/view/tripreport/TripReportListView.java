@@ -3,7 +3,6 @@ package com.svetkin.optrou.view.tripreport;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripReport;
 import com.svetkin.optrou.entity.type.TripStatus;
-import com.svetkin.optrou.repository.TripRepository;
 import com.svetkin.optrou.service.TripOuterReportCreateService;
 import com.svetkin.optrou.service.TripReportCreateService;
 import com.svetkin.optrou.view.main.MainView;
@@ -14,11 +13,9 @@ import io.jmix.core.Id;
 import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Dialogs;
 import io.jmix.flowui.Notifications;
-import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
-import io.jmix.flowui.component.combobox.EntityComboBox;
 import io.jmix.flowui.download.Downloader;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
@@ -30,10 +27,8 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
-import io.jmix.flowui.view.builder.LookupWindowBuilder;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,13 +60,16 @@ public class TripReportListView extends StandardListView<TripReport> {
     private InstanceContainer<Trip> tripDc;
     @ViewComponent
     private MapFragment mapFragment;
+    @ViewComponent
+    private InstanceContainer<TripReport> tripReportDc;
 
     private GeoMap map;
 
+
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
-        VectorLayer routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripDc, "line");
-        VectorLayer factRouteVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripDc, "factLine");
+        VectorLayer routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripReportDc, "line");
+        VectorLayer factRouteVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(tripReportDc, "factLine");
         VectorLayer controlPointsVector = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
 
         mapFragment.setLineStringStyleProvider(routeVectorLayer);
@@ -83,9 +81,10 @@ public class TripReportListView extends StandardListView<TripReport> {
     public void onTripReportsDataGridCellFocus(final CellFocusEvent<TripReport> event) {
         event.getItem().ifPresent(tripReport -> {
             Trip trip = tripReport.getTrip();
+            tripReportDc.setItem(tripReport);
             tripDc.setItem(trip);
 
-            LineString line = trip.getLine();
+            LineString line = tripReport.getLine();
             if (line != null) {
                 mapFragment.setCenter(new Coordinate(line.getCoordinateN(0)));
                 mapFragment.setZoom(7.0);

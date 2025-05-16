@@ -1,13 +1,10 @@
 package com.svetkin.optrou.service;
 
 import com.svetkin.optrou.entity.RefuellingPlan;
-import com.svetkin.optrou.entity.Route;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripReport;
-import com.svetkin.optrou.repository.RouteRepository;
 import com.svetkin.optrou.repository.TripReportRepository;
 import com.svetkin.optrou.repository.TripRepository;
-import com.svetkin.optrou.view.trip.TripDetailView;
 import com.svetkin.optrou.view.tripreport.TripReportDetailView;
 import com.vaadin.flow.router.RouteParameters;
 import io.jmix.core.FetchPlan;
@@ -49,8 +46,12 @@ public class TripReportCreateService {
     public void createAndNavigateTripReport(Id<Trip> tripId) {
         TripReport tripReport = createAndSaveTripReport(tripId);
 
-        viewNavigators.detailView(UiComponentUtils.getCurrentView(), TripReport.class)
-                .editEntity(tripReport)
+        viewNavigators.view(UiComponentUtils.getCurrentView(), TripReportDetailView.class)
+                .withRouteParameters(new RouteParameters("id", "new"))
+                .withAfterNavigationHandler(afterViewNavigationEvent -> {
+                    TripReportDetailView tripReportDetailView = afterViewNavigationEvent.getView();
+                    tripReportDetailView.setTripReport(tripReport);
+                })
                 .navigate();
     }
 
@@ -76,18 +77,18 @@ public class TripReportCreateService {
         tripReport.setFactLine(tripFactLineService.getTripFactLine(trip));
         tripReport.setFactLength(tripReport.getFactLine().getLength() * 100);
         tripReport.setFactRefuellingPlan(tripFactRefuellingPlanService.getTripFactRefuellingPlan(trip));
-        tripReport = tripReportRepository.save(tripReport);
         return tripReport;
     }
 
     private FetchPlan getTripFetchPlan() {
-        return fetchPlans.builder(Route.class)
+        return fetchPlans.builder(Trip.class)
                 .addFetchPlan(FetchPlan.BASE)
-                .add("trip", tfpb -> tfpb.addFetchPlan(FetchPlan.BASE))
                 .add("route", rfpb -> rfpb.addFetchPlan(FetchPlan.BASE))
                 .add("logist", lfpb -> lfpb.addFetchPlan(FetchPlan.BASE))
                 .add("driver", dfpb -> dfpb.addFetchPlan(FetchPlan.BASE))
                 .add("vehicle", vfpb -> vfpb.addFetchPlan(FetchPlan.BASE))
+                .add("fuelStations", tfsfpb -> tfsfpb.addFetchPlan(FetchPlan.BASE)
+                        .add("fuelStation", fsfpb -> fsfpb.addFetchPlan(FetchPlan.BASE)))
                 .add("refuellingPlans", repfpb -> repfpb.addFetchPlan(FetchPlan.BASE)
                         .add("refuellings", refpb -> refpb.addFetchPlan(FetchPlan.BASE)))
                 .build();

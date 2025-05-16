@@ -15,7 +15,11 @@
                 <property name="logist" fetchPlan="_base"/>
                 <property name="vehicle" fetchPlan="_base"/>
                 <property name="refuellingPlan" fetchPlan="_base">
-                    <property name="trip" fetchPlan="_base"/>
+                    <property name="trip" fetchPlan="_base">
+                        <property name="fuelStations" fetchPlan="_base">
+                            <property name="fuelStation" fetchPlan="_base"/>
+                        </property>
+                    </property>
                     <property name="refuellings" fetchPlan="_base">
                         <property name="fuelStationPrice" fetchPlan="_base">
                             <property name="fuelStation" fetchPlan="_base"/>
@@ -80,8 +84,6 @@
                             </entityPicker>
                             <textField id="lengthField" property="length"/>
                             <textField id="factLengthField" property="factLength"/>
-                            <textField id="lineField" property="line"/>
-                            <textField id="factLineField" property="factLine"/>
                             <entityPicker id="driverField" property="driver">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
@@ -97,18 +99,6 @@
                             <entityPicker id="vehicleField" property="vehicle">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
-                                    <action id="entityClear" type="entity_clear"/>
-                                </actions>
-                            </entityPicker>
-                            <entityPicker id="refuellingPlanField" property="refuellingPlan">
-                                <actions>
-                                    <action id="entityOpenComposition" type="entity_openComposition"/>
-                                    <action id="entityClear" type="entity_clear"/>
-                                </actions>
-                            </entityPicker>
-                            <entityPicker id="factRefuellingPlanField" property="factRefuellingPlan">
-                                <actions>
-                                    <action id="entityOpenComposition" type="entity_openComposition"/>
                                     <action id="entityClear" type="entity_clear"/>
                                 </actions>
                             </entityPicker>

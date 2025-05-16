@@ -31,6 +31,7 @@
                     <textField id="fuelConsumptionField" property="fuelConsumption"/>
                     <textField id="remainingFuelField" property="remainingFuel"/>
                     <textField id="capacityField" property="capacity"/>
+                    <textField id="vehicleIdField" property="vehicleId"/>
                     <textField id="latitudeField" property="latitude"/>
                     <textField id="longitudeField" property="longitude"/>
                 </formLayout>

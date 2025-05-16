@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
       title="msg://tripReportListView.title"
       focusComponent="tripReportsDataGrid">
     <data>
@@ -22,6 +21,7 @@
         <instance id="tripDc" class="com.svetkin.optrou.entity.Trip">
             <collection id="controlPointsDc" property="controlPoints"/>
         </instance>
+        <instance id="tripReportDc" class="com.svetkin.optrou.entity.TripReport"/>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -42,6 +42,9 @@
                                dataLoader="tripReportsDl">
                     <properties include=".*"/>
                 </genericFilter>
+                <hbox id="reportsButtonsPanel" classNames="buttons-panel">
+                    <button id="processFuelStationsAndPricesButton" action="outerReportAction"/>
+                </hbox>
                 <hbox id="buttonsPanel" classNames="buttons-panel">
                     <button id="createButton" action="tripReportsDataGrid.create"/>
                     <button id="editButton" action="tripReportsDataGrid.edit"/>

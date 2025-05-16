@@ -4,6 +4,7 @@ import com.svetkin.optrou.controller.FuelStationBenzuberController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +23,7 @@ public class RestClient {
 
         ResponseEntity<RES> responseEntity;
         try {
-            responseEntity = restTemplate.getForEntity(path, responseType, uriVariables);
+            responseEntity = restTemplate.exchange(path, HttpMethod.GET, request, responseType, uriVariables);
 
             if (!responseEntity.getStatusCode().is2xxSuccessful()) {
                 log.debug("Received non 200 custom request http GET response {}", responseEntity);
