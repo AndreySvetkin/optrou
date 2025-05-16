@@ -1,54 +1,34 @@
 package com.svetkin.optrou.view.route;
 
-import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.entity.Route;
 import com.svetkin.optrou.entity.RouteFuelStation;
 import com.svetkin.optrou.entity.RoutePoint;
-import com.svetkin.optrou.repository.RouteFuelStationRepository;
 import com.svetkin.optrou.repository.RoutePointRepository;
 import com.svetkin.optrou.service.FuelStationSearchService;
 import com.svetkin.optrou.service.RouteService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
-import io.jmix.core.DataManager;
 import io.jmix.core.EntitySet;
 import io.jmix.core.EntityStates;
 import io.jmix.flowui.Notifications;
-import io.jmix.flowui.Views;
 import io.jmix.flowui.action.list.RemoveAction;
 import io.jmix.flowui.action.view.DetailSaveCloseAction;
 import io.jmix.flowui.component.grid.DataGrid;
-import io.jmix.flowui.component.tabsheet.JmixTabSheet;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
-import io.jmix.flowui.model.InstanceLoader;
-import io.jmix.flowui.model.ViewData;
-import io.jmix.flowui.sys.ViewSupport;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
-import io.jmix.flowui.xml.layout.support.ViewLoaderSupport;
 import io.jmix.maps.utils.GeometryUtils;
 import io.jmix.mapsflowui.component.GeoMap;
-import io.jmix.mapsflowui.component.data.ContainerDataVectorSourceItems;
-import io.jmix.mapsflowui.component.data.binding.ClusterDataVectorSourceBinding;
-import io.jmix.mapsflowui.component.data.binding.DataVectorSourceBinding;
 import io.jmix.mapsflowui.component.event.MapSingleClickEvent;
-import io.jmix.mapsflowui.component.loader.MapLoaderSupport;
-import io.jmix.mapsflowui.component.model.FitOptions;
-import io.jmix.mapsflowui.component.model.feature.LineStringFeature;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
-import io.jmix.mapsflowui.component.model.source.ClusterSource;
-import io.jmix.mapsflowui.component.model.source.DataVectorSource;
-import io.jmix.mapsflowui.component.model.source.VectorSource;
-import io.jmix.mapsflowui.kit.component.model.style.Style;
 import org.apache.commons.collections4.CollectionUtils;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
@@ -56,8 +36,6 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 @com.vaadin.flow.router.Route(value = "routes/:id", layout = MainView.class)
 @ViewController(id = "optrou_Route.detail")
@@ -109,7 +87,6 @@ public class RouteDetailView extends StandardDetailView<Route> {
         routeVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeDc, "line");
         controlPointsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(controlPointsDc, "location");
         routeFuelStationsVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(routeFuelStationsDc, "fuelStation.location");
-        routeFuelStationsVectorLayer.setVisible(false);
 
         mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
         mapFragment.setLineStringStyleProvider(routeVectorLayer);
@@ -123,13 +100,6 @@ public class RouteDetailView extends StandardDetailView<Route> {
         if (routeLine != null) {
             setMapCenterByLine(routeLine);
         }
-    }
-
-    @Subscribe("tabSheet")
-    public void onTabSheetSelectedChange(final JmixTabSheet.SelectedChangeEvent event) {
-        routeFuelStationsVectorLayer.setVisible(fuelStationsTab.isSelected());
-        routeVectorLayer.setVisible(commonTab.isSelected());
-        controlPointsVectorLayer.setVisible(commonTab.isSelected());
     }
 
     public void onMapSingleClick(final MapSingleClickEvent event) {

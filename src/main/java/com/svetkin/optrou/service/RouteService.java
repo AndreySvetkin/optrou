@@ -30,7 +30,7 @@ public class RouteService {
         List<RouteDto> routeDtos = osrmRouteController.getRoutesByControlPoints(controlPoints);
 
         return routeDtos.stream()
-                .map(routeDto -> PolylineUtils.decode(routeDto.getGeometry(), 5))
+                .map(routeDto -> PolylineUtils.decode(routeDto.getGeometry(), 6))
                 .map(points -> points.stream()
                         .map(point -> new Coordinate(point.longitude(), point.latitude()))
                         .toList())

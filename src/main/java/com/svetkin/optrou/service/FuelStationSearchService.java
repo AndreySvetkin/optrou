@@ -1,20 +1,10 @@
 package com.svetkin.optrou.service;
 
-import com.mapbox.geojson.utils.PolylineUtils;
-import com.svetkin.optrou.controller.OsrmRouteController;
-import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.entity.Route;
 import com.svetkin.optrou.entity.RouteFuelStation;
-import com.svetkin.optrou.entity.RoutePoint;
-import com.svetkin.optrou.entity.dto.RouteDto;
 import com.svetkin.optrou.repository.FuelStationRepository;
-import com.svetkin.optrou.repository.RouteFuelStationRepository;
-import io.jmix.core.DataManager;
-import io.jmix.maps.utils.GeometryUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.LineString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Component(FuelStationSearchService.NAME)
@@ -34,7 +23,7 @@ public class FuelStationSearchService {
     private static final Logger log = LoggerFactory.getLogger(FuelStationSearchService.class);
     private static final String SEARCH_FUEL_STATION_QUERY_STRING = """
             with stbuffer as (
-                select ST_Transform(ST_Buffer(ST_Transform(ST_SetSRID(#line::geometry, 4326), 26986), 300, 'side=both'), 4326) buffer
+                select ST_Transform(ST_Buffer(ST_Transform(ST_SetSRID(#line::geometry, 4326), 26986), 500, 'side=both'), 4326) buffer
             ),
             fuel_stations as (
                 select fs.id, fs.location

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.svetkin.optrou.entity.RoutePoint;
 import com.svetkin.optrou.entity.dto.OsrmRouteResponseDto;
 import com.svetkin.optrou.entity.dto.RouteDto;
-import com.svetkin.optrou.entity.dto.RoutePointDto;
 import com.svetkin.optrou.rest.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class OsrmRouteController {
     }
 
     public List<RouteDto> getRoutesByControlPoints(List<RoutePoint> controlPoints) {
-        String path = baseUrl + "route/v1/driving/" + convertRoutePointsToString(controlPoints);
+        String path = baseUrl + "route/v1/driving/" + convertRoutePointsToString(controlPoints) + "?overview={overview}&geometries={geometries}";
         OsrmRouteResponseDto osrmRouteResponseDto = restClient
                 .get(path, OsrmRouteResponseDto.class, Map.of("overview", "full", "geometries", "polyline6"))
                 .getBody();
