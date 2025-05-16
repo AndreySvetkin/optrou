@@ -112,6 +112,14 @@ public class TripReportListView extends StandardListView<TripReport> {
                             return;
                         }
 
+                        if (trip.getVehicle().getVehicleId() == null) {
+                            notifications.create("У машины нет GlonassSoft идентификатора")
+                                    .build()
+                                    .open();
+
+                            return;
+                        }
+
                         tripReportCreateService.createAndNavigateTripReport(Id.of(trip));
                     }
                 })
