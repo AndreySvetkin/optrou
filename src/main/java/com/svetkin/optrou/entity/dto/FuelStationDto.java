@@ -14,7 +14,8 @@ public class FuelStationDto {
 
     private String brand;
 
-    private Boolean isGoods;
+    @JsonProperty("enable")
+    private Boolean isEnabled;
 
     @JsonProperty("city")
     private String region;
@@ -39,12 +40,12 @@ public class FuelStationDto {
         return location;
     }
 
-    public void setIsGoods(Boolean isGoods) {
-        this.isGoods = isGoods;
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
-    public Boolean getIsGoods() {
-        return isGoods;
+    public Boolean getIsEnabled() {
+        return isEnabled;
     }
 
     public String getAddress() {

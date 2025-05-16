@@ -5,7 +5,6 @@ import com.svetkin.optrou.entity.FuelStationBrand;
 import com.svetkin.optrou.entity.dto.FuelStationDto;
 import com.svetkin.optrou.entity.dto.PointDto;
 import com.svetkin.optrou.repository.FuelStationBrandRepository;
-import com.svetkin.optrou.repository.FuelStationRepository;
 import io.jmix.maps.utils.GeometryUtils;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +30,7 @@ public class FuelStationMapper {
         fuelStation.setStationId(fuelStationDto.getStationId());
         fuelStation.setName(fuelStationDto.getName());
         fuelStation.setBrand(brand);
-        fuelStation.setIsEnabled(fuelStationDto.getIsGoods());
+        fuelStation.setIsEnabled(fuelStationDto.getIsEnabled());
         fuelStation.setRegion(fuelStationDto.getRegion());
         fuelStation.setAddress(fuelStationDto.getAddress());
         PointDto pointDto = fuelStationDto.getLocation();

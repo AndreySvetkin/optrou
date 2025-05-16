@@ -4,7 +4,6 @@ import com.svetkin.optrou.controller.FuelStationBenzuberController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -38,7 +37,7 @@ public class RestClient {
         return null;
     }
 
-    public <RES> ResponseEntity<RES> get(String path, Class<RES> responseType, Map<String, Object> uriVariables) {
+    public <RES> ResponseEntity<RES> get(String path, Class<RES> responseType, Map<String, ?> uriVariables) {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<RES> responseEntity;

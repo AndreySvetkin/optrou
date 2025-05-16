@@ -3,7 +3,6 @@ package com.svetkin.optrou.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.svetkin.optrou.entity.dto.FuelStationDto;
 import com.svetkin.optrou.entity.dto.FuelStationPriceDto;
-import com.svetkin.optrou.entity.dto.FuelStationsResponseDto;
 import com.svetkin.optrou.rest.RestClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,7 +32,7 @@ public class FuelStationBenzuberController {
     }
 
     public List<FuelStationDto> getAllFuelStations() {
-        String path = baseUrl + "stations";
+        String path = baseUrl + "/stations?apikey={apikey}";
         List<?> responseList = restClient.get(path, List.class, Map.of(API_KEY, apikey)).getBody();
 
         if (responseList == null) {
@@ -46,7 +45,7 @@ public class FuelStationBenzuberController {
     }
 
     public List<FuelStationPriceDto> getAllFuelStationPrices() {
-        String path = baseUrl + "price";
+        String path = baseUrl + "/price?apikey={apikey}";
         List<?> responseList = restClient.get(path, List.class, Map.of(API_KEY, apikey)).getBody();
 
         if (responseList == null) {
@@ -59,7 +58,8 @@ public class FuelStationBenzuberController {
     }
 
     public List<FuelStationPriceDto> getFuelStationPrices(String stationId) {
-        String path = baseUrl + "price";
+        String path = baseUrl + "/price?apikey={apikey}&stationId={stationId}";
+
         List<?> responseList = restClient.get(path, List.class, Map.of("stationId", stationId, API_KEY, apikey)).getBody();
 
         if (responseList == null) {

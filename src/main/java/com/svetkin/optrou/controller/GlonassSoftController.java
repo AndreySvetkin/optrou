@@ -1,18 +1,14 @@
 package com.svetkin.optrou.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.svetkin.optrou.entity.Vehicle;
 import com.svetkin.optrou.entity.dto.GlonassSoftAuthenticationDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftResponseRefuellingsDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftResponseVehicleLocationsDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftVehicleInfoRequestDto;
-import com.svetkin.optrou.entity.dto.GlonassSoftVehicleLocationDto;
 import com.svetkin.optrou.entity.dto.GlonassSoftVehicleLocationRequestDto;
 import com.svetkin.optrou.rest.RestClient;
 import io.jmix.core.Metadata;
-import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.session.SessionData;
-import io.jmix.flowui.sys.SessionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -37,12 +33,6 @@ public class GlonassSoftController {
     private static final String GLONASSSOFT_TOKEN_HEADER_KEY = "X-Auth";
     private static final Logger log = LoggerFactory.getLogger(GlonassSoftController.class);
 
-    private final ObjectMapper objectMapper;
-    private final SessionHolder sessionHolder;
-    private final ObjectProvider<SessionData> sessionDataProvider;
-    private final CurrentAuthentication currentAuthentication;
-    private final Metadata metadata;
-
     @Value("${optrou.glonasssoft.base-url}")
     private String baseUrl;
 
@@ -53,13 +43,15 @@ public class GlonassSoftController {
     private String password;
 
     private final RestClient restClient;
+    private final ObjectProvider<SessionData> sessionDataProvider;
 
-    public GlonassSoftController(RestClient restClient, ObjectMapper objectMapper, SessionHolder sessionHolder, ObjectProvider<SessionData> sessionDataProvider, CurrentAuthentication currentAuthentication, Metadata metadata) {
+    private final Metadata metadata;
+
+    public GlonassSoftController(RestClient restClient,
+                                 ObjectProvider<SessionData> sessionDataProvider,
+                                 Metadata metadata) {
         this.restClient = restClient;
-        this.objectMapper = objectMapper;
-        this.sessionHolder = sessionHolder;
         this.sessionDataProvider = sessionDataProvider;
-        this.currentAuthentication = currentAuthentication;
         this.metadata = metadata;
     }
 
