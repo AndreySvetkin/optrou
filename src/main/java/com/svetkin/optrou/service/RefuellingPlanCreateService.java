@@ -12,17 +12,11 @@ import com.svetkin.optrou.entity.type.FuelType;
 import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
 import com.svetkin.optrou.repository.RefuellingPlanRepository;
 import com.svetkin.optrou.repository.RefuellingRepository;
-import com.svetkin.optrou.repository.RouteRepository;
-import com.svetkin.optrou.repository.TripFuelStationRepository;
-import com.svetkin.optrou.repository.TripRepository;
-import io.jmix.core.FetchPlans;
 import io.jmix.core.Metadata;
-import io.jmix.flowui.ViewNavigators;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -172,7 +166,8 @@ public class RefuellingPlanCreateService {
         double possibleTraveledDistance = traveledDistance + remainingFuel / fuelConsumption * 100;
 
         for(TripFuelStation fuelStation : fuelStations) {
-            if (fuelStation.getDistance() <= possibleTraveledDistance) {
+            Double fuelStationDistance = fuelStation.getDistance();
+            if (fuelStationDistance > traveledDistance && fuelStationDistance <= possibleTraveledDistance) {
                 return fuelStation;
             }
         };

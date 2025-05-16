@@ -77,10 +77,12 @@ public class TripCreateService {
     private FetchPlan getRouteFetchPlan() {
         return fetchPlans.builder(Route.class)
                 .addFetchPlan(FetchPlan.BASE)
-                .add("controlPoints", rpfpb -> rpfpb.addFetchPlan(FetchPlan.BASE))
-                .add("fuelStations", fsfpb -> fsfpb
+                .add("controlPoints", rpfpb -> rpfpb
+                        .addFetchPlan(FetchPlan.BASE))
+                .add("fuelStations", tfsfpb -> tfsfpb
                         .addFetchPlan(FetchPlan.BASE)
-                        .add("fuelStation"))
+                        .add("fuelStation", fsfpb -> fsfpb
+                                .addFetchPlan(FetchPlan.BASE)))
                 .build();
     }
 }

@@ -26,5 +26,9 @@
     <exclude-change idName="geography_columns" tagName="dropView" />
     <exclude-change idName="geometry_columns" tagName="dropView" />
     <exclude-change idName="spatial_ref_sys" tagName="dropTable" />
+    <exclude-change idName="OPTROU_ROUTE#LINE" tagName="modifyDataType" />
+    <exclude-change idName="OPTROU_TRIP_REPORT#LINE" tagName="modifyDataType" />
+    <exclude-change idName="OPTROU_TRIP#LINE" tagName="modifyDataType" />
+    <exclude-change idName="OPTROU_TRIP_REPORT#FACT_LINE" tagName="modifyDataType" />
   </component>
 </project>

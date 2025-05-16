@@ -192,7 +192,7 @@ public class TripDetailView extends StandardDetailView<Trip> {
         if (refuellingPlanDto.getStatus() == RefuellingPlanCreateStatus.NEXT_STATION_OR_END_ROUTE_FAR_AWAY) {
             FuelStation lastFuelStation = refuellingPlanDto.getLastFuelStation();
             String lastFuelStationString = lastFuelStation != null
-                    ? lastFuelStation.getName() + lastFuelStation.getBrand()
+                    ? lastFuelStation.getName() + " " + lastFuelStation.getBrand().getName()
                     : "Отсутсвует";
 
             notifications.create("Не удалось доехать до следующей АЗС или конца пути. Последняя АЗС %s".formatted(lastFuelStationString))
