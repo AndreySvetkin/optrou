@@ -1,21 +1,9 @@
 package com.svetkin.optrou.service;
 
 import com.svetkin.optrou.entity.Driver;
-import com.svetkin.optrou.entity.FuelStation;
-import com.svetkin.optrou.entity.FuelStationPrice;
-import com.svetkin.optrou.entity.Refuelling;
-import com.svetkin.optrou.entity.RefuellingPlan;
 import com.svetkin.optrou.entity.Trip;
-import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.Vehicle;
-import com.svetkin.optrou.entity.dto.RefuellingPlanDto;
 import com.svetkin.optrou.entity.dto.RefuellingsVolumeDto;
-import com.svetkin.optrou.entity.type.FuelType;
-import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
-import com.svetkin.optrou.repository.RefuellingPlanRepository;
-import com.svetkin.optrou.repository.RefuellingRepository;
-import io.jmix.core.Metadata;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -26,11 +14,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Component(TripOuterReportCreateService.NAME)
 public class TripOuterReportCreateService {
@@ -85,10 +70,14 @@ public class TripOuterReportCreateService {
         row.createCell(cellIndex++).setCellValue(refuellingsVolumeDto.getPlanningVolume());
         row.createCell(cellIndex++).setCellValue(refuellingsVolumeDto.getFactVolume());
 
-        row.createCell(cellIndex++).setCellValue(trip.getPlanningDateStart());
-        row.createCell(cellIndex++).setCellValue(trip.getPlanningDateEnd());
-        row.createCell(cellIndex++).setCellValue(trip.getFactDateStart());
-        row.createCell(cellIndex++).setCellValue(trip.getFactDateEnd());
+        LocalDateTime planningDateStart = trip.getPlanningDateStart();
+        LocalDateTime planningDateEnd = trip.getPlanningDateEnd();
+        LocalDateTime factDateStart = trip.getFactDateStart();
+        LocalDateTime factDateEnd = trip.getPlanningDateEnd();
+        row.createCell(cellIndex++).setCellValue(planningDateStart != null ? planningDateStart.toString() : "");
+        row.createCell(cellIndex++).setCellValue(planningDateEnd != null ? planningDateEnd.toString() : "");
+        row.createCell(cellIndex++).setCellValue(factDateStart != null ? factDateStart.toString() : "");
+        row.createCell(cellIndex++).setCellValue(factDateEnd != null ? factDateEnd.toString() : "");
 
         Driver driver = trip.getDriver();
         row.createCell(cellIndex++).setCellValue(driver.getFullName());

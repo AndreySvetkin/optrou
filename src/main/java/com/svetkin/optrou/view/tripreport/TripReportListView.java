@@ -123,7 +123,7 @@ public class TripReportListView extends StandardListView<TripReport> {
         dialogWindows.lookup(this, Trip.class)
                 .withSelectHandler(trips -> {
                     byte[] report = tripOuterReportCreateService.createTripsReport(trips.stream().toList());
-                    downloader.download(report, "Отчет по рейсам");
+                    downloader.download(report, "Отчет по рейсам.xlsx");
                 })
                 .open();
     }
