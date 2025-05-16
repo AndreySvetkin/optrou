@@ -1,10 +1,13 @@
 package com.svetkin.optrou.view.trip;
 
+import com.svetkin.optrou.entity.Driver;
+import com.svetkin.optrou.entity.DriverLicenceCategoryRelation;
 import com.svetkin.optrou.entity.FuelStation;
 import com.svetkin.optrou.entity.RefuellingPlan;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.TripPoint;
+import com.svetkin.optrou.entity.Vehicle;
 import com.svetkin.optrou.entity.dto.RefuellingPlanDto;
 import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
 import com.svetkin.optrou.entity.type.TripStatus;
@@ -107,6 +110,27 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private void setMapCenterByLine(LineString line) {
         mapFragment.setCenter(new Coordinate(line.getCoordinateN(0)));
         mapFragment.setZoom(10.0);
+    }
+
+    @Install(to = "driverField", subject = "validator")
+    private void driverFieldValidator(final Driver value) {
+        driverLicenseCategoryValidator(getEditedEntity().getVehicle(), value);
+    }
+
+    @Install(to = "vehicleField", subject = "validator")
+    private void vehicleFieldValidator(final Vehicle value) {
+        driverLicenseCategoryValidator(value, getEditedEntity().getDriver());
+    }
+
+    private void driverLicenseCategoryValidator(Vehicle vehicle, Driver driver) {
+        if (vehicle != null && driver != null) {
+            boolean hasValidDriverLicenseCategory = driver.getLicenseCategories().stream()
+                    .map(DriverLicenceCategoryRelation::getLicenseCategory)
+                    .anyMatch(driverLicenseCategory -> driverLicenseCategory == vehicle.getDriverLicenseCategory());
+            if (!hasValidDriverLicenseCategory) {
+                throw new ValidationException("Нет подходящей водительской категории");
+            }
+        }
     }
 
     @Install(to = "planningDateTimeStartField", subject = "validator")
