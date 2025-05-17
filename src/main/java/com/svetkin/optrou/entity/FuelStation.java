@@ -27,6 +27,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 @JmixEntity
 @Table(name = "OPTROU_FUEL_STATION")
@@ -224,5 +225,16 @@ public class FuelStation {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public static Function<Object, String> getPointTooltipTextProviderFunction() {
+        return object -> {
+            FuelStation fuelStation = (FuelStation) object;
+            if (fuelStation.getName() == null || fuelStation.getBrand() == null || fuelStation.getLocation() == null) {
+                return "";
+            }
+
+            return fuelStation.getName() + " " + fuelStation.getBrand().getName();
+        };
     }
 }

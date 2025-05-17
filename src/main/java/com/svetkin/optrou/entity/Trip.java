@@ -32,6 +32,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 @JmixEntity
 @Table(name = "OPTROU_TRIP", indexes = {
@@ -316,5 +317,56 @@ public class Trip {
         return String.format("%s %s",
                 datatypeFormatter.formatLong(number),
                 metadataTools.format(name));
+    }
+
+    public static Function<Object, String> getPointTooltipTextProviderFunction() {
+        return object -> {
+            TripPoint point = (TripPoint) object;
+            if (point.getName() == null || point.getLocation() == null) {
+                return "";
+            }
+
+            return point.getName();
+        };
+    }
+
+    public static Function<Object, String> getFuelStationTooltipTextProviderFunction() {
+        return object -> {
+            TripFuelStation tripFuelStation = (TripFuelStation)  object;
+            if (tripFuelStation.getFuelStation() == null) {
+                return "";
+            }
+
+            FuelStation fuelStation = tripFuelStation.getFuelStation();
+
+            if (fuelStation.getName() == null || fuelStation.getBrand() == null || fuelStation.getLocation() == null) {
+                return "";
+            }
+
+            return fuelStation.getName() + " " + fuelStation.getBrand().getName() + " " + tripFuelStation.getDistance();
+        };
+    }
+
+    public static Function<Object, String> getLineTooltipTextProviderFunction() {
+        return object -> {
+            Trip trip = (Trip) object;
+            if (trip.getName() == null || trip.getLine() == null) {
+                return "";
+            }
+
+            return trip.getName() + " " + trip.getNumber() + " Длина: " + trip.getLength();
+        };
+    }
+
+    public static Function<Object, String> getVehiclePointTooltipTextProviderFunction() {
+        return object -> {
+            Trip trip = (Trip) object;
+            Vehicle vehicle = trip.getVehicle();
+            if (vehicle.getModel() == null || vehicle.getLicensePlate() == null) {
+                return "";
+            }
+
+            return vehicle.getModel() + " " + vehicle.getLicensePlate();
+        };
     }
 }

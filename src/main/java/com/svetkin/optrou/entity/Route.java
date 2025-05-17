@@ -24,6 +24,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 @JmixEntity
 @Table(name = "OPTROU_ROUTE")
@@ -190,5 +191,44 @@ public class Route implements HasLine {
         return String.format("%s %s",
                 datatypeFormatter.formatLong(number),
                 metadataTools.format(name));
+    }
+
+    public static Function<Object, String> getPointTooltipTextProviderFunction() {
+        return object -> {
+            RoutePoint point = (RoutePoint) object;
+            if (point.getName() == null || point.getLocation() == null) {
+                return "";
+            }
+
+            return point.getName();
+        };
+    }
+
+    public static Function<Object, String> getFuelStationTooltipTextProviderFunction() {
+        return object -> {
+            RouteFuelStation routeFuelStation = (RouteFuelStation)  object;
+            if (routeFuelStation.getFuelStation() == null) {
+                return "";
+            }
+
+            FuelStation fuelStation = routeFuelStation.getFuelStation();
+
+            if (fuelStation.getName() == null || fuelStation.getBrand() == null || fuelStation.getLocation() == null) {
+                return "";
+            }
+
+            return fuelStation.getName() + " " + fuelStation.getBrand().getName() + " " + routeFuelStation.getDistance();
+        };
+    }
+
+    public static Function<Object, String> getLineTooltipTextProviderFunction() {
+        return object -> {
+            Route route = (Route) object;
+            if (route.getName() == null || route.getLine() == null) {
+                return "";
+            }
+
+            return route.getName() + " " + route.getNumber() + " Длина: " + route.getLength();
+        };
     }
 }

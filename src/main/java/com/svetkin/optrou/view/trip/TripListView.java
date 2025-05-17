@@ -1,27 +1,20 @@
 package com.svetkin.optrou.view.trip;
 
 import com.svetkin.optrou.entity.Route;
-import com.svetkin.optrou.entity.RoutePoint;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripPoint;
-import com.svetkin.optrou.repository.TripRepository;
 import com.svetkin.optrou.service.TripCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.grid.CellFocusEvent;
-import com.vaadin.flow.router.RouteParameters;
 import io.jmix.core.Id;
 import io.jmix.flowui.Dialogs;
-import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.app.inputdialog.DialogActions;
 import io.jmix.flowui.app.inputdialog.DialogOutcome;
 import io.jmix.flowui.app.inputdialog.InputParameter;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
-import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.InstanceContainer;
-import io.jmix.flowui.model.InstanceLoader;
-import io.jmix.flowui.sys.ViewSupport;
 import io.jmix.flowui.view.DialogMode;
 import io.jmix.flowui.view.LookupComponent;
 import io.jmix.flowui.view.StandardListView;
@@ -29,8 +22,6 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
-import io.jmix.flowui.view.navigation.DetailViewNavigator;
-import io.jmix.flowui.view.navigation.ViewNavigationSupport;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.locationtech.jts.geom.Coordinate;
@@ -67,6 +58,9 @@ public class TripListView extends StandardListView<Trip> {
 
         mapFragment.setLineStringStyleProvider(routeVectorLayer);
         mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
+
+        mapFragment.addSelectedGeoObjectTextProvider(routeVectorLayer.getSource(), Trip.getLineTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(controlPointsVectorLayer.getSource(), Trip.getPointTooltipTextProviderFunction());
     }
 
     @Subscribe("tripsDataGrid")

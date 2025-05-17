@@ -31,6 +31,8 @@ public class VehicleDetailView extends StandardDetailView<Vehicle> {
         VectorLayer vehicleVectorLayer = mapFragment.addVectorLayerWithDataVectorSource(vehicleDc, "location");
 
         mapFragment.setVehiclesStyleProvider(vehicleVectorLayer);
+
+        mapFragment.addSelectedGeoObjectTextProvider(vehicleVectorLayer.getSource(), Vehicle.getPointTooltipTextProviderFunction());
     }
 
     @Subscribe

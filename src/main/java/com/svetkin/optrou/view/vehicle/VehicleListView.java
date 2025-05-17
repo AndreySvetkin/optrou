@@ -14,12 +14,10 @@ import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
-import io.jmix.maps.utils.GeometryUtils;
 import io.jmix.mapsflowui.component.GeoMap;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.component.model.source.GeoObjectClickNotifier;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 
 
@@ -48,6 +46,8 @@ public class VehicleListView extends StandardListView<Vehicle> {
         vehiclesVectorLayer.<DataVectorSource<Vehicle>>getSource().addGeoObjectClickListener(this::onGeoObjectClick);
 
         mapFragment.setVehiclesStyleProvider(vehiclesVectorLayer);
+
+        mapFragment.addSelectedGeoObjectTextProvider(vehiclesVectorLayer.getSource(), Vehicle.getPointTooltipTextProviderFunction());
     }
 
     private void onGeoObjectClick(GeoObjectClickNotifier.GeoObjectClickEvent<Vehicle> event) {

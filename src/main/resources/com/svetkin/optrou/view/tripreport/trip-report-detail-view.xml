@@ -2,7 +2,7 @@
 <view xmlns="http://jmix.io/schema/flowui/view"
       title="msg://tripReportDetailView.title"
       focusComponent="form">
-    <data readOnly="true">
+    <data>
         <instance id="tripReportDc"
                   class="com.svetkin.optrou.entity.TripReport">
             <fetchPlan extends="_base">
@@ -107,29 +107,35 @@
                 </tab>
                 <tab id="refuellingPlanTab" label="Заправки">
                     <hbox height="100%" width="100%" padding="false">
-                        <dataGrid id="refuellingsDataGrid"
-                                  dataContainer="refuellingsDc"
-                                  width="50%"
-                                  minHeight="20em">
-                            <columns>
-                                <column property="createdDate"/>
-                                <column property="fuelStationPrice.fuelStation"/>
-                                <column property="volume"/>
-                                <column property="price"/>
-                            </columns>
-                        </dataGrid>
-                        <dataGrid id="factRefuellingsDataGrid"
-                                  dataContainer="factRefuellingsDc"
-                                  width="50%"
-                                  minHeight="20em">
-                            <columns>
-                                <column property="startDate"/>
-                                <column property="endDate"/>
-                                <column property="volume"/>
-                                <column property="beforeLevelFuel"/>
-                                <column property="afterLevelFuel"/>
-                            </columns>
-                        </dataGrid>
+                        <vbox padding="false" height="100%" width="50%">
+                            <h4 id="refuellingPlanHeader" text="Исходный план"/>
+                            <dataGrid id="refuellingsDataGrid"
+                                      dataContainer="refuellingsDc"
+                                      width="50%"
+                                      minHeight="20em">
+                                <columns>
+                                    <column property="createdDate"/>
+                                    <column property="fuelStationPrice.fuelStation"/>
+                                    <column property="volume"/>
+                                    <column property="price"/>
+                                </columns>
+                            </dataGrid>
+                        </vbox>
+                        <vbox padding="false" height="100%" width="50%">
+                            <h4 id="factRefuellingPlanHeader" text="Фактический план"/>
+                            <dataGrid id="factRefuellingsDataGrid"
+                                      dataContainer="factRefuellingsDc"
+                                      width="50%"
+                                      minHeight="20em">
+                                <columns>
+                                    <column property="startDate"/>
+                                    <column property="endDate"/>
+                                    <column property="volume"/>
+                                    <column property="beforeLevelFuel"/>
+                                    <column property="afterLevelFuel"/>
+                                </columns>
+                            </dataGrid>
+                        </vbox>
                     </hbox>
                 </tab>
             </tabSheet>

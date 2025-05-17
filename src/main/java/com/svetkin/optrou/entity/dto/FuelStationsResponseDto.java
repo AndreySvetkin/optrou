@@ -4,7 +4,7 @@ import io.jmix.core.metamodel.annotation.JmixEntity;
 
 import java.util.List;
 
-@JmixEntity(name = "optrou_FuelStationDto")
+@JmixEntity(name = "optrou_FuelStationsResponseDto")
 public class FuelStationsResponseDto {
 
     private List<FuelStationDto> fuelStations;

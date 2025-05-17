@@ -1,6 +1,7 @@
 package com.svetkin.optrou.view.mapfragment;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.fragment.Fragment;
 import io.jmix.flowui.fragment.FragmentDescriptor;
 import io.jmix.flowui.model.InstanceContainer;
@@ -18,6 +19,8 @@ import io.jmix.mapsflowui.kit.component.model.style.image.IconStyle;
 import io.jmix.mapsflowui.kit.component.model.style.stroke.Stroke;
 import org.locationtech.jts.geom.Coordinate;
 
+import java.util.function.Function;
+
 @FragmentDescriptor("map-fragment.xml")
 public class MapFragment extends Fragment<VerticalLayout> {
 
@@ -26,6 +29,8 @@ public class MapFragment extends Fragment<VerticalLayout> {
 
     @ViewComponent
     private GeoMap map;
+    @ViewComponent
+    private TypedTextField<Object> lastSelectedGeoObjectField;
 
     @Subscribe
     public void onReady(final ReadyEvent event) {
@@ -61,6 +66,12 @@ public class MapFragment extends Fragment<VerticalLayout> {
     public void setZoom(double zoom) {
         map.setZoom(zoom);
     }
+
+    public void addSelectedGeoObjectTextProvider(DataVectorSource<?> dataVectorSource, Function<Object, String> textProvider) {
+        dataVectorSource.addGeoObjectSingleClickListener(clickEvent ->
+            lastSelectedGeoObjectField.setValue(textProvider.apply(clickEvent.getItem())));
+    }
+
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void setControlPointStyleProvider(VectorLayer vectorLayer) {
@@ -106,7 +117,7 @@ public class MapFragment extends Fragment<VerticalLayout> {
                 new Style()
                         .withStroke(new Stroke()
                                 .withColor("#000000")
-                                .withWidth(2.0d)));
+                                .withWidth(3.0d)));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -116,7 +127,7 @@ public class MapFragment extends Fragment<VerticalLayout> {
                 new Style()
                         .withStroke(new Stroke()
                                 .withColor("#EB2DCB")
-                                .withWidth(2.0d)));
+                                .withWidth(3.0d)));
     }
 
     private <T> DataVectorSource<T> createDataVectorSource(InstanceContainer<T> dc, String property) {

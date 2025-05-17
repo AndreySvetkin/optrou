@@ -52,10 +52,6 @@
                             <textField id="numberField" property="number" readOnly="true"/>
                             <textField id="nameField" property="name"/>
                             <select id="statusField" property="status"/>
-                            <datePicker id="planningDateTimeStartField" property="planningDateStart"/>
-                            <datePicker id="planningDateTimeEndField" property="planningDateEnd"/>
-                            <datePicker id="factDateTimeStartField" property="factDateStart"/>
-                            <datePicker id="factDateTimeEndField" property="factDateEnd"/>
                             <entityPicker id="driverField" property="driver">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
@@ -68,6 +64,13 @@
                                     <action id="entityClear" type="entity_clear"/>
                                 </actions>
                             </entityPicker>
+                        </formLayout>
+                        <h4 id="datesHeader" text="Даты"/>
+                        <formLayout id="datesForm" dataContainer="tripDc">
+                            <datePicker id="planningDateTimeStartField" property="planningDateStart"/>
+                            <datePicker id="planningDateTimeEndField" property="planningDateEnd"/>
+                            <datePicker id="factDateTimeStartField" property="factDateStart"/>
+                            <datePicker id="factDateTimeEndField" property="factDateEnd"/>
                         </formLayout>
                         <h4 id="vehicleInfoHeader" text="Транспорт"/>
                         <formLayout id="vehicleForm" dataContainer="tripDc">

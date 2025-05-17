@@ -91,6 +91,10 @@ public class RouteDetailView extends StandardDetailView<Route> {
         mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
         mapFragment.setLineStringStyleProvider(routeVectorLayer);
         mapFragment.setFuelStationStyleProvider(routeFuelStationsVectorLayer);
+
+        mapFragment.addSelectedGeoObjectTextProvider(routeVectorLayer.getSource(), Route.getLineTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(controlPointsVectorLayer.getSource(), Route.getPointTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(routeFuelStationsVectorLayer.getSource(), Route.getFuelStationTooltipTextProviderFunction());
         map.addSingleClickListener(this::onMapSingleClick);
     }
 

@@ -2,17 +2,13 @@
 <fragment xmlns="http://jmix.io/schema/flowui/fragment"
           xmlns:maps="http://jmix.io/schema/maps/ui">
     <content>
-        <vbox id="root" height="100%">
+        <vbox id="root" height="100%" expand="map" themeNames="spacing">
+            <textField id="lastSelectedGeoObjectField" label="Последний выбранный объект" width="100%"/>
             <maps:geoMap id="map" width="100%" height="100%">
                 <maps:layers>
                     <maps:tile>
                         <maps:osmSource/>
                     </maps:tile>
-                    <maps:vector>
-                        <maps:dataVectorSource>
-
-                        </maps:dataVectorSource>
-                    </maps:vector>
                 </maps:layers>
             </maps:geoMap>
         </vbox>

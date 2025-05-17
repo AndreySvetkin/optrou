@@ -22,6 +22,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.function.Function;
 
 @JmixEntity
 @Table(name = "OPTROU_VEHICLE")
@@ -239,5 +240,16 @@ public class Vehicle {
         return String.format("%s %s",
                 metadataTools.format(model),
                 metadataTools.format(licensePlate));
+    }
+
+    public static Function<Object, String> getPointTooltipTextProviderFunction() {
+        return object -> {
+            Vehicle vehicle = (Vehicle) object;
+            if (vehicle.getModel() == null || vehicle.getLicensePlate() == null) {
+                return "";
+            }
+
+            return vehicle.getModel() + " " + vehicle.getLicensePlate();
+        };
     }
 }

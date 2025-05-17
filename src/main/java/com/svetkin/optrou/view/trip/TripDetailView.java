@@ -94,6 +94,11 @@ public class TripDetailView extends StandardDetailView<Trip> {
         mapFragment.setControlPointStyleProvider(controlPointsVectorLayer);
         mapFragment.setFuelStationStyleProvider(fuelStationsVectorLayer);
         mapFragment.setVehiclesStyleProvider(vehicleVectorLayer);
+
+        mapFragment.addSelectedGeoObjectTextProvider(routeVectorLayer.getSource(), Trip.getLineTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(controlPointsVectorLayer.getSource(), Trip.getPointTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(fuelStationsVectorLayer.getSource(), Trip.getFuelStationTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(vehicleVectorLayer.getSource(), Trip.getVehiclePointTooltipTextProviderFunction());
     }
 
     @Subscribe

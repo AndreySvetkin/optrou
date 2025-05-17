@@ -22,6 +22,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.function.Function;
 
 @JmixEntity
 @Table(name = "OPTROU_TRIP_REPORT", indexes = {
@@ -288,5 +289,27 @@ public class TripReport {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public static Function<Object, String> getLineTooltipTextProviderFunction() {
+        return object -> {
+            TripReport tripReport = (TripReport) object;
+            if (tripReport.getName() == null || tripReport.getLine() == null) {
+                return "";
+            }
+
+            return tripReport.getName() + " " + tripReport.getNumber() + " Длина: " + tripReport.getLength();
+        };
+    }
+
+    public static Function<Object, String> getFactLineTooltipTextProviderFunction() {
+        return object -> {
+            TripReport tripReport = (TripReport) object;
+            if (tripReport.getName() == null || tripReport.getFactLine() == null) {
+                return "";
+            }
+
+            return tripReport.getName() + " " + tripReport.getNumber() + " Длина: " + tripReport.getFactLength();
+        };
     }
 }

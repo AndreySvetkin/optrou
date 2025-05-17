@@ -1,7 +1,6 @@
 package com.svetkin.optrou.view.fuelstation;
 
 import com.svetkin.optrou.entity.FuelStation;
-import com.svetkin.optrou.entity.Vehicle;
 import com.svetkin.optrou.service.FuelStationPriceProcessor;
 import com.svetkin.optrou.service.FuelStationProcessor;
 import com.svetkin.optrou.view.main.MainView;
@@ -12,12 +11,16 @@ import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
-import io.jmix.flowui.view.*;
-import io.jmix.mapsflowui.component.GeoMap;
+import io.jmix.flowui.view.DialogMode;
+import io.jmix.flowui.view.LookupComponent;
+import io.jmix.flowui.view.StandardListView;
+import io.jmix.flowui.view.Subscribe;
+import io.jmix.flowui.view.ViewComponent;
+import io.jmix.flowui.view.ViewController;
+import io.jmix.flowui.view.ViewDescriptor;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.component.model.source.GeoObjectClickNotifier;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,6 +53,8 @@ public class FuelStationListView extends StandardListView<FuelStation> {
         mapFragment.setFuelStationStyleProvider(fuelStationsVectorLayer);
 
         fuelStationsVectorLayer.<DataVectorSource<FuelStation>>getSource().addGeoObjectClickListener(this::onGeoObjectClick);
+
+        mapFragment.addSelectedGeoObjectTextProvider(fuelStationsVectorLayer.getSource(), FuelStation.getPointTooltipTextProviderFunction());
     }
 
     private void onGeoObjectClick(GeoObjectClickNotifier.GeoObjectClickEvent<FuelStation> event) {

@@ -1,11 +1,15 @@
 package com.svetkin.optrou.view.tripreport;
 
+import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripFuelStation;
 import com.svetkin.optrou.entity.TripPoint;
 import com.svetkin.optrou.entity.TripReport;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
+import io.jmix.core.EntitySet;
+import io.jmix.flowui.action.view.DetailSaveCloseAction;
+import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
@@ -35,6 +39,8 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
     private InstanceContainer<TripReport> tripReportDc;
     @ViewComponent
     private DataContext dataContext;
+    @ViewComponent
+    private DetailSaveCloseAction<Object> saveAction;
 
     public void setTripReport(TripReport tripReport) {
         dataContext.clear();
@@ -53,6 +59,11 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
         mapFragment.setFactLineStringStyleProvider(factRouteVectorLayer);
         mapFragment.setControlPointStyleProvider(controlPointsVector);
         mapFragment.setFuelStationStyleProvider(fuelStationsVectorLayer);
+
+        mapFragment.addSelectedGeoObjectTextProvider(routeVectorLayer.getSource(), TripReport.getLineTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(factRouteVectorLayer.getSource(), TripReport.getFactLineTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(controlPointsVector.getSource(), Trip.getPointTooltipTextProviderFunction());
+        mapFragment.addSelectedGeoObjectTextProvider(fuelStationsVectorLayer.getSource(), Trip.getFuelStationTooltipTextProviderFunction());
     }
 
     @Subscribe
@@ -66,5 +77,11 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
     private void setMapCenterByLine(LineString line) {
         mapFragment.setCenter(new Coordinate(line.getCoordinateN(0)));
         mapFragment.setZoom(10.0);
+    }
+
+    @Subscribe("saveAction")
+    public void onSaveAction(final ActionPerformedEvent event) {
+        EntitySet set = dataContext.save();
+        saveAction.execute();
     }
 }
