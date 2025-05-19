@@ -74,6 +74,8 @@ public class RefuellingPlanCreateService {
 
         while (true) {
             if (isPossibleTravel(traveledDistance, remainingFuel, fuelConsumption, length)) {
+                remainingFuel = remainingFuel - fuelAmountForLength(traveledDistance, length, fuelConsumption);
+                refuellingPlan.setRemainingFuel(remainingFuel);
                 refuellingPlanDto.setStatus(RefuellingPlanCreateStatus.DONE);
                 return refuellingPlanDto;
             }

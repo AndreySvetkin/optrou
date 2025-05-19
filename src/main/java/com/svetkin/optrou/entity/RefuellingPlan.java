@@ -71,10 +71,21 @@ public class RefuellingPlan {
     @NotNull
     private Integer fuelType;
 
+    @Column(name = "REMAINING_FUEL")
+    private Double remainingFuel;
+
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "refuellingPlan")
     private List<Refuelling> refuellings;
+
+    public Double getRemainingFuel() {
+        return remainingFuel;
+    }
+
+    public void setRemainingFuel(Double remainingFuel) {
+        this.remainingFuel = remainingFuel;
+    }
 
     public FuelType getFuelType() {
         return fuelType == null ? null : FuelType.fromId(fuelType);
