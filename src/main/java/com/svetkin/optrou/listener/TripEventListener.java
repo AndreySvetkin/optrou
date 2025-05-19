@@ -18,6 +18,9 @@ public class TripEventListener {
 
     @EventListener
     public void onTripSaving(final EntitySavingEvent<Trip> event) {
-        event.getEntity().setNumber(sequences.createNextValue(Sequence.withName("trip")));
+        Trip trip = event.getEntity();
+        if (trip.getNumber() != null) {
+            trip.setNumber(sequences.createNextValue(Sequence.withName("trip")));
+        }
     }
 }

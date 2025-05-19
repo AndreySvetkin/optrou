@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="optrou">
+        <addColumn tableName="OPTROU_ROUTE_POINT">
+            <column name="ORDER_" type="INT"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="ORDER_" defaultNullValue="0" tableName="OPTROU_ROUTE_POINT"/>
+    </changeSet>
+    <changeSet id="2" author="optrou">
+        <addColumn tableName="OPTROU_TRIP_POINT">
+            <column name="ORDER_" type="INT"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="ORDER_" defaultNullValue="0" tableName="OPTROU_TRIP_POINT"/>
+    </changeSet>
+</databaseChangeLog>

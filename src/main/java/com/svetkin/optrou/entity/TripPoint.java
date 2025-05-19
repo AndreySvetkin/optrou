@@ -45,6 +45,10 @@ public class TripPoint {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
+    @Column(name = "ORDER_", nullable = false)
+    @NotNull
+    private Integer order;
+
     @InstanceName
     @Column(name = "NAME", nullable = false)
     @NotNull
@@ -66,6 +70,14 @@ public class TripPoint {
     @JoinColumn(name = "TRIP_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Trip trip;
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
 
     public Double getLongitude() {
         return longitude;

@@ -22,6 +22,8 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -73,10 +75,10 @@ public class Route implements HasLine {
 
     @Composition
     @OneToMany(mappedBy = "route")
-    private List<RoutePoint> controlPoints;
+    private List<RoutePoint> controlPoints = new ArrayList<>();
 
     @OneToMany(mappedBy = "route")
-    private List<RouteFuelStation> fuelStations;
+    private List<RouteFuelStation> fuelStations = new ArrayList<>();
 
     @OneToMany(mappedBy = "route")
     private List<Trip> trips;
@@ -126,10 +128,12 @@ public class Route implements HasLine {
     }
 
     public List<RouteFuelStation> getFuelStations() {
+        fuelStations.sort(Comparator.comparing(RouteFuelStation::getDistance));
         return fuelStations;
     }
 
     public List<RoutePoint> getControlPoints() {
+        controlPoints.sort(Comparator.comparing(RoutePoint::getOrder));
         return controlPoints;
     }
 

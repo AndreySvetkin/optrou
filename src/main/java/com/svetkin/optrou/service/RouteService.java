@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component(RouteService.NAME)
@@ -27,6 +28,8 @@ public class RouteService {
     }
 
     public List<LineString> getLineByPoints(List<RoutePoint> controlPoints) {
+        controlPoints.sort(Comparator.comparing(RoutePoint::getOrder));
+
         List<RouteDto> routeDtos = osrmRouteController.getRoutesByControlPoints(controlPoints);
 
         return routeDtos.stream()

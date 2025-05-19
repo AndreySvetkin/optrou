@@ -45,6 +45,10 @@ public class RoutePoint {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
+    @Column(name = "ORDER_", nullable = false)
+    @NotNull
+    private Integer order;
+
     @NotNull
     @InstanceName
     @Column(name = "NAME", nullable = false)
@@ -66,6 +70,14 @@ public class RoutePoint {
     @JoinColumn(name = "ROUTE_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Route route;
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
 
     public Point getLocation() {
         return location;

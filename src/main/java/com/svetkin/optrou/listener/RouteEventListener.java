@@ -18,6 +18,9 @@ public class RouteEventListener {
 
     @EventListener
     public void onRouteSaving(final EntitySavingEvent<Route> event) {
-        event.getEntity().setNumber(sequences.createNextValue(Sequence.withName("route")));
+        Route route = event.getEntity();
+        if (route.getNumber() != null) {
+            route.setNumber(sequences.createNextValue(Sequence.withName("route")));
+        }
     }
 }

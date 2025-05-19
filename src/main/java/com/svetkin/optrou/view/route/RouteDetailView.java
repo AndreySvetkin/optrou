@@ -35,6 +35,7 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Comparator;
 import java.util.List;
 
 @com.vaadin.flow.router.Route(value = "routes/:id", layout = MainView.class)
@@ -126,7 +127,11 @@ public class RouteDetailView extends StandardDetailView<Route> {
     public void onControlPointsDataGridCreate(final ActionPerformedEvent event) {
         RoutePoint routePoint = routePointRepository.create();
         routePoint.setName("Новая точка");
-        controlPointsDc.getMutableItems().add(routePoint);
+        routePoint.setOrder(getEditedEntity().getControlPoints().size());
+
+        List<RoutePoint> controlPointDcItems = controlPointsDc.getMutableItems();
+        controlPointDcItems.add(routePoint);
+        controlPointDcItems.sort(Comparator.comparing(RoutePoint::getOrder));
     }
 
     @Subscribe("routeFuelStationsDataGrid.remove")
@@ -197,7 +202,9 @@ public class RouteDetailView extends StandardDetailView<Route> {
 
         List<RouteFuelStation> routeFuelStations = fuelStationSearchService.getFuelStations(editedEntity);
         EntitySet mergedSet = dataContext.merge(routeFuelStations);
-        editedEntity.setFuelStations(mergedSet.getAll(RouteFuelStation.class).stream().toList());
+        editedEntity.setFuelStations(mergedSet.getAll(RouteFuelStation.class).stream()
+                .sorted(Comparator.comparing(RouteFuelStation::getDistance))
+                .toList());
 
         notifications.create("Найдено АЗС : %s".formatted(routeFuelStations.size()))
                 .build()

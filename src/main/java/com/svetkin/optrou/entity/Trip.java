@@ -30,6 +30,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -184,6 +185,7 @@ public class Trip {
     }
 
     public List<TripFuelStation> getFuelStations() {
+        fuelStations.sort(Comparator.comparing(TripFuelStation::getDistance));
         return fuelStations;
     }
 
@@ -192,6 +194,7 @@ public class Trip {
     }
 
     public List<TripPoint> getControlPoints() {
+        controlPoints.sort(Comparator.comparing(TripPoint::getOrder));
         return controlPoints;
     }
 
