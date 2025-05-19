@@ -109,7 +109,7 @@ public class Trip {
     @OnDelete(DeletePolicy.CASCADE)
     @Composition
     @OneToMany(mappedBy = "trip")
-    private List<TripPoint> controlPoints;
+    private List<TripPoint> controlPoints = new ArrayList<>();
 
     @OnDelete(DeletePolicy.CASCADE)
     @Composition

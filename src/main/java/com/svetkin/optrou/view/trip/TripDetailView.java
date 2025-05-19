@@ -17,6 +17,7 @@ import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.select.JmixSelect;
 import io.jmix.flowui.exception.ValidationException;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -48,6 +49,8 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private Notifications notifications;
     @Autowired
     private RefuellingPlanCreateService refuellingPlanCreateService;
+    @Autowired
+    private ViewNavigators viewNavigators;
 
     @ViewComponent
     private InstanceContainer<Trip> tripDc;
@@ -109,6 +112,13 @@ public class TripDetailView extends StandardDetailView<Trip> {
         LineString routeLine = editedEntity.getLine();
         if (routeLine != null) {
             setMapCenterByLine(routeLine);
+        }
+    }
+
+    @Subscribe
+    public void onReady(final ReadyEvent event) {
+        if (getEditedEntity().getRoute() == null) {
+            closeWithDefaultAction();
         }
     }
 
