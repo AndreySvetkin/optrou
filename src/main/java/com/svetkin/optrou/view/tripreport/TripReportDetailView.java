@@ -7,7 +7,6 @@ import com.svetkin.optrou.entity.TripReport;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
-import io.jmix.flowui.action.view.DetailSaveCloseAction;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
@@ -37,8 +36,6 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
     private InstanceContainer<TripReport> tripReportDc;
     @ViewComponent
     private DataContext dataContext;
-    @ViewComponent
-    private DetailSaveCloseAction<Object> saveAction;
 
     public void setTripReport(TripReport tripReport) {
         dataContext.clear();

@@ -16,8 +16,8 @@ import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.router.Route;
+import io.jmix.core.EntityStates;
 import io.jmix.flowui.Notifications;
-import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.select.JmixSelect;
 import io.jmix.flowui.exception.ValidationException;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -29,6 +29,7 @@ import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.Install;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.Subscribe;
+import io.jmix.flowui.view.Target;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
@@ -38,6 +39,7 @@ import org.locationtech.jts.geom.LineString;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @Route(value = "trips/:id", layout = MainView.class)
 @ViewController(id = "optrou_Trip.detail")
@@ -49,8 +51,6 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private Notifications notifications;
     @Autowired
     private RefuellingPlanCreateService refuellingPlanCreateService;
-    @Autowired
-    private ViewNavigators viewNavigators;
 
     @ViewComponent
     private InstanceContainer<Trip> tripDc;
@@ -72,6 +72,8 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private BaseAction cancelAction;
     @ViewComponent
     private BaseAction approveAction;
+    @Autowired
+    private EntityStates entityStates;
 
     public void setTrip(Trip trip) {
         statusField.setValue(TripStatus.NEW);
@@ -119,6 +121,17 @@ public class TripDetailView extends StandardDetailView<Trip> {
     public void onReady(final ReadyEvent event) {
         if (getEditedEntity().getRoute() == null) {
             closeWithDefaultAction();
+        }
+    }
+
+    @Subscribe(target = Target.DATA_CONTEXT)
+    public void onPreSave(final DataContext.PreSaveEvent event) {
+        if (getEditedEntity().getRefuellingPlans().isEmpty()) {
+            notifications.create("Нет плана заправок")
+                    .build()
+                    .open();
+
+            event.preventSave();
         }
     }
 
@@ -185,7 +198,12 @@ public class TripDetailView extends StandardDetailView<Trip> {
 
     @Subscribe("approveAction")
     public void onApproveAction(final ActionPerformedEvent event) {
-        getEditedEntity().setStatus(TripStatus.DONE);
+        Trip editedEntity = getEditedEntity();
+        editedEntity.setStatus(TripStatus.DONE);
+        editedEntity.getVehicle().setRemainingFuel(editedEntity.getRefuellingPlans().stream()
+                .min(Comparator.comparing(RefuellingPlan::getCreatedDate))
+                .get()
+                .getRemainingFuel());
     }
 
     @Subscribe("cancelAction")
@@ -199,6 +217,11 @@ public class TripDetailView extends StandardDetailView<Trip> {
     }
 
     private void onChangeStatus(TripStatus status) {
+        boolean isDetached = entityStates.isDetached(getEditedEntity());
+        toProgressAction.setEnabled(isDetached);
+        approveAction.setEnabled(isDetached);
+        cancelAction.setEnabled(isDetached);
+
         toProgressAction.setVisible(false);
         approveAction.setVisible(false);
         cancelAction.setVisible(false);
@@ -281,4 +304,6 @@ public class TripDetailView extends StandardDetailView<Trip> {
 
         return true;
     }
+
+
 }
