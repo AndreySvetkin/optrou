@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +38,7 @@ public class TripOuterReportCreateService {
     public byte[] createTripsReport(List<Trip> trips) {
         try (Workbook workbook = new SXSSFWorkbook()) {
             CellStyle cellStyle = createDefaultCellStyle(workbook);
-            Sheet sheet = workbook.createSheet("Отчет по рейсам");
+            SXSSFSheet sheet = (SXSSFSheet) workbook.createSheet("Отчет по рейсам");
 
             int index = 0;
             createHeaderRow(sheet, index++);
@@ -46,6 +47,9 @@ public class TripOuterReportCreateService {
                 createRow(sheet, index, trip, cellStyle);
                 index++;
             }
+
+            sheet.trackAllColumnsForAutoSizing();
+            sheet.getRow(0).forEach(cell -> sheet.autoSizeColumn(cell.getColumnIndex()));
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
@@ -112,6 +116,12 @@ public class TripOuterReportCreateService {
         row.createCell(cellIndex++).setCellValue("Номер водителя");
         row.createCell(cellIndex++).setCellValue("Гос номер авто");
         row.createCell(cellIndex).setCellValue("Модель авто");
+
+//        while (index != -1) {
+//            sheet.autoSizeColumn(index);
+//            index--;
+//        }
+
         return row;
     }
 

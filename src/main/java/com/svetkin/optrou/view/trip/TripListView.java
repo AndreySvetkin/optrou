@@ -32,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ViewController(id = "optrou_Trip.list")
 @ViewDescriptor(path = "trip-list-view.xml")
 @LookupComponent("tripsDataGrid")
-@DialogMode(width = "64em")
+@DialogMode(width = "80em")
 public class TripListView extends StandardListView<Trip> {
 
     @Autowired
