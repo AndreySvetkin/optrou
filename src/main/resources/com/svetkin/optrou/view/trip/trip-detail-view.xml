@@ -105,6 +105,7 @@
                                       minHeight="20em"
                                       dataContainer="controlPointsDc">
                                 <columns resizable="true">
+                                    <column property="order"/>
                                     <column property="name"/>
                                     <column property="latitude"/>
                                     <column property="longitude"/>
@@ -117,8 +118,8 @@
                                       minHeight="20em"
                                       dataContainer="tripFuelStationsDc">
                                 <columns resizable="true">
-                                    <column property="fuelStation" filterable="true"/>
-                                    <column property="distance" filterable="true"/>
+                                    <column property="fuelStation"/>
+                                    <column property="distance"/>
                                 </columns>
                             </dataGrid>
                         </vbox>

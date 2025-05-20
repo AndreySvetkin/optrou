@@ -31,10 +31,14 @@ public class TripRouteViolationService {
 
     public double hasRouteViolations(Trip trip) {
         LineString factLine = tripFactLineService.getTripFactLine(trip);
-        return (double) entityManager.createNativeQuery(SEARCH_ROUTE_VIOLATION_QUERY_STRING)
+        Double maxDeviation = (Double) entityManager.createNativeQuery(SEARCH_ROUTE_VIOLATION_QUERY_STRING)
                 .setParameter("planningLine", trip.getLine().toString())
                 .setParameter("factLine", factLine.toString())
                 .setParameter("deviation", 1000)
                 .getSingleResult();
+
+        return maxDeviation != null
+                ? maxDeviation
+                : 0d;
     }
 }

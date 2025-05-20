@@ -7,10 +7,7 @@ import com.svetkin.optrou.entity.TripReport;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
 import com.vaadin.flow.router.Route;
-import io.jmix.core.EntitySet;
-import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.action.view.DetailSaveCloseAction;
-import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
@@ -23,16 +20,12 @@ import io.jmix.flowui.view.ViewDescriptor;
 import io.jmix.mapsflowui.component.model.layer.VectorLayer;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.LineString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "tripReports/:id", layout = MainView.class)
 @ViewController(id = "optrou_TripReport.detail")
 @ViewDescriptor(path = "trip-report-detail-view.xml")
 @EditedEntityContainer("tripReportDc")
 public class TripReportDetailView extends StandardDetailView<TripReport> {
-
-    @Autowired
-    private ViewNavigators viewNavigators;
 
     @ViewComponent
     private MapFragment mapFragment;
@@ -89,11 +82,5 @@ public class TripReportDetailView extends StandardDetailView<TripReport> {
     private void setMapCenterByLine(LineString line) {
         mapFragment.setCenter(new Coordinate(line.getCoordinateN(0)));
         mapFragment.setZoom(10.0);
-    }
-
-    @Subscribe("saveAction")
-    public void onSaveAction(final ActionPerformedEvent event) {
-        EntitySet set = dataContext.save();
-        saveAction.execute();
     }
 }

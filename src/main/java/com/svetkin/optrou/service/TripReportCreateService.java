@@ -1,5 +1,6 @@
 package com.svetkin.optrou.service;
 
+import com.svetkin.optrou.entity.FactRefuellingPlan;
 import com.svetkin.optrou.entity.RefuellingPlan;
 import com.svetkin.optrou.entity.Trip;
 import com.svetkin.optrou.entity.TripReport;
@@ -76,7 +77,9 @@ public class TripReportCreateService {
         tripReport.setLength(tripReport.getLine().getLength() * 100);
         tripReport.setFactLine(tripFactLineService.getTripFactLine(trip));
         tripReport.setFactLength(tripReport.getFactLine().getLength() * 100);
-        tripReport.setFactRefuellingPlan(tripFactRefuellingPlanService.getTripFactRefuellingPlan(trip));
+        FactRefuellingPlan factRefuellingPlan = tripFactRefuellingPlanService.getTripFactRefuellingPlan(trip);
+        factRefuellingPlan.setTrip(tripReport);
+        tripReport.setFactRefuellingPlan(factRefuellingPlan);
         return tripReport;
     }
 

@@ -200,6 +200,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
             return;
         }
 
+        routeFuelStationsDc.getMutableItems().clear();
         List<RouteFuelStation> routeFuelStations = fuelStationSearchService.getFuelStations(editedEntity);
         EntitySet mergedSet = dataContext.merge(routeFuelStations);
         editedEntity.setFuelStations(mergedSet.getAll(RouteFuelStation.class).stream()
