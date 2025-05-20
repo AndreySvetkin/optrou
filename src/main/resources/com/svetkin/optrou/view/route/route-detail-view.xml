@@ -88,9 +88,9 @@
                                     <action id="remove" type="list_remove"/>
                                 </actions>
                                 <columns resizable="true">
-                                    <column property="fuelStation.name"/>
-                                    <column property="fuelStation.brand" autoWidth="true"/>
-                                    <column property="distance" autoWidth="true"/>
+                                    <column property="fuelStation.name" filterable="true"/>
+                                    <column property="fuelStation.brand" autoWidth="true" filterable="true"/>
+                                    <column property="distance" autoWidth="true" filterable="true"/>
                                 </columns>
                             </dataGrid>
                         </formLayout>
@@ -103,10 +103,10 @@
                                   dataContainer="routeTripsDc"
                                   selectionMode="NONE">
                             <columns resizable="true">
-                                <column property="name"/>
-                                <column property="createdDate"/>
-                                <column property="planningDateStart"/>
-                                <column property="factDateEnd"/>
+                                <column property="name" filterable="true"/>
+                                <column property="createdDate" filterable="true"/>
+                                <column property="planningDateStart" filterable="true"/>
+                                <column property="factDateEnd" filterable="true"/>
                             </columns>
                         </dataGrid>
                     </tab>

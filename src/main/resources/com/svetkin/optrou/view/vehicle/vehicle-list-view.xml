@@ -57,8 +57,6 @@
                         <column property="fuelConsumption" filterable="true"/>
                         <column property="remainingFuel" filterable="true"/>
                         <column property="capacity" filterable="true"/>
-                        <column property="latitude" filterable="true"/>
-                        <column property="longitude" filterable="true"/>
                         <column property="vehicleId"/>
                     </columns>
                 </dataGrid>

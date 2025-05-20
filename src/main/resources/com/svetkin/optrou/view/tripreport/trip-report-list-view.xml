@@ -64,20 +64,18 @@
                         <action id="remove" type="list_remove"/>
                     </actions>
                     <columns resizable="true">
-                        <column property="trip"/>
-                        <column property="name"/>
-                        <column property="planningDateStart"/>
-                        <column property="planningDateEnd"/>
-                        <column property="factDateStart"/>
-                        <column property="factDateEnd"/>
-                        <column property="route"/>
-                        <column property="length"/>
-                        <column property="factLength"/>
-                        <column property="line"/>
-                        <column property="factLine"/>
-                        <column property="driver"/>
-                        <column property="logist"/>
-                        <column property="vehicle"/>
+                        <column property="trip" filterable="true"/>
+                        <column property="name" filterable="true"/>
+                        <column property="planningDateStart" filterable="true"/>
+                        <column property="planningDateEnd" filterable="true"/>
+                        <column property="factDateStart" filterable="true"/>
+                        <column property="factDateEnd" filterable="true"/>
+                        <column property="route" filterable="true"/>
+                        <column property="length" filterable="true"/>
+                        <column property="factLength" filterable="true"/>
+                        <column property="driver" filterable="true"/>
+                        <column property="logist" filterable="true"/>
+                        <column property="vehicle" filterable="true"/>
                     </columns>
                 </dataGrid>
                 <hbox id="lookupActions" visible="false">

@@ -117,8 +117,8 @@
                                       minHeight="20em"
                                       dataContainer="tripFuelStationsDc">
                                 <columns resizable="true">
-                                    <column property="fuelStation"/>
-                                    <column property="distance"/>
+                                    <column property="fuelStation" filterable="true"/>
+                                    <column property="distance" filterable="true"/>
                                 </columns>
                             </dataGrid>
                         </vbox>
