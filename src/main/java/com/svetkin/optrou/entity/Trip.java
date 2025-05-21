@@ -34,7 +34,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @JmixEntity
 @Table(name = "OPTROU_TRIP", indexes = {
@@ -186,9 +185,8 @@ public class Trip {
     }
 
     public List<TripFuelStation> getFuelStations() {
-        return fuelStations.stream()
-                .sorted(Comparator.comparing(TripFuelStation::getDistance))
-                .collect(Collectors.toList());
+        fuelStations.sort(Comparator.comparing(TripFuelStation::getDistance));
+        return fuelStations;
     }
 
     public void setFuelStations(List<TripFuelStation> fuelStations) {
@@ -196,9 +194,8 @@ public class Trip {
     }
 
     public List<TripPoint> getControlPoints() {
-        return controlPoints.stream()
-                .sorted(Comparator.comparing(TripPoint::getOrder))
-                .collect(Collectors.toList());
+        controlPoints.sort(Comparator.comparing(TripPoint::getOrder));
+        return controlPoints;
     }
 
     public void setControlPoints(List<TripPoint> controlPoints) {

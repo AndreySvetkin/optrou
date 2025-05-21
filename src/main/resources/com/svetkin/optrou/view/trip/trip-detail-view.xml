@@ -51,7 +51,7 @@
                             </responsiveSteps>
                             <textField id="numberField" property="number" readOnly="true"/>
                             <textField id="nameField" property="name"/>
-                            <select id="statusField" property="status"/>
+                            <select id="statusField" property="status" readOnly="true"/>
                             <entityPicker id="driverField" property="driver">
                                 <actions>
                                     <action id="entityLookup" type="entity_lookup"/>
@@ -69,8 +69,8 @@
                         <formLayout id="datesForm" dataContainer="tripDc">
                             <datePicker id="planningDateTimeStartField" property="planningDateStart"/>
                             <datePicker id="planningDateTimeEndField" property="planningDateEnd"/>
-                            <datePicker id="factDateTimeStartField" property="factDateStart"/>
-                            <datePicker id="factDateTimeEndField" property="factDateEnd"/>
+                            <datePicker id="factDateTimeStartField" property="factDateStart" readOnly="true"/>
+                            <datePicker id="factDateTimeEndField" property="factDateEnd" readOnly="true"/>
                         </formLayout>
                         <h4 id="vehicleInfoHeader" text="Транспорт"/>
                         <formLayout id="vehicleForm" dataContainer="tripDc">

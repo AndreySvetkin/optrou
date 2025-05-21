@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
       title="msg://driverListView.title"
       focusComponent="driversDataGrid">
     <data>
@@ -8,6 +7,7 @@
                     class="com.svetkin.optrou.entity.Driver">
             <fetchPlan extends="_base">
                 <property name="licenseCategories" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="driversDl" readOnly="true">
                 <query>
@@ -53,6 +53,7 @@
             </actions>
             <columns resizable="true">
                 <column property="fullName" filterable="true"/>
+                <column property="user"/>
                 <column property="phoneNumber" filterable="true"/>
                 <column property="createdDate" filterable="true"/>
             </columns>

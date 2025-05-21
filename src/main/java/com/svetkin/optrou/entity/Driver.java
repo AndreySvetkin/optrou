@@ -8,8 +8,12 @@ import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +25,9 @@ import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "OPTROU_DRIVER")
+@Table(name = "OPTROU_DRIVER", indexes = {
+        @Index(name = "IDX_OPTROU_DRIVER_USER", columnList = "USER_ID")
+})
 @Entity(name = "optrou_Driver")
 public class Driver {
     @JmixGeneratedValue
@@ -54,12 +60,24 @@ public class Driver {
     @NotNull
     private String fullName;
 
+    @JoinColumn(name = "USER_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    private User user;
+
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
     @Composition
     @OneToMany(mappedBy = "driver")
     private List<DriverLicenceCategoryRelation> licenseCategories;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public List<DriverLicenceCategoryRelation> getLicenseCategories() {
         return licenseCategories;

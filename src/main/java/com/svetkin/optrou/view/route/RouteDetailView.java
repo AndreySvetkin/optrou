@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @com.vaadin.flow.router.Route(value = "routes/:id", layout = MainView.class)
 @ViewController(id = "optrou_Route.detail")
@@ -126,8 +127,9 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @Subscribe("controlPointsDataGrid.create")
     public void onControlPointsDataGridCreate(final ActionPerformedEvent event) {
         RoutePoint routePoint = routePointRepository.create();
-        routePoint.setName("Новая точка");
-        routePoint.setOrder(getEditedEntity().getControlPoints().size());
+        int controlPointsSize = getEditedEntity().getControlPoints().size();
+        routePoint.setName("Новая точка" + controlPointsSize);
+        routePoint.setOrder(controlPointsSize);
 
         List<RoutePoint> controlPointDcItems = controlPointsDc.getMutableItems();
         controlPointDcItems.add(routePoint);
@@ -205,7 +207,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
         EntitySet mergedSet = dataContext.merge(routeFuelStations);
         editedEntity.setFuelStations(mergedSet.getAll(RouteFuelStation.class).stream()
                 .sorted(Comparator.comparing(RouteFuelStation::getDistance))
-                .toList());
+                .collect(Collectors.toList()));
 
         notifications.create("Найдено АЗС : %s".formatted(routeFuelStations.size()))
                 .build()

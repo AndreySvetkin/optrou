@@ -70,7 +70,7 @@ public class FuelStationSearchService {
             Object[] row = (Object[]) rowObject;
 
             UUID fuelStationId = (UUID) row[0];
-            Double distance = (Double) row[1] / 1000 ;
+            Double distance = (Double) row[1] / 1000;
 
             fuelStationIdsWithDistance.put(fuelStationId, distance);
         }

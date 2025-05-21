@@ -51,7 +51,7 @@ public class FactRefuellingPlan {
     @Column(name = "CREATED_DATE")
     private OffsetDateTime createdDate;
 
-    @OnDeleteInverse(DeletePolicy.DENY)
+    @OnDeleteInverse(DeletePolicy.CASCADE)
     @JoinColumn(name = "TRIP_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private TripReport trip;

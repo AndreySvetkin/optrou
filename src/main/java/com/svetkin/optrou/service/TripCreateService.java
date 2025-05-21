@@ -16,6 +16,7 @@ import io.jmix.flowui.component.UiComponentUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component(TripCreateService.NAME)
 public class TripCreateService {
@@ -67,10 +68,10 @@ public class TripCreateService {
         trip.setLogist((User) currentAuthentication.getUser());
         trip.setControlPoints(route.getControlPoints().stream()
                 .map(routePoint -> tripPointCreateService.createTripPoint(trip, routePoint))
-                .toList());
+                .collect(Collectors.toList()));
         trip.setFuelStations(route.getFuelStations().stream()
                 .map(routeFuelStation -> tripFuelStationCreateService.createTripFuelStation(trip, routeFuelStation))
-                .toList());
+                .collect(Collectors.toList()));
         return trip;
     }
 

@@ -102,7 +102,7 @@ public class TripOuterReportCreateService {
         row.createCell(cellIndex++).setCellValue("Планируемая длина маршрута(км.)");
         row.createCell(cellIndex++).setCellValue("Фактическое растояние(км.)");
 
-        row.createCell(cellIndex++).setCellValue("Максимальное отклонение от маршрута(м.)");
+        row.createCell(cellIndex++).setCellValue("Максимальное отклонение от маршрута(км.)");
 
         row.createCell(cellIndex++).setCellValue("Планируемый объем(л.)");
         row.createCell(cellIndex++).setCellValue("Фактический объем(л.)");

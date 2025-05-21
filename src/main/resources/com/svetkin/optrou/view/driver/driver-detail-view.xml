@@ -7,6 +7,7 @@
                   class="com.svetkin.optrou.entity.Driver">
             <fetchPlan extends="_base">
                 <property name="licenseCategories" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="driverDl"/>
             <collection id="licenseCategoriesDc" property="licenseCategories"/>
@@ -26,6 +27,12 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <textField id="fullNameField" property="fullName"/>
+            <entityPicker id="userField" property="user">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
             <textField id="phoneNumberField" property="phoneNumber"/>
         </formLayout>
         <h4 text="msg://com.svetkin.optrou.entity/Driver.licenseCategories"/>
