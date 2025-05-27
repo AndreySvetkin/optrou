@@ -20,6 +20,8 @@ import io.jmix.mapsflowui.component.model.source.DataVectorSource;
 import io.jmix.mapsflowui.component.model.source.GeoObjectClickNotifier;
 import org.locationtech.jts.geom.Point;
 
+import java.util.Collection;
+
 
 @Route(value = "vehicles", layout = MainView.class)
 @ViewController(id = "optrou_Vehicle.list")
@@ -36,6 +38,10 @@ public class VehicleListView extends StandardListView<Vehicle> {
     private DataGrid<Vehicle> vehiclesDataGrid;
 
     private GeoMap map;
+
+    public void setVehiclesToDc(Collection<Vehicle> vehicles) {
+        vehiclesDc.setItems(vehicles);
+    }
 
     @Subscribe
     public void onInit(final InitEvent event) {

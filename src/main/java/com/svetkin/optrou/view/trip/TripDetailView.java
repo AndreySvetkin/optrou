@@ -11,22 +11,32 @@ import com.svetkin.optrou.entity.Vehicle;
 import com.svetkin.optrou.entity.dto.RefuellingPlanDto;
 import com.svetkin.optrou.entity.type.RefuellingPlanCreateStatus;
 import com.svetkin.optrou.entity.type.TripStatus;
+import com.svetkin.optrou.repository.VehicleRepository;
 import com.svetkin.optrou.service.RefuellingPlanCreateService;
 import com.svetkin.optrou.view.main.MainView;
 import com.svetkin.optrou.view.mapfragment.MapFragment;
+import com.svetkin.optrou.view.vehicle.VehicleListView;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.AccessManager;
 import io.jmix.core.EntityStates;
+import io.jmix.core.Metadata;
 import io.jmix.core.accesscontext.SpecificOperationAccessContext;
+import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.select.JmixSelect;
+import io.jmix.flowui.component.valuepicker.EntityPicker;
 import io.jmix.flowui.exception.ValidationException;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
 import io.jmix.flowui.kit.action.BaseAction;
+import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
+import io.jmix.flowui.model.ViewData;
+import io.jmix.flowui.model.impl.CollectionContainerImpl;
+import io.jmix.flowui.sys.ViewSupport;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.Install;
 import io.jmix.flowui.view.StandardDetailView;
@@ -77,6 +87,20 @@ public class TripDetailView extends StandardDetailView<Trip> {
     private BaseAction cancelAction;
     @ViewComponent
     private BaseAction approveAction;
+    @Autowired
+    private ViewNavigators viewNavigators;
+    @Autowired
+    private DialogWindows dialogWindows;
+    @ViewComponent
+    private EntityPicker<Vehicle> vehicleField;
+    @Autowired
+    private VehicleRepository vehicleRepository;
+    @Autowired
+    private ViewSupport viewSupport;
+    @Autowired
+    private ViewData viewData;
+    @Autowired
+    private Metadata metadata;
 
     public void setTrip(Trip trip) {
         statusField.setValue(TripStatus.NEW);
@@ -194,6 +218,18 @@ public class TripDetailView extends StandardDetailView<Trip> {
         if (startDateTime.isAfter(endDateTime)) {
             throw new ValidationException("Дата окончания должна быть позже даты начала");
         }
+    }
+
+    @Subscribe("vehicleField.entityLookup")
+    public void onVehicleFieldEntityLookup(final ActionPerformedEvent event) {
+        CollectionContainer<Vehicle> vehiclesDc = new CollectionContainerImpl<>(metadata.getClass(Vehicle.class));
+        vehiclesDc.setItems(vehicleRepository.findByTripStatusNotInProgress());
+
+        dialogWindows.lookup(vehicleField)
+                .withViewClass(VehicleListView.class)
+                .withAfterOpenListener(afterOpenEvent -> afterOpenEvent.getView().setVehiclesToDc(vehiclesDc.getItems()))
+                .build()
+                .open();
     }
 
     @Subscribe("toProgressAction")
