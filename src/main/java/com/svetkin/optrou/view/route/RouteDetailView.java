@@ -37,6 +37,7 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -169,6 +170,7 @@ public class RouteDetailView extends StandardDetailView<Route> {
     @Subscribe(id = "controlPointsDc", target = Target.DATA_CONTAINER)
     public void onControlPointsDcCollectionChange(final CollectionContainer.CollectionChangeEvent<RoutePoint> event) {
         updateControlPoints();
+        clearFuelStationsAndRoute();
     }
 
     private void updateControlPoints() {
@@ -177,6 +179,18 @@ public class RouteDetailView extends StandardDetailView<Route> {
         for (RoutePoint routePoint : routePoints) {
             routePoint.setOrder(index++);
         }
+    }
+
+    @Subscribe(id = "controlPointsDc", target = Target.DATA_CONTAINER)
+    public void onControlPointsDcItemPropertyChange(final InstanceContainer.ItemPropertyChangeEvent<RoutePoint> event) {
+        clearFuelStationsAndRoute();
+    }
+
+    private void clearFuelStationsAndRoute() {
+        Route route = getEditedEntity();
+        route.setFuelStations(new ArrayList<>());
+        route.setLine(null);
+        route.setLength(null);
     }
 
     @Subscribe("saveAction")
