@@ -16,12 +16,14 @@ import io.jmix.flowui.action.list.RemoveAction;
 import io.jmix.flowui.action.view.DetailSaveCloseAction;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
+import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import io.jmix.flowui.model.InstanceContainer;
 import io.jmix.flowui.view.EditedEntityContainer;
 import io.jmix.flowui.view.StandardDetailView;
 import io.jmix.flowui.view.Subscribe;
+import io.jmix.flowui.view.Target;
 import io.jmix.flowui.view.ViewComponent;
 import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
@@ -162,6 +164,19 @@ public class RouteDetailView extends StandardDetailView<Route> {
         route.setLength(routeLine.getLength() * 100);
 
         setMapCenterByLine(routeLine);
+    }
+
+    @Subscribe(id = "controlPointsDc", target = Target.DATA_CONTAINER)
+    public void onControlPointsDcCollectionChange(final CollectionContainer.CollectionChangeEvent<RoutePoint> event) {
+        updateControlPoints();
+    }
+
+    private void updateControlPoints() {
+        List<RoutePoint> routePoints = getEditedEntity().getControlPoints();
+        int index = 1;
+        for (RoutePoint routePoint : routePoints) {
+            routePoint.setOrder(index++);
+        }
     }
 
     @Subscribe("saveAction")
